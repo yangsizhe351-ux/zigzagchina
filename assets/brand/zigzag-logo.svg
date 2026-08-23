@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 96" role="img" aria-labelledby="title desc">
+  <title id="title">ZigZag</title>
+  <desc id="desc">A minimal double-Z wordmark for ZigZag China.</desc>
+  <g fill="none" stroke-width="10" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M10 16h62L16 78h62" stroke="#19a889"/>
+    <path d="M46 22h62L40 84h62" stroke="#e46d42"/>
+  </g>
+  <text x="132" y="69" fill="#f5f0e7" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="500" letter-spacing="-2">ZigZag</text>
+</svg>

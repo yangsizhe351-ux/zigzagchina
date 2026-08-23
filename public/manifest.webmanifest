@@ -1,0 +1,10 @@
+{
+  "name": "ZigZag — Explore Western China",
+  "short_name": "ZigZag",
+  "description": "A vivid first journey through Chengdu and Chongqing.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07131a",
+  "theme_color": "#07131a",
+  "lang": "en"
+}
