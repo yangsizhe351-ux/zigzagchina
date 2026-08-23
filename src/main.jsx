@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import heroImage from '../assets/images/cdqc-hero-clean.jpg';
-import cityChengduImage from '../assets/images/cdqc-city-chengdu.png';
-import cityChongqingImage from '../assets/images/cdqc-city-chongqing.png';
-import teaImage from '../assets/images/cdqc-experience-tea.png';
-import pandaImage from '../assets/images/cdqc-experience-panda.png';
-import hotpotImage from '../assets/images/cdqc-experience-hotpot.png';
-import nightscapeImage from '../assets/images/cdqc-experience-nightscape.png';
+import cityChengduImage from '../assets/images/webp/cdqc-city-chengdu.webp';
+import cityChongqingImage from '../assets/images/webp/cdqc-city-chongqing.webp';
+import teaImage from '../assets/images/webp/cdqc-experience-tea.webp';
+import pandaImage from '../assets/images/webp/cdqc-experience-panda.webp';
+import hotpotImage from '../assets/images/webp/cdqc-experience-hotpot.webp';
+import nightscapeImage from '../assets/images/webp/cdqc-experience-nightscape.webp';
 import zigzagLogo from '../assets/brand/zigzag-logo.svg';
 import { content, languages } from './content';
 import { getPublishedContent } from './lib/contentRepository';
