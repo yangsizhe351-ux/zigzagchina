@@ -1,0 +1,3 @@
+[build]
+  command = "npx vite build --config vite.static.config.js"
+  publish = "dist-netlify"
