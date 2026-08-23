@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createRoot } from 'react-dom/client';
 import heroImage from '../assets/images/cdqc-hero-clean.jpg';
 import cityChengduImage from '../assets/images/webp/cdqc-city-chengdu.webp';
 import cityChongqingImage from '../assets/images/webp/cdqc-city-chongqing.webp';
@@ -145,3 +146,7 @@ function App() {
 }
 
 export default App;
+
+if (typeof document !== 'undefined' && document.getElementById('root')) {
+  createRoot(document.getElementById('root')).render(<App />);
+}
