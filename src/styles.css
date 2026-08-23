@@ -72,24 +72,11 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
 .city-cta b { margin-left: 12px; font-size: 15px; }
 .scroll-note { position: absolute; left: clamp(24px, 4vw, 68px); bottom: 28px; display: flex; align-items: center; gap: 14px; text-transform: uppercase; letter-spacing: .22em; font-size: 9px; opacity: .8; }
 .scroll-line { width: 42px; height: 1px; background: currentColor; }
-.teaser { min-height: 65vh; padding: 18vh clamp(28px, 12vw, 180px); background: #0d2827; display: grid; grid-template-columns: 1fr 1fr; gap: 8vw; align-items: center; }
+.teaser { min-height: 65vh; padding: 18vh clamp(28px, 12vw, 180px); background: linear-gradient(90deg, rgba(7,19,26,.92), rgba(7,19,26,.46)), var(--section-image) center / cover; display: grid; grid-template-columns: 1fr 1fr; gap: 8vw; align-items: center; }
 .teaser h2 { font-size: clamp(55px, 7vw, 110px); margin: 0; }
 .teaser-copy { max-width: 330px; line-height: 1.8; font-size: 14px; opacity: .8; }
 .teaser-copy a, .all-routes { display: inline-flex; align-items: center; gap: 18px; margin-top: 28px; color: #f5f0e7; text-decoration: none; text-transform: uppercase; letter-spacing: .18em; font-size: 10px; }
 .teaser-copy a span { font-size: 18px; }
-.proof-section { position: relative; display: grid; grid-template-columns: 1.15fr .85fr; gap: 8vw; padding: 17vh clamp(28px, 12vw, 180px); color: #f4eee3; background: linear-gradient(110deg, rgba(6,19,24,.98), rgba(8,39,38,.86)), url('../assets/images/cdqc-hero-clean.jpg') center / cover; }
-.proof-section::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 75% 25%, rgba(218,171,95,.2), transparent 25%); pointer-events: none; }
-.proof-copy, .proof-stats { position: relative; z-index: 1; }
-.proof-section h2 { max-width: 760px; font-size: clamp(52px, 7vw, 108px); margin: 0 0 34px; }
-.proof-copy > p:not(.kicker) { max-width: 470px; line-height: 1.8; font-size: 15px; opacity: .74; }
-.proof-action { display: inline-flex; gap: 20px; align-items: center; margin-top: 24px; color: inherit; text-decoration: none; text-transform: uppercase; letter-spacing: .18em; font-size: 10px; }
-.proof-action span { font-size: 18px; }
-.proof-stats { align-self: end; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(255,255,255,.35); }
-.proof-stat { min-height: 155px; display: flex; flex-direction: column; justify-content: end; padding: 18px 12px 0 0; border-right: 1px solid rgba(255,255,255,.2); }
-.proof-stat + .proof-stat { padding-left: 18px; }
-.proof-stat:last-child { border-right: 0; }
-.proof-stat strong { font-family: 'Playfair Display', serif; font-size: clamp(42px, 5vw, 70px); font-weight: 500; line-height: 1; }
-.proof-stat span { margin-top: 14px; text-transform: uppercase; letter-spacing: .14em; font-size: 9px; opacity: .62; }
 .city-strip { position: relative; display: grid; grid-template-columns: 130px 1fr 1fr; min-height: 70vh; }
 .section-label { padding: 44px 0 0 34px; writing-mode: vertical-rl; text-transform: uppercase; letter-spacing: .2em; font-size: 10px; opacity: .55; }
 .city-panel { position: relative; padding: clamp(40px, 9vw, 130px) clamp(28px, 6vw, 100px); display: flex; flex-direction: column; justify-content: end; overflow: hidden; transition: flex .5s, filter .5s; }
@@ -103,7 +90,7 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
 .city-panel p { max-width: 260px; line-height: 1.7; font-size: 13px; opacity: .78; }
 .city-panel button { margin-top: 24px; align-self: start; text-transform: uppercase; letter-spacing: .16em; font-size: 10px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.4); }
 .city-panel button b { margin-left: 16px; font-size: 15px; }
-.experience-section { padding: 18vh clamp(28px, 12vw, 180px); background: #111c22; }
+.experience-section { padding: 18vh clamp(28px, 12vw, 180px); background: linear-gradient(110deg, rgba(7,19,26,.96), rgba(7,19,26,.74)), var(--section-image) center / cover; }
 .experience-heading { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 70px; }
 .experience-heading h2 { margin: 0; font-size: clamp(54px, 7vw, 104px); }
 .experience-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
@@ -116,26 +103,7 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
 .experience-card strong { max-width: 170px; font-family: 'Playfair Display', serif; font-size: clamp(24px, 2.2vw, 34px); font-weight: 500; line-height: 1.05; }
 .experience-card small { margin-top: 12px; text-transform: uppercase; letter-spacing: .18em; font-size: 9px; opacity: .7; }
 .experience-card i { position: absolute; right: 24px; bottom: 24px; font-style: normal; font-size: 20px; }
-.practical-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: 10vw; padding: 18vh clamp(28px, 12vw, 180px); color: #17272a; background: #e9e1d4; }
-.practical-heading h2 { margin: 0; font-size: clamp(54px, 7vw, 104px); }
-.practical-list { align-self: end; border-top: 1px solid rgba(23,39,42,.35); }
-.practical-item { width: 100%; display: grid; grid-template-columns: 38px 1fr 20px; gap: 14px; align-items: start; padding: 22px 0; color: inherit; text-align: left; border-bottom: 1px solid rgba(23,39,42,.2); transition: padding .3s, color .3s; }
-.practical-item:hover { padding-left: 12px; color: #a55432; }
-.practical-item > span { padding-top: 4px; font-size: 10px; opacity: .55; }
-.practical-item strong { font-family: 'Playfair Display', serif; font-size: 25px; font-weight: 500; }
-.practical-item p { max-width: 420px; margin: 8px 0 0; line-height: 1.6; font-size: 12px; opacity: .65; }
-.practical-item i { font-size: 18px; font-style: normal; }
-.route-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10vw; padding: 18vh clamp(28px, 12vw, 180px); background: #e9e1d4; color: #17272a; }
-.route-section h2 { font-size: clamp(55px, 7vw, 110px); margin: 0; }
-.route-list { align-self: end; border-top: 1px solid rgba(23,39,42,.35); }
-.route-item { width: 100%; display: grid; grid-template-columns: 40px 1fr 20px; align-items: center; gap: 10px; padding: 20px 0; text-align: left; color: inherit; border-bottom: 1px solid rgba(23,39,42,.25); transition: padding .3s, color .3s; }
-.route-item:hover { padding-left: 12px; color: #a55432; }
-.route-item.is-selected { padding-left: 12px; color: #a55432; }
-.route-item span { font-size: 10px; opacity: .6; }
-.route-item strong { font-family: 'Playfair Display', serif; font-size: 23px; font-weight: 500; }
-.route-item i { font-style: normal; font-size: 18px; }
-.all-routes { color: inherit; opacity: .7; }
-.booking-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10vw; padding: 18vh clamp(28px, 12vw, 180px); color: #f5f0e7; background: #a55432; }
+.booking-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10vw; padding: 18vh clamp(28px, 12vw, 180px); color: #f5f0e7; background: linear-gradient(105deg, rgba(98,42,27,.94), rgba(165,84,50,.72)), var(--section-image) center / cover; }
 .booking-section h2 { margin: 0; font-size: clamp(54px, 7vw, 104px); }
 .booking-copy { align-self: end; max-width: 430px; }
 .booking-copy > p { line-height: 1.7; font-size: 15px; opacity: .82; }
@@ -205,10 +173,9 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
   .city-detail { font-size: 9px; line-height: 1.5; }
   .teaser { min-height: 80vh; padding: 18vh 28px; display: block; }
   .teaser-copy { margin-top: 42px; }
-  .proof-section { display: block; padding-top: 14vh; padding-bottom: 14vh; }
   .proof-stats { margin-top: 70px; }
   .proof-stat { min-height: 115px; }
-  .city-strip, .route-section { display: block; }
+  .city-strip { display: block; }
   .booking-section { display: block; padding-top: 14vh; padding-bottom: 14vh; }
   .booking-copy { margin-top: 50px; }
   .experience-section { padding-top: 14vh; padding-bottom: 14vh; }
@@ -217,8 +184,6 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
   .experience-card { min-height: 270px; padding: 18px; }
   .experience-card span { left: 18px; top: 16px; }
   .experience-card i { right: 18px; bottom: 18px; }
-  .practical-section { display: block; padding-top: 14vh; padding-bottom: 14vh; }
-  .practical-list { margin-top: 55px; }
   .brand-mark { width: 148px; }
   .site-footer { display: block; }
   .waitlist { margin-top: 48px; }
@@ -226,8 +191,6 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
   .site-footer small { display: block; margin-top: 45px; }
   .section-label { padding: 28px; writing-mode: initial; }
   .city-panel { min-height: 55vh; }
-  .route-section { padding-top: 14vh; padding-bottom: 14vh; }
-  .route-list { margin-top: 55px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
