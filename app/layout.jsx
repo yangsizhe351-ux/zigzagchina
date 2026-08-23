@@ -1,8 +1,8 @@
 import '../src/styles.css';
 
 export const metadata = {
-  title: 'ZigZag China — Chengdu & Chongqing',
-  description: 'Private guiding in Chengdu and Chongqing for curious travelers.',
+  title: 'ZigZag China — Private Guides in Chengdu & Chongqing',
+  description: 'Private, locally guided experiences in Chengdu and Chongqing.',
 };
 
 export default function RootLayout({ children }) {

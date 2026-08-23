@@ -1,13 +1,32 @@
-import { content } from '../src/content.js';
+import { content, languageNames } from '../src/content.js';
 
 const locales = Object.keys(content);
 const required = ['nav', 'title', 'city', 'routes', 'routeDetails', 'experienceCards', 'practicalCards', 'proofStats', 'waitlistTitle', 'waitlistBody', 'waitlistPlaceholder', 'waitlistButton', 'waitlistSuccess', 'skipToContent', 'booking'];
 const errors = [];
 
+function collectStrings(value, path = 'EN') {
+  if (typeof value === 'string') return [{ path, value }];
+  if (Array.isArray(value)) return value.flatMap((item, index) => collectStrings(item, `${path}[${index}]`));
+  if (value && typeof value === 'object') return Object.entries(value).flatMap(([key, item]) => collectStrings(item, `${path}.${key}`));
+  return [];
+}
+
 for (const field of required) {
   for (const locale of locales) {
     if (!content[locale][field]) errors.push(`${locale}.${field} is missing`);
   }
+}
+
+for (const { path, value } of collectStrings(content.EN)) {
+  if (/\p{Script=Han}/u.test(value)) errors.push(`${path} contains Chinese characters`);
+}
+
+for (const { path, value } of collectStrings(languageNames.EN, 'languageNames.EN')) {
+  if (/\p{Script=Han}/u.test(value)) errors.push(`${path} contains Chinese characters`);
+}
+
+for (const locale of locales) {
+  if (!content[locale].booking.paymentLabel) errors.push(`${locale}.booking.paymentLabel is missing`);
 }
 
 const reference = content.EN;

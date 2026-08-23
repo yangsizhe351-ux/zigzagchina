@@ -52,7 +52,7 @@ export async function getPublishedContent(language = 'en') {
     const translatedRouteDetails = routes.map((route, index) => routeTranslations.find((item) => item.route_id === route.id)?.description || base.routeDetails?.[index] || '');
     return { source: 'supabase', language, content: { ...localContent, [locale]: { ...base, city: translatedCities, routes: translatedRoutes, routeDetails: translatedRouteDetails } } };
   } catch (error) {
-    console.warn('CDQC content fallback:', error.message);
+    console.warn('ZigZag content fallback:', error.message);
     return { source: 'local-fallback', language, content: localContent };
   }
 }

@@ -8,7 +8,7 @@ import pandaImage from '../assets/images/webp/cdqc-experience-panda.webp';
 import hotpotImage from '../assets/images/webp/cdqc-experience-hotpot.webp';
 import nightscapeImage from '../assets/images/webp/cdqc-experience-nightscape.webp';
 import zigzagLogo from '../assets/brand/zigzag-logo.svg';
-import { content, languages } from './content';
+import { content, languages, languageNames } from './content';
 import { getPublishedContent } from './lib/contentRepository';
 import './styles.css';
 
@@ -78,7 +78,7 @@ function App() {
           <nav className="nav-links" aria-label="Main navigation">
             {t.nav.map((item, index) => <a href={['#destinations', '#experiences', '#plan', '#guide'][index]} key={item}>{item}</a>)}
           </nav>
-          <div className="header-actions"><div className="language-wrap"><button className="language-button" aria-expanded={languageOpen} onClick={() => setLanguageOpen(!languageOpen)} aria-label="Choose language">{language} <span>⌄</span></button>{languageOpen && <div className="language-menu">{languages.map(({ code, label }) => <button key={code} onClick={() => { setLanguage(code); setLanguageOpen(false); }}>{code}<span>{label}</span></button>)}</div>}</div></div>
+          <div className="header-actions"><div className="language-wrap"><button className="language-button" aria-expanded={languageOpen} onClick={() => setLanguageOpen(!languageOpen)} aria-label="Choose language">{languages.find(({ code }) => code === language)?.short} <span>⌄</span></button>{languageOpen && <div className="language-menu">{languages.map(({ code, short }) => <button key={code} onClick={() => { setLanguage(code); setLanguageOpen(false); }}>{short}<span>{languageNames[language][code]}</span></button>)}</div>}</div></div>
         </header>
         {menuOpen && <div className="mobile-menu">{t.nav.map((item, index) => <button key={item} onClick={() => jumpTo(['destinations', 'experiences', 'plan', 'guide'][index])}>{item} <span>0{index + 1}</span></button>)}</div>}
         <div className="hero-copy">
@@ -133,7 +133,7 @@ function App() {
         </div>
       </section>
 
-      <section className="booking-section" id="booking"><div><p className="kicker">{t.booking.kicker}</p><h2>{t.booking.title[0]}<br /><em>{t.booking.title[1]}</em></h2></div><div className="booking-copy"><p>{t.booking.body}</p><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20private%20guide%20request" className="booking-action">{t.booking.action} <span>↗</span></a><div className="payment-placeholder"><small>Payment</small><strong>{t.booking.payment}</strong></div></div></section>
+      <section className="booking-section" id="booking"><div><p className="kicker">{t.booking.kicker}</p><h2>{t.booking.title[0]}<br /><em>{t.booking.title[1]}</em></h2></div><div className="booking-copy"><p>{t.booking.body}</p><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20private%20guide%20request" className="booking-action">{t.booking.action} <span>↗</span></a><div className="payment-placeholder"><small>{t.booking.paymentLabel}</small><strong>{t.booking.payment}</strong></div></div></section>
       <footer className="site-footer" id="contact"><div><strong>ZigZag</strong><p>{t.footerText}</p></div><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20private%20guide%20request">{t.booking.action} <span>↗</span></a><small>© 2026 ZigZag</small></footer>
 
       {experienceOpen && <div className="experience-modal" role="dialog" aria-modal="true"><button className="modal-backdrop" aria-label={t.close} onClick={() => setExperienceOpen(null)} /><article className={`modal-card experience-${experienceOpen.index}`}><button className="modal-close" onClick={() => setExperienceOpen(null)}>×</button><span className="modal-index">{experienceOpen.index}</span><small>{experienceOpen.city}</small><h3>{experienceOpen.title}</h3><p>{t.experienceDetail}</p><button className="modal-action" onClick={() => setExperienceOpen(null)}>{t.explore} <b>↗</b></button></article></div>}
