@@ -4,14 +4,19 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vinext dev",
+    "build": "vinext build",
     "check:content": "node scripts/check-content.mjs",
     "check": "npm run check:content && npm run build",
-    "preview": "vite preview"
+    "start": "vinext start"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
+    "@openai/sites-vite-plugin": "0.1.0",
+    "@vitejs/plugin-rsc": "0.5.26",
+    "@vitejs/plugin-react": "6.0.2",
+    "@cloudflare/vite-plugin": "1.37.1",
+    "react-server-dom-webpack": "19.2.6",
+    "vinext": "1.0.0-beta.2",
     "vite": "latest",
     "react": "latest",
     "react-dom": "latest"

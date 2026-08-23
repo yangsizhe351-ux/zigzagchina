@@ -1,5 +1,4 @@
-import { StrictMode, useEffect, useState } from 'react';
-import { createRoot } from 'react-dom/client';
+import { useEffect, useState } from 'react';
 import heroImage from '../assets/images/cdqc-hero-clean.jpg';
 import cityChengduImage from '../assets/images/cdqc-city-chengdu.png';
 import cityChongqingImage from '../assets/images/cdqc-city-chongqing.png';
@@ -145,4 +144,4 @@ function App() {
   );
 }
 
-createRoot(document.getElementById('root')).render(<StrictMode><App /></StrictMode>);
+export default App;
