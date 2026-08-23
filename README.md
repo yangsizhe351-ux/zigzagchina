@@ -1,6 +1,6 @@
-# CDQC
+# ZigZag China
 
-CDQC is a visual, multilingual travel product for international visitors discovering Chengdu and Chongqing.
+ZigZag China is a visual, multilingual travel guide for international visitors discovering Chengdu and Chongqing.
 
 ## What is already working
 

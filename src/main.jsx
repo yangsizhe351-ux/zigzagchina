@@ -67,13 +67,13 @@ function App() {
   return (
     <main id="top" className={`${scrolled ? 'page is-scrolled' : 'page'} ${loaded ? 'is-loaded' : ''}`}>
       <a className="skip-link" href="#destinations">{t.skipToContent}</a>
-      {!loaded && <div className="loader"><img src={zigzagLogo} alt="ZigZag" /><i /></div>}
+      {!loaded && <div className="loader"><img src={zigzagLogo} alt="ZigZag China" /><i /></div>}
       <section className="hero" aria-label="Discover Chengdu and Chongqing">
         <div className="hero-media" style={{ backgroundImage: `url(${heroImage})`, '--mx': `${cursor.x * 10}px`, '--my': `${cursor.y * 8}px` }} />
         <div className="hero-split" />
         <div className="hero-shade" />
         <header className="site-header">
-          <a className="brand-mark" href="#top" aria-label="ZigZag home"><img src={zigzagLogo} alt="ZigZag" /></a>
+          <a className="brand-mark" href="#top" aria-label="ZigZag China home"><img src={zigzagLogo} alt="ZigZag China" /></a>
           <button className={`menu-button ${menuOpen ? 'is-open' : ''}`} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
           <nav className="nav-links" aria-label="Main navigation">
             {t.nav.map((item, index) => <a href={['#destinations', '#experiences', '#plan', '#guide'][index]} key={item}>{item}</a>)}
@@ -133,8 +133,8 @@ function App() {
         </div>
       </section>
 
-      <section className="booking-section" id="booking"><div><p className="kicker">{t.booking.kicker}</p><h2>{t.booking.title[0]}<br /><em>{t.booking.title[1]}</em></h2></div><div className="booking-copy"><p>{t.booking.body}</p><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20private%20guide%20request" className="booking-action">{t.booking.action} <span>↗</span></a><div className="payment-placeholder"><small>{t.booking.paymentLabel}</small><strong>{t.booking.payment}</strong></div></div></section>
-      <footer className="site-footer" id="contact"><div><strong>ZigZag</strong><p>{t.footerText}</p></div><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20private%20guide%20request">{t.booking.action} <span>↗</span></a><small>© 2026 ZigZag</small></footer>
+      <section className="booking-section" id="booking"><div><p className="kicker">{t.booking.kicker}</p><h2>{t.booking.title[0]}<br /><em>{t.booking.title[1]}</em></h2></div><div className="booking-copy"><p>{t.booking.body}</p><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20China%20private%20guide%20request" className="booking-action">{t.booking.action} <span>↗</span></a><div className="payment-placeholder"><small>{t.booking.paymentLabel}</small><strong>{t.booking.payment}</strong></div></div></section>
+      <footer className="site-footer" id="contact"><div><strong>ZigZag China</strong><p>{t.footerText}</p></div><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20China%20private%20guide%20request">{t.booking.action} <span>↗</span></a><small>© 2026 ZigZag China</small></footer>
 
       {experienceOpen && <div className="experience-modal" role="dialog" aria-modal="true"><button className="modal-backdrop" aria-label={t.close} onClick={() => setExperienceOpen(null)} /><article className={`modal-card experience-${experienceOpen.index}`}><button className="modal-close" onClick={() => setExperienceOpen(null)}>×</button><span className="modal-index">{experienceOpen.index}</span><small>{experienceOpen.city}</small><h3>{experienceOpen.title}</h3><p>{t.experienceDetail}</p><button className="modal-action" onClick={() => setExperienceOpen(null)}>{t.explore} <b>↗</b></button></article></div>}
       {guideOpen && <div className="experience-modal guide-modal" role="dialog" aria-modal="true"><button className="modal-backdrop" aria-label={t.close} onClick={() => setGuideOpen(null)} /><article className="modal-card guide-card"><button className="modal-close" onClick={() => setGuideOpen(null)}>×</button><span className="modal-index">0{guideOpen.index + 1}</span><small>{t.practicalKicker}</small><h3>{guideOpen.title}</h3><p>{guideOpen.body}</p><button className="modal-action" onClick={() => { setGuideOpen(null); jumpTo('plan'); }}>{t.footerAction} <b>↗</b></button></article></div>}
