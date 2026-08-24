@@ -7,7 +7,7 @@ import teaImage from '../assets/images/webp/cdqc-experience-tea.webp';
 import pandaImage from '../assets/images/webp/cdqc-experience-panda.webp';
 import hotpotImage from '../assets/images/webp/cdqc-experience-hotpot.webp';
 import nightscapeImage from '../assets/images/webp/cdqc-experience-nightscape.webp';
-import zigzagLogo from '../assets/brand/zigzag-logo.svg';
+import zigzagMark from '../assets/brand/zigzag-mark-02.png';
 import { content, languages, languageNames } from './content';
 import { getPublishedContent } from './lib/contentRepository';
 import './styles.css';
@@ -18,6 +18,10 @@ const cities = [
 ];
 
 const experienceImages = [teaImage, pandaImage, hotpotImage, nightscapeImage];
+
+function BrandLockup() {
+  return <><img src={zigzagMark} alt="" aria-hidden="true" /><span>ZigZag China</span></>;
+}
 
 function App() {
   const [activeCity, setActiveCity] = useState(null);
@@ -65,13 +69,13 @@ function App() {
   return (
     <main id="top" className={`${scrolled ? 'page is-scrolled' : 'page'} ${loaded ? 'is-loaded' : ''}`}>
       <a className="skip-link" href="#destinations">{t.skipToContent}</a>
-      {!loaded && <div className="loader"><img src={zigzagLogo} alt="ZigZag China" /><i /></div>}
+      {!loaded && <div className="loader"><div className="loader-brand" role="img" aria-label="ZigZag China"><BrandLockup /></div><i /></div>}
       <section className="hero" aria-label="Discover Chengdu and Chongqing">
         <div className="hero-media" style={{ backgroundImage: `url(${heroImage})`, '--mx': `${cursor.x * 10}px`, '--my': `${cursor.y * 8}px` }} />
         <div className="hero-split" />
         <div className="hero-shade" />
         <header className="site-header">
-          <a className="brand-mark" href="#top" aria-label="ZigZag China home"><img src={zigzagLogo} alt="ZigZag China" /></a>
+          <a className="brand-mark" href="#top" aria-label="ZigZag China home"><BrandLockup /></a>
           <button className={`menu-button ${menuOpen ? 'is-open' : ''}`} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
           <nav className="nav-links" aria-label="Main navigation">
             {t.nav.map((item, index) => <a href={['#destinations', '#experiences', '#booking'][index]} key={item}>{item}</a>)}
