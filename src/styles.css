@@ -148,11 +148,7 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
 .drawer-empty button { margin-top: 16px; text-transform: uppercase; letter-spacing: .14em; font-size: 10px; color: inherit; }
 .experience-modal { position: fixed; z-index: 14; inset: 0; display: grid; place-items: center; padding: 24px; }
 .modal-backdrop { position: absolute; inset: 0; background: rgba(2,8,11,.7); backdrop-filter: blur(9px); }
-.modal-card { position: relative; width: min(560px, 100%); min-height: 500px; display: flex; flex-direction: column; justify-content: end; padding: 42px; color: #fff; background: linear-gradient(0deg, rgba(3,9,12,.95), rgba(3,9,12,.1) 80%), url('../assets/images/cdqc-hero-clean.jpg') center / 205%; box-shadow: 0 25px 90px rgba(0,0,0,.45); animation: modal-in .4s cubic-bezier(.2,.7,.2,1) both; }
-.modal-card.experience-1 { background-position: left 25%; }
-.modal-card.experience-2 { background-position: left 75%; }
-.modal-card.experience-3 { background-position: right 30%; }
-.modal-card.experience-4 { background-position: right 78%; }
+.modal-card { position: relative; width: min(560px, 100%); min-height: 500px; display: flex; flex-direction: column; justify-content: end; padding: 42px; color: #fff; background: linear-gradient(0deg, rgba(3,9,12,.95), rgba(3,9,12,.1) 80%), var(--modal-image) center / cover; box-shadow: 0 25px 90px rgba(0,0,0,.45); animation: modal-in .4s cubic-bezier(.2,.7,.2,1) both; }
 @keyframes modal-in { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .modal-close { position: absolute; top: 22px; right: 26px; font-size: 28px; }
 .modal-index { position: absolute; top: 28px; left: 30px; font-size: 10px; letter-spacing: .16em; opacity: .7; }
