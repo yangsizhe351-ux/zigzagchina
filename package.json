@@ -13,15 +13,12 @@
     "start:ssr": "vinext start"
   },
   "dependencies": {
-    "@openai/sites-vite-plugin": "0.1.0",
-    "@vitejs/plugin-rsc": "0.5.26",
     "@vitejs/plugin-react": "6.0.2",
-    "@cloudflare/vite-plugin": "1.37.1",
-    "react-server-dom-webpack": "19.2.6",
-    "vinext": "1.0.0-beta.2",
-    "vite": "latest",
-    "react": "latest",
-    "react-dom": "latest"
-  },
-  "devDependencies": {}
+    "@vitejs/plugin-rsc": "0.5.34",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-server-dom-webpack": "19.2.8",
+    "vinext": "1.0.0-beta.8",
+    "vite": "8.2.2"
+  }
 }
