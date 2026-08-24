@@ -17,10 +17,17 @@ const cities = [
   { name: 'Chongqing', eyebrow: 'Neon nights · rivers · mountain city', tone: 'ember' },
 ];
 
-const experienceImages = [teaImage, pandaImage, hotpotImage, nightscapeImage];
+const resolveAssetUrl = (asset) => typeof asset === 'string' ? asset : asset?.src || asset?.default?.src || asset?.default || '';
+const heroImageUrl = resolveAssetUrl(heroImage);
+const cityChengduImageUrl = resolveAssetUrl(cityChengduImage);
+const cityChongqingImageUrl = resolveAssetUrl(cityChongqingImage);
+const hotpotImageUrl = resolveAssetUrl(hotpotImage);
+const nightscapeImageUrl = resolveAssetUrl(nightscapeImage);
+const zigzagMarkUrl = resolveAssetUrl(zigzagMark);
+const experienceImages = [teaImage, pandaImage, hotpotImage, nightscapeImage].map(resolveAssetUrl);
 
 function BrandLockup() {
-  return <><img src={zigzagMark} alt="" aria-hidden="true" /><span>ZigZag China</span></>;
+  return <><img src={zigzagMarkUrl} alt="" aria-hidden="true" /><span>ZigZag China</span></>;
 }
 
 function App() {
@@ -55,7 +62,7 @@ function App() {
     const image = new Image();
     image.onload = () => setLoaded(true);
     image.onerror = () => setLoaded(true);
-    image.src = heroImage;
+    image.src = heroImageUrl;
     const onMove = (event) => setCursor({ x: (event.clientX / window.innerWidth - .5) * 2, y: (event.clientY / window.innerHeight - .5) * 2 });
     const onKey = (event) => { if (event.key === 'Escape') { setMenuOpen(false); setLanguageOpen(false); setExperienceOpen(null); } };
     window.addEventListener('pointermove', onMove, { passive: true });
@@ -71,7 +78,7 @@ function App() {
       <a className="skip-link" href="#destinations">{t.skipToContent}</a>
       {!loaded && <div className="loader"><div className="loader-brand" role="img" aria-label="ZigZag China"><BrandLockup /></div><i /></div>}
       <section className="hero" aria-label="Discover Chengdu and Chongqing">
-        <div className="hero-media" style={{ backgroundImage: `url(${heroImage})`, '--mx': `${cursor.x * 10}px`, '--my': `${cursor.y * 8}px` }} />
+        <div className="hero-media" style={{ backgroundImage: `url(${heroImageUrl})`, '--mx': `${cursor.x * 10}px`, '--my': `${cursor.y * 8}px` }} />
         <div className="hero-split" />
         <div className="hero-shade" />
         <header className="site-header">
@@ -101,23 +108,23 @@ function App() {
         <div className="scroll-note"><span className="scroll-line" />{t.scroll}</div>
       </section>
 
-      <section className="teaser" id="destinations" style={{ '--section-image': `url(${cityChengduImage})` }}>
+      <section className="teaser" id="destinations" style={{ '--section-image': `url(${cityChengduImageUrl})` }}>
         <div className="teaser-heading"><p className="kicker">{t.teaserKicker}</p><h2>{t.teaserTitle[0]}<br /><em>{t.teaserTitle[1]}</em></h2></div>
         <div className="teaser-copy"><p>{t.teaserBody}</p><a href="#experiences">{t.begin} <span>↗</span></a></div>
       </section>
 
       <section className="city-strip" id="experiences">
         <div className="section-label">{t.sectionLabel}</div>
-        <div className="city-panel jade-panel" id="city-chengdu" style={{ '--panel-image': `url(${cityChengduImage})` }}><span className="panel-index">01</span><h3>{t.city.Chengdu.title}</h3><p>{t.city.Chengdu.body}</p><button onClick={() => setActiveCity('Chengdu')}>{t.city.Chengdu.action} <b>↗</b></button></div>
-        <div className="city-panel ember-panel" id="city-chongqing" style={{ '--panel-image': `url(${cityChongqingImage})` }}><span className="panel-index">02</span><h3>{t.city.Chongqing.title}</h3><p>{t.city.Chongqing.body}</p><button onClick={() => setActiveCity('Chongqing')}>{t.city.Chongqing.action} <b>↗</b></button></div>
+        <div className="city-panel jade-panel" id="city-chengdu" style={{ '--panel-image': `url(${cityChengduImageUrl})` }}><span className="panel-index">01</span><h3>{t.city.Chengdu.title}</h3><p>{t.city.Chengdu.body}</p><button onClick={() => setActiveCity('Chengdu')}>{t.city.Chengdu.action} <b>↗</b></button></div>
+        <div className="city-panel ember-panel" id="city-chongqing" style={{ '--panel-image': `url(${cityChongqingImageUrl})` }}><span className="panel-index">02</span><h3>{t.city.Chongqing.title}</h3><p>{t.city.Chongqing.body}</p><button onClick={() => setActiveCity('Chongqing')}>{t.city.Chongqing.action} <b>↗</b></button></div>
       </section>
 
-      <section className="experience-section" style={{ '--section-image': `url(${nightscapeImage})` }}>
+      <section className="experience-section" style={{ '--section-image': `url(${nightscapeImageUrl})` }}>
         <div className="experience-heading"><p className="kicker">{t.experienceKicker}</p><h2>{t.experienceTitle[0]}<br /><em>{t.experienceTitle[1]}</em></h2></div>
         <div className="experience-grid">{t.experienceCards.map(([title, city, index], cardIndex) => <button className={`experience-card experience-${cardIndex + 1}`} style={{ '--experience-image': `url(${experienceImages[cardIndex]})` }} key={title} onClick={() => setExperienceOpen({ title, city, index })}><span>{index}</span><strong>{title}</strong><small>{city}</small><i>↗</i></button>)}</div>
       </section>
 
-      <section className="booking-section" id="booking" style={{ '--section-image': `url(${hotpotImage})` }}><div><p className="kicker">{t.booking.kicker}</p><h2>{t.booking.title[0]}<br /><em>{t.booking.title[1]}</em></h2></div><div className="booking-copy"><p>{t.booking.body}</p><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20China%20private%20guide%20request" className="booking-action">{t.booking.action} <span>↗</span></a><div className="payment-placeholder"><small>{t.booking.paymentLabel}</small><strong>{t.booking.payment}</strong></div></div></section>
+      <section className="booking-section" id="booking" style={{ '--section-image': `url(${hotpotImageUrl})` }}><div><p className="kicker">{t.booking.kicker}</p><h2>{t.booking.title[0]}<br /><em>{t.booking.title[1]}</em></h2></div><div className="booking-copy"><p>{t.booking.body}</p><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20China%20private%20guide%20request" className="booking-action">{t.booking.action} <span>↗</span></a><div className="payment-placeholder"><small>{t.booking.paymentLabel}</small><strong>{t.booking.payment}</strong></div></div></section>
       <footer className="site-footer" id="contact"><div><strong>ZigZag China</strong><p>{t.footerText}</p></div><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20China%20private%20guide%20request">{t.booking.action} <span>↗</span></a><small>© 2026 ZigZag China</small></footer>
 
       {experienceOpen && <div className="experience-modal" role="dialog" aria-modal="true"><button className="modal-backdrop" aria-label={t.close} onClick={() => setExperienceOpen(null)} /><article className={`modal-card experience-${experienceOpen.index}`}><button className="modal-close" onClick={() => setExperienceOpen(null)}>×</button><span className="modal-index">{experienceOpen.index}</span><small>{experienceOpen.city}</small><h3>{experienceOpen.title}</h3><p>{t.experienceDetail}</p><button className="modal-action" onClick={() => setExperienceOpen(null)}>{t.explore} <b>↗</b></button></article></div>}
