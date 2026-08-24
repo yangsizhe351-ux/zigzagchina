@@ -1,15 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 128" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 132" role="img" aria-labelledby="title desc">
   <title id="title">ZigZag China</title>
   <desc id="desc">A bold offset double-Z mark in jade and orange for ZigZag China.</desc>
-  <g fill="#19a889">
-    <path d="M0 12h150l-24 24H0z"/>
-    <path d="M126 12h24L48 96H24z"/>
-    <path d="M24 72h112l-24 24H24z"/>
+  <g fill="#149b95">
+    <path d="M0 12h180l-30 26H76L34 76h134l-30 26H0l44-39H0z"/>
   </g>
-  <g fill="#ff6a0a">
-    <path d="M75 34h150l-24 24H75z"/>
-    <path d="M201 34h24l-78 84h-24z"/>
-    <path d="M99 94h112l-24 24H99z"/>
+  <g fill="#ff6900">
+    <path d="M85 36h180l-30 26h-74l-42 38h134l-30 26H85l44-39H85z"/>
   </g>
-  <text x="246" y="84" fill="#f5f0e7" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="500" letter-spacing="-1.5">ZigZag China</text>
+  <text x="290" y="84" fill="#f5f0e7" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="500" letter-spacing="-1.5">ZigZag China</text>
 </svg>
