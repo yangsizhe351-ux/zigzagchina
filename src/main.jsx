@@ -19,8 +19,6 @@ const cities = [
   { name: 'Chengdu', eyebrow: 'Misty mornings · tea · giant panda', tone: 'jade' },
   { name: 'Chongqing', eyebrow: 'Neon nights · rivers · mountain city', tone: 'ember' },
 ];
-const navAnchors = ['#about', '#destinations', '#experiences', '#booking'];
-
 const resolveAssetUrl = (asset) => typeof asset === 'string' ? asset : asset?.src || asset?.default?.src || asset?.default || '';
 const heroImageUrl = resolveAssetUrl(heroImage);
 const cityChengduImageUrl = resolveAssetUrl(cityChengduImage);
@@ -37,6 +35,34 @@ function BrandLockup() {
   return <><img src={zigzagMarkUrl} alt="" aria-hidden="true" /><span>ZigZag China</span></>;
 }
 
+function SiteHeader({ t, language, setLanguage, languageOpen, setLanguageOpen, menuOpen, setMenuOpen, aboutPage = false }) {
+  const navLinks = aboutPage ? ['/about', '/#destinations', '/#experiences', '/#booking'] : ['/about', '#destinations', '#experiences', '#booking'];
+  return <>
+    <header className={`site-header ${aboutPage ? 'about-page-header' : ''}`}>
+      <a className="brand-mark" href={aboutPage ? '/' : '#top'} aria-label="ZigZag China home"><BrandLockup /></a>
+      <button className={`menu-button ${menuOpen ? 'is-open' : ''}`} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
+      <nav className="nav-links" aria-label="Main navigation">
+        {t.nav.map((item, index) => <a href={navLinks[index]} key={item}>{item}</a>)}
+      </nav>
+      <div className="header-actions"><div className="language-wrap"><button className="language-button" aria-expanded={languageOpen} onClick={() => setLanguageOpen(!languageOpen)} aria-label="Choose language">{languages.find(({ code }) => code === language)?.short} <span>⌄</span></button>{languageOpen && <div className="language-menu">{languages.map(({ code, short }) => <button key={code} onClick={() => { setLanguage(code); setLanguageOpen(false); }}>{short}<span>{languageNames[language][code]}</span></button>)}</div>}</div></div>
+    </header>
+    {menuOpen && <div className={`mobile-menu ${aboutPage ? 'about-page-menu' : ''}`}>{t.nav.map((item, index) => <a href={navLinks[index]} key={item} onClick={() => setMenuOpen(false)}>{item} <span>0{index + 1}</span></a>)}</div>}
+  </>;
+}
+
+function AboutPageContent({ t }) {
+  return <>
+    <section className="about-page-intro">
+      <p className="kicker">{t.aboutKicker}</p>
+      <h1>{t.aboutTitle[0]}<br /><em>{t.aboutTitle[1]}</em></h1>
+    </section>
+    <section className="about-page-sections" aria-label={t.aboutKicker}>
+      {t.aboutSections.map(([title, body]) => <article className="about-page-block" key={title}><h2>{title}</h2><p>{body}</p></article>)}
+    </section>
+    <div className="about-page-action"><a href="/#destinations">{t.aboutAction} <span>↗</span></a></div>
+  </>;
+}
+
 function App() {
   const [scrolled, setScrolled] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -48,6 +74,7 @@ function App() {
   const [bookingSubject, setBookingSubject] = useState('ZigZag China private guide request');
   const [contentData, setContentData] = useState(content);
   const t = contentData[language];
+  const aboutPage = typeof window !== 'undefined' && window.location.pathname.replace(/\/+$/, '') === '/about';
   useEffect(() => {
     document.documentElement.lang = language === '中' ? 'zh-CN' : language === 'FR' ? 'fr' : 'en';
     document.title = t.pageTitle;
@@ -64,6 +91,10 @@ function App() {
   }, [language]);
 
   useEffect(() => {
+    if (aboutPage) {
+      setLoaded(true);
+      return undefined;
+    }
     const onScroll = () => setScrolled(window.scrollY > 24);
     window.addEventListener('scroll', onScroll, { passive: true });
     const image = new Image();
@@ -75,7 +106,7 @@ function App() {
     window.addEventListener('pointermove', onMove, { passive: true });
     window.addEventListener('keydown', onKey);
     return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('pointermove', onMove); window.removeEventListener('keydown', onKey); image.onload = null; image.onerror = null; };
-  }, []);
+  }, [aboutPage]);
 
   const jumpTo = (id) => { setMenuOpen(false); document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); };
   const openCityExperience = (city) => {
@@ -94,6 +125,14 @@ function App() {
 
   const bookingHref = `mailto:yangsizhe351@gmail.com?subject=${encodeURIComponent(bookingSubject)}`;
 
+  if (aboutPage) {
+    return <main id="top" className={`page about-page ${loaded ? 'is-loaded' : ''}`}>
+      <SiteHeader t={t} language={language} setLanguage={setLanguage} languageOpen={languageOpen} setLanguageOpen={setLanguageOpen} menuOpen={menuOpen} setMenuOpen={setMenuOpen} aboutPage />
+      <AboutPageContent t={t} />
+      <footer className="site-footer" id="contact"><div><strong>ZigZag China</strong><p>{t.footerText}</p></div><a href={bookingHref}>{t.booking.action} <span>↗</span></a><small>© 2026 ZigZag China</small></footer>
+    </main>;
+  }
+
   return (
     <main id="top" className={`${scrolled ? 'page is-scrolled' : 'page'} ${loaded ? 'is-loaded' : ''}`}>
       <a className="skip-link" href="#destinations">{t.skipToContent}</a>
@@ -102,15 +141,7 @@ function App() {
         <div className="hero-media" style={{ backgroundImage: `url(${heroImageUrl})`, '--mx': `${cursor.x * 10}px`, '--my': `${cursor.y * 8}px` }} />
         <div className="hero-split" />
         <div className="hero-shade" />
-        <header className="site-header">
-          <a className="brand-mark" href="#top" aria-label="ZigZag China home"><BrandLockup /></a>
-          <button className={`menu-button ${menuOpen ? 'is-open' : ''}`} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
-          <nav className="nav-links" aria-label="Main navigation">
-            {t.nav.map((item, index) => <a href={navAnchors[index]} key={item}>{item}</a>)}
-          </nav>
-          <div className="header-actions"><div className="language-wrap"><button className="language-button" aria-expanded={languageOpen} onClick={() => setLanguageOpen(!languageOpen)} aria-label="Choose language">{languages.find(({ code }) => code === language)?.short} <span>⌄</span></button>{languageOpen && <div className="language-menu">{languages.map(({ code, short }) => <button key={code} onClick={() => { setLanguage(code); setLanguageOpen(false); }}>{short}<span>{languageNames[language][code]}</span></button>)}</div>}</div></div>
-        </header>
-        {menuOpen && <div className="mobile-menu">{t.nav.map((item, index) => <button key={item} onClick={() => jumpTo(navAnchors[index].slice(1))}>{item} <span>0{index + 1}</span></button>)}</div>}
+        <SiteHeader t={t} language={language} setLanguage={setLanguage} languageOpen={languageOpen} setLanguageOpen={setLanguageOpen} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
         <div className="hero-copy">
           <p className="kicker">{t.kicker} <span className="kicker-dot" /></p>
           <h1>{t.title[0]}<br /><em>{t.title[1]}</em></h1>
@@ -127,11 +158,6 @@ function App() {
           </div>
         </div>
         <div className="scroll-note"><span className="scroll-line" />{t.scroll}</div>
-      </section>
-
-      <section className="about-section" id="about">
-        <div className="about-heading"><p className="kicker">{t.aboutKicker}</p><h2>{t.aboutTitle[0]}<br /><em>{t.aboutTitle[1]}</em></h2></div>
-        <div className="about-copy">{t.aboutSections.map(([title, body]) => <article className="about-block" key={title}><h3>{title}</h3><p>{body}</p></article>)}<a href="#destinations">{t.aboutAction} <span>↗</span></a></div>
       </section>
 
       <section className="teaser" id="destination-intro" style={{ '--section-image': `url(${teaLaneImageUrl})` }}>

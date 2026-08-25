@@ -47,6 +47,10 @@ for (const locale of locales) {
   if (content[locale].nav.length !== reference.nav.length) errors.push(`${locale}.nav has a different length`);
   if (content[locale].experienceCards.length !== reference.experienceCards.length) errors.push(`${locale}.experienceCards has a different length`);
   if (content[locale].experienceDetails.length !== content[locale].experienceCards.length) errors.push(`${locale}.experienceDetails has a different length`);
+  if (content[locale].aboutSections.length !== 3) errors.push(`${locale}.aboutSections must contain three sections`);
+  for (const [index, section] of content[locale].aboutSections.entries()) {
+    if (!Array.isArray(section) || section.length !== 2 || section.some((value) => !String(value).trim())) errors.push(`${locale}.aboutSections[${index}] is incomplete`);
+  }
   for (const field of ['title', 'teaserTitle', 'experienceTitle']) {
     if (content[locale][field].length !== 2) errors.push(`${locale}.${field} must contain two lines`);
   }
