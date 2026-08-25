@@ -4,9 +4,10 @@ const locales = Object.keys(content);
 const requiredPaths = [
   'pageTitle', 'skipToContent', 'nav', 'kicker', 'title', 'intro', 'explore', 'scroll',
   'teaserKicker', 'teaserTitle', 'teaserBody', 'begin', 'sectionLabel',
+  'aboutKicker', 'aboutTitle', 'aboutBody', 'aboutAction',
   'city.Chengdu.eyebrow', 'city.Chengdu.title', 'city.Chengdu.body', 'city.Chengdu.action',
   'city.Chongqing.eyebrow', 'city.Chongqing.title', 'city.Chongqing.body', 'city.Chongqing.action',
-  'cityComing', 'experienceKicker', 'experienceTitle', 'experienceCards', 'experienceDetail',
+  'cityComing', 'experienceKicker', 'experienceTitle', 'experienceCards', 'experienceDetails', 'experienceDetail',
   'footerText', 'close', 'booking.kicker', 'booking.title', 'booking.body', 'booking.action',
   'booking.paymentLabel', 'booking.payment',
 ];
@@ -45,6 +46,7 @@ const reference = content.EN;
 for (const locale of locales) {
   if (content[locale].nav.length !== reference.nav.length) errors.push(`${locale}.nav has a different length`);
   if (content[locale].experienceCards.length !== reference.experienceCards.length) errors.push(`${locale}.experienceCards has a different length`);
+  if (content[locale].experienceDetails.length !== content[locale].experienceCards.length) errors.push(`${locale}.experienceDetails has a different length`);
   for (const field of ['title', 'teaserTitle', 'experienceTitle']) {
     if (content[locale][field].length !== 2) errors.push(`${locale}.${field} must contain two lines`);
   }

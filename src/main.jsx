@@ -10,7 +10,7 @@ import nightscapeImage from '../assets/images/webp/cdqc-experience-nightscape.we
 import teaLaneImage from '../assets/images/generated/cdqc-tea-lane.jpg';
 import chongqingHillsideImage from '../assets/images/generated/cdqc-chongqing-hillside-night.jpg';
 import sichuanTableImage from '../assets/images/generated/cdqc-sichuan-table.jpg';
-import zigzagMark from '../assets/brand/zigzag-mark-02.png';
+import zigzagMark from '../assets/brand/zigzag-mark-new.png';
 import { content, languages, languageNames } from './content';
 import { getPublishedContent } from './lib/contentRepository';
 import './styles.css';
@@ -19,6 +19,7 @@ const cities = [
   { name: 'Chengdu', eyebrow: 'Misty mornings · tea · giant panda', tone: 'jade' },
   { name: 'Chongqing', eyebrow: 'Neon nights · rivers · mountain city', tone: 'ember' },
 ];
+const navAnchors = ['#about', '#destinations', '#experiences', '#booking'];
 
 const resolveAssetUrl = (asset) => typeof asset === 'string' ? asset : asset?.src || asset?.default?.src || asset?.default || '';
 const heroImageUrl = resolveAssetUrl(heroImage);
@@ -105,11 +106,11 @@ function App() {
           <a className="brand-mark" href="#top" aria-label="ZigZag China home"><BrandLockup /></a>
           <button className={`menu-button ${menuOpen ? 'is-open' : ''}`} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
           <nav className="nav-links" aria-label="Main navigation">
-            {t.nav.map((item, index) => <a href={['#destinations', '#experiences', '#booking'][index]} key={item}>{item}</a>)}
+            {t.nav.map((item, index) => <a href={navAnchors[index]} key={item}>{item}</a>)}
           </nav>
           <div className="header-actions"><div className="language-wrap"><button className="language-button" aria-expanded={languageOpen} onClick={() => setLanguageOpen(!languageOpen)} aria-label="Choose language">{languages.find(({ code }) => code === language)?.short} <span>⌄</span></button>{languageOpen && <div className="language-menu">{languages.map(({ code, short }) => <button key={code} onClick={() => { setLanguage(code); setLanguageOpen(false); }}>{short}<span>{languageNames[language][code]}</span></button>)}</div>}</div></div>
         </header>
-        {menuOpen && <div className="mobile-menu">{t.nav.map((item, index) => <button key={item} onClick={() => jumpTo(['destinations', 'experiences', 'booking'][index])}>{item} <span>0{index + 1}</span></button>)}</div>}
+        {menuOpen && <div className="mobile-menu">{t.nav.map((item, index) => <button key={item} onClick={() => jumpTo(navAnchors[index].slice(1))}>{item} <span>0{index + 1}</span></button>)}</div>}
         <div className="hero-copy">
           <p className="kicker">{t.kicker} <span className="kicker-dot" /></p>
           <h1>{t.title[0]}<br /><em>{t.title[1]}</em></h1>
@@ -128,18 +129,23 @@ function App() {
         <div className="scroll-note"><span className="scroll-line" />{t.scroll}</div>
       </section>
 
-      <section className="teaser" id="destinations" style={{ '--section-image': `url(${teaLaneImageUrl})` }}>
-        <div className="teaser-heading"><p className="kicker">{t.teaserKicker}</p><h2>{t.teaserTitle[0]}<br /><em>{t.teaserTitle[1]}</em></h2></div>
-        <div className="teaser-copy"><p>{t.teaserBody}</p><a href="#experiences">{t.begin} <span>↗</span></a></div>
+      <section className="about-section" id="about">
+        <div className="about-heading"><p className="kicker">{t.aboutKicker}</p><h2>{t.aboutTitle[0]}<br /><em>{t.aboutTitle[1]}</em></h2></div>
+        <div className="about-copy"><p>{t.aboutBody}</p><a href="#destinations">{t.aboutAction} <span>↗</span></a></div>
       </section>
 
-      <section className="city-strip" id="experiences">
+      <section className="teaser" id="destination-intro" style={{ '--section-image': `url(${teaLaneImageUrl})` }}>
+        <div className="teaser-heading"><p className="kicker">{t.teaserKicker}</p><h2>{t.teaserTitle[0]}<br /><em>{t.teaserTitle[1]}</em></h2></div>
+        <div className="teaser-copy"><p>{t.teaserBody}</p><a href="#destinations">{t.begin} <span>↗</span></a></div>
+      </section>
+
+      <section className="city-strip" id="destinations">
         <div className="section-label">{t.sectionLabel}</div>
         <div className="city-panel jade-panel" id="city-chengdu" style={{ '--panel-image': `url(${cityChengduImageUrl})` }}><span className="panel-index">01</span><h3>{t.city.Chengdu.title}</h3><p>{t.city.Chengdu.body}</p><button onClick={() => openCityExperience('Chengdu')}>{t.city.Chengdu.action} <b>↗</b></button></div>
         <div className="city-panel ember-panel" id="city-chongqing" style={{ '--panel-image': `url(${cityChongqingImageUrl})` }}><span className="panel-index">02</span><h3>{t.city.Chongqing.title}</h3><p>{t.city.Chongqing.body}</p><button onClick={() => openCityExperience('Chongqing')}>{t.city.Chongqing.action} <b>↗</b></button></div>
       </section>
 
-      <section className="experience-section" style={{ '--section-image': `url(${chongqingHillsideImageUrl})` }}>
+      <section className="experience-section" id="experiences" style={{ '--section-image': `url(${chongqingHillsideImageUrl})` }}>
         <div className="experience-heading"><p className="kicker">{t.experienceKicker}</p><h2>{t.experienceTitle[0]}<br /><em>{t.experienceTitle[1]}</em></h2></div>
         <div className="experience-grid">{t.experienceCards.map(([title, city, index], cardIndex) => <button className={`experience-card experience-${cardIndex + 1}`} style={{ '--experience-image': `url(${experienceImages[cardIndex]})` }} key={title} onClick={() => openExperience(title, city, index, experienceImages[cardIndex], t.experienceDetails[cardIndex])}><span>{index}</span><strong>{title}</strong><small>{city}</small><i>↗</i></button>)}</div>
       </section>
