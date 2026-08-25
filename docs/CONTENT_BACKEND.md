@@ -18,13 +18,17 @@ To connect the real backend:
 5. Restart Vite. `src/main.jsx` already calls `getPublishedContent()` whenever the language changes.
 6. Open the browser console and confirm there is no `CDQC content fallback` warning. If the tables are reachable, the source is Supabase; if not, the page safely keeps the local translations.
 
-The same schema creates `waitlist_signups`. The homepage writes only an email,
-the source label, and the database timestamp through the public insert policy;
-there is no public read policy for those signups.
+The same schema creates `waitlist_signups`. The retained `submitWaitlist()`
+helper writes only an email, the source label, and the database timestamp
+through the public insert policy; there is no public read policy for those
+signups. The current simplified homepage does not render a waitlist form or
+call this helper.
 
 The public site only reads published rows. Editing permissions remain private
 until an authenticated admin surface is added.
 
 The current public read path intentionally does not expose a service-role key.
-The next backend milestone is an authenticated content editor or a protected
-seed/update workflow; it should not be implemented with a client-side secret.
+The waitlist UI was intentionally removed from the simplified product and is
+not a pending launch item. If backend editing is needed later, the next backend
+milestone should be an authenticated content editor or a protected seed-update
+workflow; it should not be implemented with a client-side secret.

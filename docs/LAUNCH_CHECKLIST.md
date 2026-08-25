@@ -1,26 +1,27 @@
-# CDQC launch checklist
+# ZigZag China 上线检查清单
 
-## Verified locally
+## 已验证
 
-- [x] Production build passes with `npm run check`
-- [x] Production preview serves the homepage with HTTP 200
-- [x] English, French and Chinese switching works in the built bundle
-- [x] Search covers cities, routes and experiences
-- [x] Route and experience detail views work
-- [x] Journey persistence, removal, clear and share-link behavior are implemented
-- [x] Waitlist has local fallback and optional Supabase write path
-- [x] Responsive and reduced-motion styles are present
-- [x] `robots.txt` is served
+- [x] 三语内容检查通过
+- [x] Netlify 静态生产构建通过
+- [x] 页面包含英文、法文和中文切换
+- [x] 当前页面包含目的地、体验详情和邮件预订入口
+- [x] 四个体验详情含中英法临时介绍，入口可进入预约区
+- [x] 页面保留本地内容兜底
+- [x] 桌面端与 390px 移动端人工视觉和交互检查通过
+- [x] 移动端菜单、城市入口、体验弹层和邮件预约链路通过
+- [x] 响应式与 reduced-motion 样式存在，浏览器控制台无错误
+- [x] `robots.txt` 被包含在静态构建中
 
-## Required before public launch
+## 正式推广前
 
-- [ ] Create the production Supabase project
-- [ ] Run `supabase/schema.sql` and `supabase/seed.sql`
-- [ ] Add production `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`
-- [ ] Verify a test waitlist signup in the Supabase dashboard
-- [ ] Choose the production domain and add its canonical URL / sitemap
-- [ ] Deploy the exact build produced by `npm run build`
-- [ ] Run one final mobile and desktop pass on the public URL
+- [ ] 完成一次桌面端与移动端人工视觉检查
+- [ ] 选择正式域名并添加 canonical URL 与 sitemap
+- [ ] 补充社交分享图片和完整 Open Graph / X 元数据
+- [ ] 确认公开联系邮箱和邮件主题仍然正确
+- [ ] 决定是否启用 Supabase；如启用，创建生产项目并配置公开读取策略
+- [x] 确认 Netlify 为唯一主部署渠道
 
-The unchecked items require external project credentials, a chosen domain, or
-deployment access; they are intentionally not faked in the local project.
+## 明确排除的范围
+
+搜索、路线详情、旅程保存/分享、实用指南和候补名单表单已被主动删除，以保持页面精简。它们不是当前版本的待办项或上线阻塞项；除非产品范围再次明确变更，否则不应重新加入。

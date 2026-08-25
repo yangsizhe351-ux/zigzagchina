@@ -31,7 +31,6 @@ function BrandLockup() {
 }
 
 function App() {
-  const [activeCity, setActiveCity] = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
@@ -39,6 +38,7 @@ function App() {
   const [language, setLanguage] = useState('EN');
   const [menuOpen, setMenuOpen] = useState(false);
   const [experienceOpen, setExperienceOpen] = useState(null);
+  const [bookingSubject, setBookingSubject] = useState('ZigZag China private guide request');
   const [contentData, setContentData] = useState(content);
   const t = contentData[language];
   useEffect(() => {
@@ -71,7 +71,21 @@ function App() {
   }, []);
 
   const jumpTo = (id) => { setMenuOpen(false); document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); };
-  const chooseCity = (city) => { setActiveCity(city); jumpTo('experiences'); };
+  const openCityExperience = (city) => {
+    const cardIndex = city === 'Chengdu' ? 0 : 2;
+    const [title, cityLabel, index] = t.experienceCards[cardIndex];
+    setExperienceOpen({ title, city: cityLabel, index, image: experienceImages[cardIndex], detail: t.experienceDetails[cardIndex] });
+  };
+
+  const openExperience = (title, city, index, image, detail) => setExperienceOpen({ title, city, index, image, detail });
+
+  const requestExperience = () => {
+    setBookingSubject(`ZigZag China private guide request — ${experienceOpen.title}`);
+    setExperienceOpen(null);
+    jumpTo('booking');
+  };
+
+  const bookingHref = `mailto:yangsizhe351@gmail.com?subject=${encodeURIComponent(bookingSubject)}`;
 
   return (
     <main id="top" className={`${scrolled ? 'page is-scrolled' : 'page'} ${loaded ? 'is-loaded' : ''}`}>
@@ -96,7 +110,7 @@ function App() {
           <p className="intro">{t.intro}</p>
           <div className="city-actions">
             {cities.map((city) => (
-                <button key={city.name} className={`city-card ${city.tone}`} onClick={() => chooseCity(city.name)}>
+                <button key={city.name} className={`city-card ${city.tone}`} onClick={() => openCityExperience(city.name)}>
                 <span className="city-name">{t.city[city.name].title}</span>
                 <span className="city-line" />
                 <span className="city-detail">{t.city[city.name].eyebrow}</span>
@@ -115,20 +129,19 @@ function App() {
 
       <section className="city-strip" id="experiences">
         <div className="section-label">{t.sectionLabel}</div>
-        <div className="city-panel jade-panel" id="city-chengdu" style={{ '--panel-image': `url(${cityChengduImageUrl})` }}><span className="panel-index">01</span><h3>{t.city.Chengdu.title}</h3><p>{t.city.Chengdu.body}</p><button onClick={() => setActiveCity('Chengdu')}>{t.city.Chengdu.action} <b>↗</b></button></div>
-        <div className="city-panel ember-panel" id="city-chongqing" style={{ '--panel-image': `url(${cityChongqingImageUrl})` }}><span className="panel-index">02</span><h3>{t.city.Chongqing.title}</h3><p>{t.city.Chongqing.body}</p><button onClick={() => setActiveCity('Chongqing')}>{t.city.Chongqing.action} <b>↗</b></button></div>
+        <div className="city-panel jade-panel" id="city-chengdu" style={{ '--panel-image': `url(${cityChengduImageUrl})` }}><span className="panel-index">01</span><h3>{t.city.Chengdu.title}</h3><p>{t.city.Chengdu.body}</p><button onClick={() => openCityExperience('Chengdu')}>{t.city.Chengdu.action} <b>↗</b></button></div>
+        <div className="city-panel ember-panel" id="city-chongqing" style={{ '--panel-image': `url(${cityChongqingImageUrl})` }}><span className="panel-index">02</span><h3>{t.city.Chongqing.title}</h3><p>{t.city.Chongqing.body}</p><button onClick={() => openCityExperience('Chongqing')}>{t.city.Chongqing.action} <b>↗</b></button></div>
       </section>
 
       <section className="experience-section" style={{ '--section-image': `url(${nightscapeImageUrl})` }}>
         <div className="experience-heading"><p className="kicker">{t.experienceKicker}</p><h2>{t.experienceTitle[0]}<br /><em>{t.experienceTitle[1]}</em></h2></div>
-        <div className="experience-grid">{t.experienceCards.map(([title, city, index], cardIndex) => <button className={`experience-card experience-${cardIndex + 1}`} style={{ '--experience-image': `url(${experienceImages[cardIndex]})` }} key={title} onClick={() => setExperienceOpen({ title, city, index, image: experienceImages[cardIndex] })}><span>{index}</span><strong>{title}</strong><small>{city}</small><i>↗</i></button>)}</div>
+        <div className="experience-grid">{t.experienceCards.map(([title, city, index], cardIndex) => <button className={`experience-card experience-${cardIndex + 1}`} style={{ '--experience-image': `url(${experienceImages[cardIndex]})` }} key={title} onClick={() => openExperience(title, city, index, experienceImages[cardIndex], t.experienceDetails[cardIndex])}><span>{index}</span><strong>{title}</strong><small>{city}</small><i>↗</i></button>)}</div>
       </section>
 
-      <section className="booking-section" id="booking" style={{ '--section-image': `url(${hotpotImageUrl})` }}><div><p className="kicker">{t.booking.kicker}</p><h2>{t.booking.title[0]}<br /><em>{t.booking.title[1]}</em></h2></div><div className="booking-copy"><p>{t.booking.body}</p><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20China%20private%20guide%20request" className="booking-action">{t.booking.action} <span>↗</span></a><div className="payment-placeholder"><small>{t.booking.paymentLabel}</small><strong>{t.booking.payment}</strong></div></div></section>
-      <footer className="site-footer" id="contact"><div><strong>ZigZag China</strong><p>{t.footerText}</p></div><a href="mailto:yangsizhe351@gmail.com?subject=ZigZag%20China%20private%20guide%20request">{t.booking.action} <span>↗</span></a><small>© 2026 ZigZag China</small></footer>
+      <section className="booking-section" id="booking" style={{ '--section-image': `url(${hotpotImageUrl})` }}><div><p className="kicker">{t.booking.kicker}</p><h2>{t.booking.title[0]}<br /><em>{t.booking.title[1]}</em></h2></div><div className="booking-copy"><p>{t.booking.body}</p><a href={bookingHref} className="booking-action">{t.booking.action} <span>↗</span></a><div className="payment-placeholder"><small>{t.booking.paymentLabel}</small><strong>{t.booking.payment}</strong></div></div></section>
+      <footer className="site-footer" id="contact"><div><strong>ZigZag China</strong><p>{t.footerText}</p></div><a href={bookingHref}>{t.booking.action} <span>↗</span></a><small>© 2026 ZigZag China</small></footer>
 
-      {experienceOpen && <div className="experience-modal" role="dialog" aria-modal="true"><button className="modal-backdrop" aria-label={t.close} onClick={() => setExperienceOpen(null)} /><article className="modal-card" style={{ '--modal-image': `url(${experienceOpen.image})` }}><button className="modal-close" onClick={() => setExperienceOpen(null)}>×</button><span className="modal-index">{experienceOpen.index}</span><small>{experienceOpen.city}</small><h3>{experienceOpen.title}</h3><p>{t.experienceDetail}</p><button className="modal-action" onClick={() => setExperienceOpen(null)}>{t.explore} <b>↗</b></button></article></div>}
-      {activeCity && <div className="toast" role="status">{t.cityComing(t.city[activeCity].title)} <button onClick={() => setActiveCity(null)}>×</button></div>}
+      {experienceOpen && <div className="experience-modal" role="dialog" aria-modal="true"><button className="modal-backdrop" aria-label={t.close} onClick={() => setExperienceOpen(null)} /><article className="modal-card" style={{ '--modal-image': `url(${experienceOpen.image})` }}><button className="modal-close" aria-label={t.close} onClick={() => setExperienceOpen(null)}>×</button><span className="modal-index">{experienceOpen.index}</span><small>{experienceOpen.city}</small><h3>{experienceOpen.title}</h3><p>{experienceOpen.detail}</p><button className="modal-action" onClick={requestExperience}>{t.booking.action} <b>↗</b></button></article></div>}
     </main>
   );
 }

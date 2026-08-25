@@ -58,6 +58,10 @@ export const content = {
   },
 };
 
+content.EN.experienceDetails = ['Start with a quiet tea house, a bowl of something warm and the slower rhythm that makes Chengdu feel like itself.', 'Pair a gentle panda morning with bamboo-covered hills and the neighbourhood flavours worth staying for.', 'Follow Chongqing’s riverside lights into a table of bubbling broth, local spice and the city’s after-dark energy.', 'Move between hillside streets, bridges and high viewpoints to see how this mountain city stacks up after sunset.'];
+content.FR.experienceDetails = ['Commencez par une maison de thé paisible, quelques bouchées locales et le rythme doux qui fait le charme de Chengdu.', 'Une matinée auprès des pandas, des collines couvertes de bambous et les saveurs de quartier qui méritent le détour.', 'Suivez les lumières des rivières de Chongqing jusqu’à une table de fondue épicée et l’énergie de la ville après la nuit.', 'Passez des ruelles en pente aux ponts et aux belvédères pour comprendre la ville-montagne lorsque les lumières s’allument.'];
+content['中'].experienceDetails = ['从一间安静的茶馆、一碗热气腾腾的食物和成都特有的慢节奏开始。', '在熊猫与竹林之间度过一个轻松的早晨，再去寻找值得停留的街区风味。', '沿着重庆江岸的灯火入夜，在翻滚的汤锅、地道的香辣和山城夜色中相遇。', '穿过坡道、桥梁和高处的观景点，看这座山城如何在日落之后层层亮起。'];
+
 content.FR.routeDetails = ['Une première approche entre maisons de thé, cuisine de rue et saveurs de Chengdu.', 'Un rythme équilibré sur sept jours, des matins de Chengdu aux nuits de Chongqing.', 'Un itinéraire nocturne entre vues sur les rivières, fondue et lumières de la ville-montagne.'];
 content['中'].routeDetails = ['从茶馆、小吃和成都的第一口味道开始，轻松进入旅程。', '用七天平衡成都的清晨与重庆的夜晚，体验一趟双城旅程。', '沿着江岸夜景、火锅和山城灯火，走进重庆的夜晚。'];
 content.EN.booking = { kicker: 'Private local guiding', title: ['See more than', 'the guidebook.'], body: 'Tell us when you’re visiting and what kind of day you would enjoy. We’ll confirm availability and shape a private experience around you.', action: 'Plan a day with us', paymentLabel: 'Payment', payment: 'PAYPAL' };
