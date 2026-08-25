@@ -7,6 +7,9 @@ import teaImage from '../assets/images/webp/cdqc-experience-tea.webp';
 import pandaImage from '../assets/images/webp/cdqc-experience-panda.webp';
 import hotpotImage from '../assets/images/webp/cdqc-experience-hotpot.webp';
 import nightscapeImage from '../assets/images/webp/cdqc-experience-nightscape.webp';
+import teaLaneImage from '../assets/images/generated/cdqc-tea-lane.jpg';
+import chongqingHillsideImage from '../assets/images/generated/cdqc-chongqing-hillside-night.jpg';
+import sichuanTableImage from '../assets/images/generated/cdqc-sichuan-table.jpg';
 import zigzagMark from '../assets/brand/zigzag-mark-02.png';
 import { content, languages, languageNames } from './content';
 import { getPublishedContent } from './lib/contentRepository';
@@ -23,6 +26,9 @@ const cityChengduImageUrl = resolveAssetUrl(cityChengduImage);
 const cityChongqingImageUrl = resolveAssetUrl(cityChongqingImage);
 const hotpotImageUrl = resolveAssetUrl(hotpotImage);
 const nightscapeImageUrl = resolveAssetUrl(nightscapeImage);
+const teaLaneImageUrl = resolveAssetUrl(teaLaneImage);
+const chongqingHillsideImageUrl = resolveAssetUrl(chongqingHillsideImage);
+const sichuanTableImageUrl = resolveAssetUrl(sichuanTableImage);
 const zigzagMarkUrl = resolveAssetUrl(zigzagMark);
 const experienceImages = [teaImage, pandaImage, hotpotImage, nightscapeImage].map(resolveAssetUrl);
 
@@ -122,7 +128,7 @@ function App() {
         <div className="scroll-note"><span className="scroll-line" />{t.scroll}</div>
       </section>
 
-      <section className="teaser" id="destinations" style={{ '--section-image': `url(${cityChengduImageUrl})` }}>
+      <section className="teaser" id="destinations" style={{ '--section-image': `url(${teaLaneImageUrl})` }}>
         <div className="teaser-heading"><p className="kicker">{t.teaserKicker}</p><h2>{t.teaserTitle[0]}<br /><em>{t.teaserTitle[1]}</em></h2></div>
         <div className="teaser-copy"><p>{t.teaserBody}</p><a href="#experiences">{t.begin} <span>↗</span></a></div>
       </section>
@@ -133,12 +139,12 @@ function App() {
         <div className="city-panel ember-panel" id="city-chongqing" style={{ '--panel-image': `url(${cityChongqingImageUrl})` }}><span className="panel-index">02</span><h3>{t.city.Chongqing.title}</h3><p>{t.city.Chongqing.body}</p><button onClick={() => openCityExperience('Chongqing')}>{t.city.Chongqing.action} <b>↗</b></button></div>
       </section>
 
-      <section className="experience-section" style={{ '--section-image': `url(${nightscapeImageUrl})` }}>
+      <section className="experience-section" style={{ '--section-image': `url(${chongqingHillsideImageUrl})` }}>
         <div className="experience-heading"><p className="kicker">{t.experienceKicker}</p><h2>{t.experienceTitle[0]}<br /><em>{t.experienceTitle[1]}</em></h2></div>
         <div className="experience-grid">{t.experienceCards.map(([title, city, index], cardIndex) => <button className={`experience-card experience-${cardIndex + 1}`} style={{ '--experience-image': `url(${experienceImages[cardIndex]})` }} key={title} onClick={() => openExperience(title, city, index, experienceImages[cardIndex], t.experienceDetails[cardIndex])}><span>{index}</span><strong>{title}</strong><small>{city}</small><i>↗</i></button>)}</div>
       </section>
 
-      <section className="booking-section" id="booking" style={{ '--section-image': `url(${hotpotImageUrl})` }}><div><p className="kicker">{t.booking.kicker}</p><h2>{t.booking.title[0]}<br /><em>{t.booking.title[1]}</em></h2></div><div className="booking-copy"><p>{t.booking.body}</p><a href={bookingHref} className="booking-action">{t.booking.action} <span>↗</span></a><div className="payment-placeholder"><small>{t.booking.paymentLabel}</small><strong>{t.booking.payment}</strong></div></div></section>
+      <section className="booking-section" id="booking" style={{ '--section-image': `url(${sichuanTableImageUrl})` }}><div><p className="kicker">{t.booking.kicker}</p><h2>{t.booking.title[0]}<br /><em>{t.booking.title[1]}</em></h2></div><div className="booking-copy"><p>{t.booking.body}</p><a href={bookingHref} className="booking-action">{t.booking.action} <span>↗</span></a><div className="payment-placeholder"><small>{t.booking.paymentLabel}</small><strong>{t.booking.payment}</strong></div></div></section>
       <footer className="site-footer" id="contact"><div><strong>ZigZag China</strong><p>{t.footerText}</p></div><a href={bookingHref}>{t.booking.action} <span>↗</span></a><small>© 2026 ZigZag China</small></footer>
 
       {experienceOpen && <div className="experience-modal" role="dialog" aria-modal="true"><button className="modal-backdrop" aria-label={t.close} onClick={() => setExperienceOpen(null)} /><article className="modal-card" style={{ '--modal-image': `url(${experienceOpen.image})` }}><button className="modal-close" aria-label={t.close} onClick={() => setExperienceOpen(null)}>×</button><span className="modal-index">{experienceOpen.index}</span><small>{experienceOpen.city}</small><h3>{experienceOpen.title}</h3><p>{experienceOpen.detail}</p><button className="modal-action" onClick={requestExperience}>{t.booking.action} <b>↗</b></button></article></div>}
