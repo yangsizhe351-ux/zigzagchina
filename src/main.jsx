@@ -52,16 +52,18 @@ function SiteHeader({ t, language, setLanguage, languageOpen, setLanguageOpen, m
 
 function AboutPageContent({ t }) {
   return <>
-    <section className="about-page-intro">
-      <p className="kicker">{t.aboutKicker}</p>
-      <h1>{t.aboutTitle[0]}<br /><em>{t.aboutTitle[1]}</em></h1>
-    </section>
-    <section className="about-page-sections" aria-label={t.aboutKicker}>
-      {t.aboutSections.map(([title, body]) => {
-        const brand = 'ZigZag China';
-        const hasBrandLead = body.startsWith(brand);
-        return <article className="about-page-block" key={title}><h2>{title}</h2><p>{hasBrandLead ? <><strong className="about-brand-lead">{brand}</strong>{body.slice(brand.length)}</> : body}</p></article>;
-      })}
+    <section className="about-page-layout">
+      <div className="about-page-intro">
+        <p className="kicker">{t.aboutKicker}</p>
+        <h1>{t.aboutTitle[0]}<br /><em>{t.aboutTitle[1]}</em></h1>
+      </div>
+      <section className="about-page-sections" aria-label={t.aboutKicker}>
+        {t.aboutSections.map(([title, body]) => {
+          const brand = 'ZigZag China';
+          const hasBrandLead = body.startsWith(brand);
+          return <article className="about-page-block" key={title}><h2>{title}</h2><p>{hasBrandLead ? <><strong className="about-brand-lead">{brand}</strong>{body.slice(brand.length)}</> : body}</p></article>;
+        })}
+      </section>
     </section>
     <div className="about-page-action"><a href="/#destinations">{t.aboutAction} <span>↗</span></a></div>
   </>;
