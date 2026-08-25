@@ -1,96 +1,90 @@
-# ZigZag China 项目交接
+# ZigZag China 项目交接（下一窗口从这里开始）
 
 更新时间：2026-08-25（Asia/Shanghai）
 
-## 项目定位
+## 30 秒看懂当前状态
 
-- 本地项目：`/Users/yangsizhe/Documents/Codex/2026-08-22/new-chat/CDQC`
-- GitHub：`https://github.com/yangsizhe351-ux/zigzagchina`
-- 线上站点：`https://zigzagchina.netlify.app/`
-- 当前分支：`main`
-- 当前发布基线：本地 `main` 最新提交及其生成的 `dist-netlify` 资源
-- 发布渠道：Netlify，GitHub `main` 为唯一源分支
+- 项目目录：`/Users/yangsizhe/Documents/Codex/2026-08-22/new-chat/CDQC`
+- 公开网址：<https://zigzagchina.netlify.app/>
+- GitHub：<https://github.com/yangsizhe351-ux/zigzagchina>
+- 部署方式：Netlify 自动部署 GitHub `main`；这是当前唯一正式发布路径。
+- 最新发布提交：`0311622`（替换重复的页面背景图）；文档更新后如有新提交，以 `main` 最新提交为准。
+- 当前工作区：应保持 `main` 与 `origin/main` 同步、无未提交改动。
 
-## 当前产品状态
+这是一个已经可以公开展示的成都 / 重庆私人向导品牌单页。当前代码、图片和 Netlify 线上资源均已更新；下一窗口不需要重新生成图片，也不需要恢复旧版功能。
 
-当前版本是 ZigZag China 的单页品牌展示与私人向导预订入口，覆盖成都和重庆。
+## 当前产品范围
 
-已在页面中使用的功能：
+页面包含：
 
 - 英文、法文、中文三语切换
-- 成都 / 重庆目的地展示
-- 四个体验卡片及详情弹层
-- 四个体验详情含中英法临时介绍
-- 响应式导航和移动端菜单
-- 邮件预订入口
-- 可选 Supabase 已发布内容读取；未配置时使用本地内容
-- 选定的 `zigzag-mark-02.png` 品牌标记
+- 成都 / 重庆目的地卡片与城市介绍
+- 4 个体验卡片、详情弹层和预订 CTA
+- 城市卡片会直接打开对应城市体验详情
+- 弹层 CTA 会回到预订区，并使用体验名称生成邮件主题
+- 预订邮箱：`yangsizhe351@gmail.com`
+- PayPal 目前只是页面上的支付方式说明文字，没有接入在线收款
+- 响应式导航、移动端菜单和 390px 移动端布局
+- 当前品牌标记：`assets/brand/zigzag-mark-02.png`
 
-搜索、路线详情、旅程收藏/分享、实用指南和候补名单表单是为了保持页面精简而主动删除的功能。当前精简版是正式产品基线；仓库中残留的相关字段和数据层代码不代表待办需求，除非产品范围再次明确变更，否则不应恢复到页面。
+为了保持页面精简，以下功能目前明确不在产品范围内：搜索、路线详情、旅程收藏 / 分享、实用指南、候补名单表单。仓库中残留的字段、检查脚本或 Supabase 数据层代码不代表这些功能待恢复；除非产品范围重新确认，否则不要把它们加回页面。
+
+## 图片基线（必须遵守）
+
+页面实际使用的 3 张新背景图只有下面这些：
+
+| 文件 | 页面用途 |
+| --- | --- |
+| `assets/images/generated/cdqc-tea-lane.jpg` | Destinations 介绍区背景 |
+| `assets/images/generated/cdqc-chongqing-hillside-night.jpg` | Experiences 区背景 |
+| `assets/images/generated/cdqc-sichuan-table.jpg` | Booking 预订区背景 |
+
+项目 `assets/images/generated/` 目录目前只保留这 3 张 JPG。之前未选中的两张 AI 中间稿已经删除，禁止重新引用或误用。体验卡片本身继续使用 `assets/images/webp/` 下已有的卡片图片；不要用新背景图替换卡片图，也不要凭记忆重画 Logo。
+
+对应代码引用在 `src/main.jsx` 的顶部 imports 和三个 section 的 `--section-image`：
+
+- `teaLaneImage` → `#destinations` teaser
+- `chongqingHillsideImage` → `.experience-section`
+- `sichuanTableImage` → `.booking-section`
 
 ## 关键文件
 
-- `src/main.jsx`：当前单页产品和所有主要交互
-- `src/styles.css`：页面视觉、响应式和动效样式
-- `src/content.js`：三语内容及仍保留的扩展内容字段
-- `src/lib/contentRepository.js`：可选 Supabase 读取与候补名单写入封装
-- `assets/brand/zigzag-mark-02.png`：当前实际使用的品牌标记
-- `assets/images/`：页面图片源文件
-- `index.html`：Netlify 静态入口
+- `src/main.jsx`：页面结构、三语切换、城市 / 体验弹层、预订邮件链接
+- `src/styles.css`：视觉样式、响应式布局、移动端菜单和背景图处理
+- `src/content.js`：英文 / 法文 / 中文内容
+- `assets/images/generated/`：当前 3 张选定背景图
+- `assets/images/webp/`：现有体验卡片和城市图片
+- `assets/brand/zigzag-mark-02.png`：品牌标记
+- `index.html`：静态入口、基础 SEO 元数据
 - `netlify.toml`、`vite.static.config.js`：Netlify 静态构建配置
-- `supabase/schema.sql`、`supabase/seed.sql`：可选内容后端结构和种子数据
+- `src/lib/contentRepository.js`、`supabase/schema.sql`、`supabase/seed.sql`：可选内容后端；不是当前上线阻塞项
 
-## 本地运行与验证
+## 已完成并验证
 
-安装并启动：
+- `npm run check` 已通过：三语内容检查 + Netlify 静态生产构建。
+- 已人工检查桌面端与 390px 移动端：导航、语言切换、城市卡片、体验弹层、预订跳转和响应式布局正常。
+- 浏览器控制台无错误，移动端无横向溢出。
+- 线上根地址 HTTP 200。
+- 当前线上资源：JS `assets/index-BRflrGq7.js`、CSS `assets/index-NX8TKFKF.css`。
+- 三张新 JPG 的线上资源均返回 200，线上 JS / CSS 与本地构建哈希一致。
 
-```bash
-npm install
-npm run dev
-```
+## 真正还剩的上线事项
 
-默认本地地址：`http://127.0.0.1:5173/`
+代码端和当前 Netlify 预览发布已完成。正式对外推广前主要是运营 / SEO 工作：
 
-内容检查和 Netlify 静态生产构建：
+1. 购买并绑定正式域名，配置 DNS 与 Netlify HTTPS。
+2. 域名确定后，把 `index.html` 的 canonical URL、站点地图和社交分享（OG / X）图片补齐；当前站点地图尚未完成（旧地址检查为 404）。
+3. 补齐业务需要的服务说明、取消 / 改期规则、隐私政策和联系方式文案。
+4. 如果未来需要可编辑内容，再单独评估 Supabase；它不是当前静态网站上线的前置条件。
 
-```bash
-npm run check
-```
+## 后续维护流程（小白也按这个做）
 
-Netlify 实际使用的静态构建：
+1. 只修改 `src/`、`assets/` 或 `index.html` 源文件，不直接编辑 `dist-netlify` 压缩文件。
+2. 在项目目录运行 `npm run check`。
+3. 检查 `git diff --check` 和 `git status`，确认没有凭据或无关文件。
+4. 提交并推送到 `main`；Netlify 会自动重新部署。
+5. 打开公开网址检查桌面端和手机端。不要把密钥提交到仓库，尤其不要把 Supabase service-role key 放到前端。
 
-```bash
-npm exec vite -- build --config vite.static.config.js
-```
+## 下一窗口第一步
 
-2026-08-25 已验证内容检查、Netlify 静态构建，以及桌面端和 390px 移动端人工验收均成功。
-
-## 部署现状
-
-Netlify 发布目录是 `dist-netlify`，构建命令写在 `netlify.toml`。仓库跟踪该目录中的生成文件；每次修改源文件后必须重新运行 `npm run check`，再提交新的哈希资源。
-
-## 可选 Supabase 后端
-
-页面只在存在以下变量时读取 Supabase，否则安全回退到 `src/content.js`：
-
-```text
-VITE_SUPABASE_URL
-VITE_SUPABASE_ANON_KEY
-```
-
-配置说明见 `docs/CONTENT_BACKEND.md`。当前 UI 会调用 `getPublishedContent()`，但没有调用 `submitWaitlist()`，因为候补名单表单已从展示页移除。不要把 service-role key 放到前端。
-
-## 下一步建议
-
-1. 保持当前精简的品牌展示与邮件预订结构，不主动重新引入已删除功能。
-2. 选定正式域名后补 canonical URL、站点地图和社交分享图片。
-3. 若启用 Supabase，只按当前页面需要验证已发布内容读取；不要默认恢复候补名单写入入口。
-4. 后续维护时可逐步清理 `src/content.js`、检查脚本和 Supabase schema 中确定不再使用的字段，但应先确认不会影响三语内容读取。
-
-## 接手注意事项
-
-- 不要直接编辑 `dist-netlify` 里的压缩文件；修改源文件后重新构建。
-- `dist-netlify` 当前被 Git 跟踪，静态构建会产生需要一并提交的哈希文件变化。
-- 保留现有图片比例和品牌标记，不要凭记忆重画 Logo。
-- 提交前至少运行一次 `npm run check` 和 Netlify 静态构建。
-- 发布前应确认工作区只包含本次发布内容，并运行 `git diff --check`；仓库中没有发现凭据。
+先读本文件，再看 `src/main.jsx`、`src/styles.css`、`src/content.js`，然后运行 `git status --short --branch` 和 `npm run check`。默认基线是最新 `main` 提交和上面列出的 3 张 JPG；除非用户明确选择替换，否则不要重新生成、删除或重新引用图片。
