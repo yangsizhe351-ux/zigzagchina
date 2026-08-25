@@ -149,7 +149,7 @@ function App() {
         <div className="hero-shade" />
         <SiteHeader t={t} language={language} setLanguage={setLanguage} languageOpen={languageOpen} setLanguageOpen={setLanguageOpen} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
         <div className="hero-copy">
-          <p className="kicker">{t.kicker} <span className="kicker-dot" /></p>
+          <p className="kicker">{t.kicker}</p>
           <h1>{t.title[0]}<br /><em>{t.title[1]}</em></h1>
           <p className="intro">{t.intro}</p>
           <div className="city-actions">
