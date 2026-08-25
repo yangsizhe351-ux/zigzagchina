@@ -4,7 +4,7 @@ const locales = Object.keys(content);
 const requiredPaths = [
   'pageTitle', 'skipToContent', 'nav', 'kicker', 'title', 'intro', 'explore', 'scroll',
   'teaserKicker', 'teaserTitle', 'teaserBody', 'begin', 'sectionLabel',
-  'aboutKicker', 'aboutTitle', 'aboutBody', 'aboutAction',
+  'aboutKicker', 'aboutTitle', 'aboutBody', 'aboutAction', 'aboutSections',
   'city.Chengdu.eyebrow', 'city.Chengdu.title', 'city.Chengdu.body', 'city.Chengdu.action',
   'city.Chongqing.eyebrow', 'city.Chongqing.title', 'city.Chongqing.body', 'city.Chongqing.action',
   'cityComing', 'experienceKicker', 'experienceTitle', 'experienceCards', 'experienceDetails', 'experienceDetail',

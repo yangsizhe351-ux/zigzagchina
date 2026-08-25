@@ -131,7 +131,7 @@ function App() {
 
       <section className="about-section" id="about">
         <div className="about-heading"><p className="kicker">{t.aboutKicker}</p><h2>{t.aboutTitle[0]}<br /><em>{t.aboutTitle[1]}</em></h2></div>
-        <div className="about-copy"><p>{t.aboutBody}</p><a href="#destinations">{t.aboutAction} <span>↗</span></a></div>
+        <div className="about-copy">{t.aboutSections.map(([title, body]) => <article className="about-block" key={title}><h3>{title}</h3><p>{body}</p></article>)}<a href="#destinations">{t.aboutAction} <span>↗</span></a></div>
       </section>
 
       <section className="teaser" id="destination-intro" style={{ '--section-image': `url(${teaLaneImageUrl})` }}>
