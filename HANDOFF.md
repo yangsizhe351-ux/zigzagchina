@@ -9,7 +9,7 @@
 - About 页面：<https://zigzagchina.netlify.app/about>
 - GitHub：<https://github.com/yangsizhe351-ux/zigzagchina>
 - 当前分支：`main`
-- 最新发布提交：`3976489`（压缩 About 页面，使桌面端首屏显示三个版块）
+- 最新功能提交：`3976489`（压缩 About 页面，使桌面端首屏显示三个版块）；交接文档更新以 `main` 当前 HEAD 为准。
 - 部署方式：Netlify 自动部署 GitHub `main`，这是唯一正式发布链路。
 - 当前状态：`main` 与 `origin/main` 同步，工作区在本交接文件更新前无代码改动。
 
