@@ -1,6 +1,6 @@
 # ZigZag China
 
-ZigZag China 是面向国际游客的成都与重庆私人向导展示网站。
+ZigZag China 是面向国际游客的成都与重庆私人向导展示网站，使用 React 19、Vite 8 和 Node.js 22 构建为 Netlify 静态站点。
 
 ## 当前功能
 
@@ -11,11 +11,9 @@ ZigZag China 是面向国际游客的成都与重庆私人向导展示网站。
 - 响应式导航、移动端菜单和短屏适配
 - 可选 Supabase 已发布内容读取，本地内容自动兜底
 
-路线、搜索、旅程保存/分享、实用指南和候补名单表单已为了保持页面精简而主动删除。当前首页加独立 About 页是正式基线；仓库中残留的相关内容字段和后端封装不代表待恢复功能。
+搜索、复杂路线、旅程保存/分享、实用指南和候补名单已主动删除，不是默认待恢复功能。
 
-## 本地运行
-
-项目固定使用 Node.js 22。
+## 本地运行与检查
 
 ```bash
 nvm use
@@ -23,27 +21,27 @@ npm install
 npm run dev
 ```
 
-打开 `http://127.0.0.1:5173/`。
-
-## 提交前验证
+开发服务默认位于 `http://127.0.0.1:5173/`。提交前运行：
 
 ```bash
 npm run check
 git diff --check
 ```
 
-`npm run check` 检查三种语言的数据并生成 Netlify 使用的 `dist-netlify` 静态版本。该目录不再由 Git 跟踪，Netlify 会从源码重新生成。
+`npm run check` 只覆盖三语内容结构和静态生产构建，不等于交互、路由、响应式或发布验收。构建生成的 `dist-netlify/` 已被 Git 忽略，不应直接编辑或提交。
 
-## 并行开发
+## 多智能体协作
 
-项目采用动态的“总控 + Worktree”架构，默认只同时运行两个文件边界互不重叠的编码窗口。开始新任务前阅读：
+项目采用动态的“总控 + 按需专项负责人 + 独立验收”工作流，不固定窗口数量。新任务开始前按顺序阅读：
 
-- `AGENTS.md`
-- `HANDOFF.md`
-- `docs/WORKTREE_OPERATING_MODEL.md`
+- `AGENTS.md`：所有窗口的强制规则
+- `WORKFLOW.md`：唯一流程规范与模型升级策略
+- `TASKS.yaml`：唯一任务状态台账
+- `HANDOFF.md`：当前检查点与接管快照
+- `docs/WORKTREE_OPERATING_MODEL.md`：Worktree 技术附录
+
+专项交付统一使用 `DELIVERY_TEMPLATE.md`。当前发布状态和用户待确认事项以 `TASKS.yaml`、`HANDOFF.md` 为准。
 
 ## 可选 Supabase
 
-复制 `.env.example` 为 `.env.local`，填写 Supabase URL 和匿名密钥，然后依次执行 `supabase/schema.sql` 与 `supabase/seed.sql`。不要在前端环境中使用 service-role key。
-
-完整数据层说明见 `docs/CONTENT_BACKEND.md`，当前项目接手状态见 `HANDOFF.md`。
+生产环境暂时不得执行 `supabase/seed.sql`：其中含尚未由业务负责人确认的体验时长数据。先完成 `TASKS.yaml` 中 ZC-002 的确认，再按 `docs/CONTENT_BACKEND.md` 连接真实后端。前端环境只能使用公开匿名密钥，不能使用 service-role key。

@@ -1,39 +1,52 @@
-# ZigZag China 协作规则
+# ZigZag China 智能体规则
 
-开始任何任务前，先阅读 `HANDOFF.md` 和 `docs/WORKTREE_OPERATING_MODEL.md`，再运行：
+开始任何任务前，按顺序完整阅读：
+
+1. `WORKFLOW.md`
+2. `TASKS.yaml`
+3. `HANDOFF.md`
+4. `docs/WORKTREE_OPERATING_MODEL.md`
+
+然后运行：
 
 ```bash
 git status --short --branch
 git log -3 --oneline
 ```
 
-## 工作方式
+若分支、HEAD、工作区、任务 owner 或文件租约与台账不一致，立即停止写入并交给总控查明归属。
 
-- `main` 是唯一集成基线；只有总控窗口负责合并、更新交接、推送和部署。
-- 编码窗口使用独立 Worktree，一次只完成一个边界清楚的任务，并提交到自己的分支。
-- 默认同时开启两个编码窗口。只有文件所有权不重叠时，才增加第三个。
-- QA / Release Gate 是独立只读审核窗口，不参与被审核功能的实现，也不能代替总控合并或部署。
-- 开发提交必须先通过分支审核；合并后的最终 `main` SHA 还必须通过一次发布候选审核。两次审核都不能省略。
-- 不直接编辑或提交 `dist-netlify/`。它是构建产物，由本地检查、CI 或 Netlify 从源码生成。
+## 强制协作规则
+
+- `main` 是唯一集成基线；只有真实项目根目录中的 `control` 负责合并、台账、交接、push 和部署。
+- `TASKS.yaml` 是唯一任务状态台账。聊天、交付模板和旧 `ZZ-*` 窗口不能替代台账记录。
+- 一个任务只能有一个 owner、一个唯一分支和一个清楚的允许/禁止范围。没有完整 40 位 `base_checkpoint` 的开发任务不得开始。
+- 专项负责人使用独立 Worktree；首次编辑前确认目标分支正确且不是 detached HEAD。旧 detached Worktree 只能只读参考。
+- 默认最多一个专项在制；只有文件租约不重叠、依赖已满足时，总控才可增加到两个。
+- 模型和推理强度必须按 `TASKS.yaml#execution_profile` 执行，owner 不得静默降档。同一验收项连续失败时按 `WORKFLOW.md` 升级模型、复核范围或拆分任务。
+- `qa-gate` 独立且只读，不参与被审实现、不替开发者修复、不更新台账、不合并、不推送、不部署。
+- 分支 commit 和集成后的最终精确 SHA 都必须独立验收；没有证据的任务不能标记为 `DONE`。
+- 专项交付必须使用 `DELIVERY_TEMPLATE.md`，直接交给指定 handoff target，不要求用户转发。
+- 总控只解决机械集成冲突；语义冲突退回原 owner，并对新 commit 重新验收。
+
+## 项目红线
+
+- 未经用户明确授权，不 push、部署、发布、删除分支/Worktree、改写历史或覆盖用户修改。
+- 不直接编辑或提交 `dist-netlify/`；它是构建产物。
 - 不恢复已删除的搜索、路线收藏、分享、实用指南或候补名单功能。
-- 未经用户提供和确认，不编造价格、时长、人数、政策、回复时效、导游履历、评价或旅行细节。
+- 未经用户或业务负责人确认，不编造或发布价格、时长、人数、政策、回复时效、导游履历、评价、旅行细节、资质翻译或个人信息授权。
 - 未经用户选定，不重新生成或替换现有网站图片。
+- 不在生产 Supabase 执行 `supabase/seed.sql`，直到 ZC-002 明确确认其中体验时长等数据。
+- 发现来源不明的修改时立即停止；不得以“顺手清理”为由删除旧构建目录、分支或 Worktree。
 
-## 默认文件边界
+## 文件边界与验证
 
-- 平台与 SEO：`index.html`、`public/`、`vite.static.config.js`、`netlify.toml`、新建的预渲染/路由文件。
-- 视觉与性能：`src/styles.css`、`assets/`；如需改 JSX 结构，先交由总控协调。
-- 产品与内容（拿到真实数据后再开启）：`src/main.jsx`、`src/content.js`、内容模型与询价流程。
-- QA / Release Gate：默认不拥有业务文件，只读取分支、提交、构建结果与页面状态；自动化测试开发必须另开任务，不能由同一次审核顺手修改。
-- 总控专属：`HANDOFF.md`、`README.md`、`AGENTS.md`、`docs/WORKTREE_OPERATING_MODEL.md`、共享依赖和最终发布配置。
+任务的 `scope` 和 `file_lease` 优先于默认模块边界。默认边界与完整验证矩阵见 `WORKFLOW.md`；最低要求：
 
-若任务必须跨越边界，先在提交说明中列出原因；不要静默修改另一个窗口正在负责的文件。
+- 仅协作文档：解析 `TASKS.yaml`、检查引用、运行 `git diff --check`。
+- 内容改动：至少运行 `npm run check:content`。
+- 代码、样式、构建或配置：运行 `npm run check` 和 `git diff --check`。
+- 交互、路由或响应式：另做相关路由、控制台、键盘/焦点和目标视口验证。
+- 验收结论必须是 `BLOCK`、`WARN` 或 `PASS`，绑定精确 SHA，并逐项覆盖 acceptance criteria。
 
-## 验证要求
-
-- 内容改动至少运行 `npm run check:content`。
-- 代码、样式、构建或配置改动运行 `npm run check` 和 `git diff --check`。
-- 页面交互或响应式改动还要检查相关路由、浏览器控制台和目标视口。
-- 工作窗口不部署；将提交 SHA、检查结果、残余风险和需要总控处理的共享文件写入最终回复。
-- 审核窗口必须输出 `BLOCK`、`WARN` 或 `PASS`，并绑定精确提交 SHA。存在 P0/P1、构建失败、关键路由失败或未确认公开信息时必须 `BLOCK`。
-- `PASS` 只表示该 SHA 允许进入下一道闸门；没有用户明确上线指令时，总控仍不得推送或部署。
+`PASS` 只允许进入下一道闸门。没有用户对明确候选 SHA 的上线授权，总控也不得 push 或部署。

@@ -1,0 +1,545 @@
+schema_version: 1
+project: zigzag-china
+ledger_authority: "This file is the only task status ledger."
+updated_at: "2026-08-31T00:31:37+08:00"
+
+status_flow:
+  normal:
+    - BACKLOG
+    - READY
+    - IN_PROGRESS
+    - REVIEW
+    - INTEGRATED
+    - VERIFIED
+    - DONE
+  exceptional:
+    - BLOCKED
+    - DEFERRED
+    - CANCELLED
+    - PENDING_USER_ACTION
+
+model_profiles:
+  fast_bounded:
+    model: gpt-5.6-luna
+    reasoning_effort: medium
+  balanced_build:
+    model: gpt-5.6-terra
+    reasoning_effort: high
+  frontier_control:
+    model: gpt-5.6-sol
+    reasoning_effort: high
+  frontier_gate:
+    model: gpt-5.6-sol
+    reasoning_effort: xhigh
+
+tasks:
+  - issue_id: ZC-001
+    title: 协作控制面落地与状态纠偏
+    priority: P0
+    status: IN_PROGRESS
+    owner: control
+    problem: 现有交接与工作树文档重复定义角色和状态，且旧发布候选结论与当前 main 不一致。
+    scope:
+      allowed_paths:
+        - AGENTS.md
+        - DELIVERY_TEMPLATE.md
+        - HANDOFF.md
+        - README.md
+        - TASKS.yaml
+        - WORKFLOW.md
+        - docs/CONTENT_BACKEND.md
+        - docs/LAUNCH_CHECKLIST.md
+        - docs/WORKTREE_OPERATING_MODEL.md
+      forbidden_paths:
+        - src/
+        - assets/
+        - public/
+        - supabase/schema.sql
+        - supabase/seed.sql
+        - dist-netlify/
+    acceptance_criteria:
+      - id: AC-001
+        statement: 单一事实来源、角色、状态机、文件租约、双闸门和模型升级规则无重复冲突。
+        evidence_required: 独立验收逐文件核对。
+      - id: AC-002
+        statement: 当前 HEAD、远端差异、发布阻塞、旧 Worktree 和未确认业务事实被准确记录。
+        evidence_required: Git 命令与文档对照。
+      - id: AC-003
+        statement: YAML 可解析，项目构建和内容检查通过，文档 diff 无空白错误。
+        evidence_required: 记录命令、结果、运行 checkpoint 和时间。
+    branch: main
+    workspace:
+      path: /Users/yangsizhe/Documents/Codex/2026-08-22/new-chat/CDQC
+      mode: local
+      expected_branch: main
+    base_checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+    dependencies: []
+    required_tests:
+      - ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
+      - npm run check
+      - git diff --check
+      - git status --short --branch
+    execution_profile:
+      risk_level: L2
+      profile: frontier_control
+      rework_count: 0
+      selection_reason: 跨越现有协作文档、Git 状态和发布闸门，需要一致性决策。
+      escalation_trigger: 若独立验收连续两轮发现同类结构冲突，拆分纠正任务并使用 frontier_gate 复核。
+    public_interface:
+      change_allowed: false
+      approval: null
+    file_lease:
+      status: HELD
+      write_paths:
+        - AGENTS.md
+        - DELIVERY_TEMPLATE.md
+        - HANDOFF.md
+        - README.md
+        - TASKS.yaml
+        - WORKFLOW.md
+        - docs/CONTENT_BACKEND.md
+        - docs/LAUNCH_CHECKLIST.md
+        - docs/WORKTREE_OPERATING_MODEL.md
+      acquired_at: "2026-08-31T00:31:37+08:00"
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification:
+        - Git、文档、任务和 Worktree 只读审计已完成。
+      review:
+        verdict: PENDING
+        checkpoint: null
+        task_id: null
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations:
+        - 用户于 2026-08-31 确认执行审计后的整合方案。
+        - 用户要求按任务难度使用不同模型，并在重复返工时升级。
+    risks:
+      - severity: P1
+        status: OPEN
+        owner: control
+        summary: 当前 main 尚无绑定 03efa5c 之后文档变更的独立最终 PASS。
+    handoff_target: qa-gate
+    history:
+      - from: BACKLOG
+        to: IN_PROGRESS
+        actor: control
+        at: "2026-08-31T00:31:37+08:00"
+        checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+        reason: 用户确认落地工作流。
+
+  - issue_id: ZC-002
+    title: 发布范围与公开信息确认
+    priority: P0
+    status: PENDING_USER_ACTION
+    owner: business-owner
+    problem: 正式推广所需的公开事实、政策和发布范围尚未得到权威确认。
+    scope:
+      allowed_paths: []
+      forbidden_paths:
+        - "**/*"
+    acceptance_criteria:
+      - id: AC-001
+        statement: 用户明确当前目标是预览验证还是正式推广发布。
+        evidence_required: 用户原文或权威业务记录。
+      - id: AC-002
+        statement: 资质信息、中法文翻译、法定代表人姓名公开授权均已确认。
+        evidence_required: 用户或业务负责人确认引用。
+      - id: AC-003
+        statement: 联系邮箱、邮件主题、隐私、条款、取消改期、服务范围和回复承诺已确认。
+        evidence_required: 用户或业务负责人确认引用。
+      - id: AC-004
+        statement: 是否启用 Supabase 及 seed 中时长数据的处理方式已确认。
+        evidence_required: 用户决定与真实数据来源。
+    branch: null
+    workspace: null
+    base_checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+    dependencies: []
+    required_tests: []
+    execution_profile:
+      risk_level: L0
+      profile: fast_bounded
+      rework_count: 0
+      selection_reason: 当前只等待用户和业务事实，不应消耗编码窗口。
+      escalation_trigger: 若确认内容产生法律或合规歧义，转交 frontier_gate 分析并请求权威意见。
+    public_interface:
+      change_allowed: false
+      approval: null
+    file_lease:
+      status: NONE
+      write_paths: []
+      acquired_at: null
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification: []
+      review:
+        verdict: PENDING
+        checkpoint: null
+        task_id: null
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations: []
+    risks:
+      - severity: P0
+        status: OPEN
+        owner: business-owner
+        summary: 未确认的公开资质、翻译、个人姓名与政策阻止正式推广。
+      - severity: P1
+        status: OPEN
+        owner: business-owner
+        summary: supabase/seed.sql 含未经确认的体验时长，生产环境不得执行。
+    handoff_target: user
+    exception:
+      blocked_from: READY
+      waiting_for: user
+      exit_condition: 所有验收标准均有权威确认或明确移出发布范围。
+      resume_status: READY
+    history:
+      - from: BACKLOG
+        to: PENDING_USER_ACTION
+        actor: control
+        at: "2026-08-31T00:31:37+08:00"
+        checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+        reason: 审计确认业务事实不能由代码推断。
+
+  - issue_id: ZC-003
+    title: 站内询价与政策实现
+    priority: P1
+    status: BLOCKED
+    owner: product-content-specialist
+    problem: 当前仅有 mailto 备用询价，隐私、字段、接收流程和政策尚未确认。
+    scope:
+      allowed_paths:
+        - src/main.jsx
+        - src/content.js
+        - src/lib/
+        - supabase/
+      forbidden_paths:
+        - src/styles.css
+        - assets/
+        - TASKS.yaml
+        - HANDOFF.md
+        - dist-netlify/
+    acceptance_criteria:
+      - id: AC-001
+        statement: 实现范围完全基于 ZC-002 的已确认事实。
+        evidence_required: ZC-002 确认引用。
+      - id: AC-002
+        statement: 询价链路、隐私边界、失败回退和三语内容均有实际验证。
+        evidence_required: 自动化检查与浏览器证据。
+    branch: codex/zc-003-inquiry-policy
+    workspace:
+      path: null
+      mode: worktree
+      expected_branch: codex/zc-003-inquiry-policy
+    base_checkpoint: null
+    dependencies:
+      - ZC-002
+    required_tests:
+      - npm run check:content
+      - npm run check
+      - git diff --check
+      - 三语与询价链路浏览器验证
+    execution_profile:
+      risk_level: L2
+      profile: frontier_control
+      rework_count: 0
+      selection_reason: 涉及用户数据、隐私、内容模型和公共交互，风险高且跨模块。
+      escalation_trigger: 任一隐私边界或数据回退问题连续两轮未解决时，停止实现并由 frontier_gate 重新拆分。
+    public_interface:
+      change_allowed: true
+      approval: PENDING_ZC_002
+    file_lease:
+      status: NONE
+      write_paths: []
+      acquired_at: null
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification: []
+      review:
+        verdict: PENDING
+        checkpoint: null
+        task_id: null
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations: []
+    risks:
+      - severity: P0
+        status: OPEN
+        owner: business-owner
+        summary: 输入字段、隐私文本、政策和接收流程未确认。
+    handoff_target: qa-gate
+    exception:
+      blocked_from: READY
+      waiting_for: ZC-002
+      exit_condition: ZC-002 达到 DONE，且总控写入完整基准 SHA 和文件租约。
+      resume_status: READY
+    history:
+      - from: BACKLOG
+        to: BLOCKED
+        actor: control
+        at: "2026-08-31T00:31:37+08:00"
+        checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+        reason: 依赖未确认业务数据与政策。
+
+  - issue_id: ZC-004
+    title: 正式域名与发布级 SEO
+    priority: P1
+    status: BLOCKED
+    owner: platform-specialist
+    problem: 未选定正式域名，不能生成真实 canonical、sitemap 和品牌邮箱配置。
+    scope:
+      allowed_paths:
+        - index.html
+        - public/
+        - vite.static.config.js
+        - netlify.toml
+      forbidden_paths:
+        - src/content.js
+        - src/main.jsx
+        - src/styles.css
+        - assets/
+        - TASKS.yaml
+        - HANDOFF.md
+        - dist-netlify/
+    acceptance_criteria:
+      - id: AC-001
+        statement: canonical、sitemap、页面 metadata 与选定正式域名一致。
+        evidence_required: 用户域名决定与构建产物检查。
+      - id: AC-002
+        statement: 三条公开路由和未知路径 404 在生产候选上通过。
+        evidence_required: 精确 SHA 的构建和浏览器证据。
+    branch: codex/zc-004-domain-seo
+    workspace:
+      path: null
+      mode: worktree
+      expected_branch: codex/zc-004-domain-seo
+    base_checkpoint: null
+    dependencies:
+      - ZC-002
+    required_tests:
+      - npm run check
+      - git diff --check
+      - 公开路由、404、metadata 与 hydration 浏览器验证
+    execution_profile:
+      risk_level: L2
+      profile: frontier_control
+      rework_count: 0
+      selection_reason: 路由与 hydration 曾出现 P1 返工，正式域名改动直接影响发布，不能继续使用常规档位。
+      escalation_trigger: 首次同类失败即提高推理强度；第二次拆分路由、metadata 与 hydration 验收，第三次 BLOCKED 并独立复审。
+    public_interface:
+      change_allowed: true
+      approval: PENDING_ZC_002
+    file_lease:
+      status: NONE
+      write_paths: []
+      acquired_at: null
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification: []
+      review:
+        verdict: PENDING
+        checkpoint: null
+        task_id: null
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations: []
+    risks:
+      - severity: P1
+        status: OPEN
+        owner: business-owner
+        summary: 正式域名和品牌邮箱尚未选定。
+    handoff_target: qa-gate
+    exception:
+      blocked_from: READY
+      waiting_for: ZC-002
+      exit_condition: 用户确认正式域名，且总控写入完整基准 SHA 和文件租约。
+      resume_status: READY
+    history:
+      - from: BACKLOG
+        to: BLOCKED
+        actor: control
+        at: "2026-08-31T00:31:37+08:00"
+        checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+        reason: 域名依赖未满足。
+
+  - issue_id: ZC-005
+    title: 首次工作流与交接独立验收
+    priority: P0
+    status: BLOCKED
+    owner: qa-gate
+    problem: 新控制面必须由未参与实现的窗口对精确 commit 做独立验收。
+    scope:
+      allowed_paths: []
+      forbidden_paths:
+        - "**/*"
+    acceptance_criteria:
+      - id: AC-001
+        statement: ZC-001 的全部验收标准在其交付 commit 上有可复现证据。
+        evidence_required: 精确 SHA、逐项结论和命令结果。
+      - id: AC-002
+        statement: 状态、风险、模型档位、旧窗口处置和接管步骤一致且无第二事实来源。
+        evidence_required: 独立文档审查。
+      - id: AC-003
+        statement: 台账收口提交通过第二次精确 SHA 验收，并由预声明 gate_ref 保存最终 PASS。
+        evidence_required: 精确封板 commit、本地 annotated tag、QA task ID 和干净工作区。
+    branch: null
+    workspace:
+      path: null
+      mode: read_only_worktree
+      expected_branch: null
+    base_checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+    gate_ref: refs/tags/qa-pass/ZC-005-20260831-01
+    dependencies:
+      - ZC-001
+    required_tests:
+      - ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
+      - npm run check
+      - git diff --check
+      - git status --short --branch
+    execution_profile:
+      risk_level: L3
+      profile: frontier_gate
+      rework_count: 0
+      selection_reason: 首次控制面和精确 SHA 闸门属于高风险独立验收，显式使用最高审查档位。
+      escalation_trigger: 若发现阻断项，退回原 owner；连续两轮同类失败时重建干净验收任务并拆分问题。
+    public_interface:
+      change_allowed: false
+      approval: null
+    file_lease:
+      status: NONE
+      write_paths: []
+      acquired_at: null
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification: []
+      review:
+        verdict: PENDING
+        checkpoint: null
+        task_id: null
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations: []
+    risks:
+      - severity: P1
+        status: OPEN
+        owner: qa-gate
+        summary: 验收前必须回填 ZC-001 交付 commit 作为完整 base_checkpoint。
+    handoff_target: control
+    exception:
+      blocked_from: READY
+      waiting_for: ZC-001
+      exit_condition: ZC-001 产生聚焦交付 commit，且总控回填测试和风险证据。
+      resume_status: READY
+    history:
+      - from: BACKLOG
+        to: BLOCKED
+        actor: control
+        at: "2026-08-31T00:31:37+08:00"
+        checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+        reason: 用户确认创建更强模型的独立验收任务；等待 ZC-001 交付 commit。
+
+  - issue_id: ZC-006
+    title: 旧窗口与 Worktree 安全收口
+    priority: P2
+    status: DEFERRED
+    owner: control
+    problem: 旧总控、诊断窗口与三个历史专项任务仍存在，容易造成入口和开发基线混淆。
+    scope:
+      allowed_paths: []
+      forbidden_paths:
+        - "**/*"
+    acceptance_criteria:
+      - id: AC-001
+        statement: 当前项目总控成为唯一置顶入口，三个无 Worktree 的旧入口安全归档。
+        evidence_required: Codex task 列表复核。
+      - id: AC-002
+        statement: 旧专项任务与 Worktree 仅标记为历史只读，不删除、不继续开发。
+        evidence_required: task 与 git worktree 对照。
+    branch: null
+    workspace: null
+    base_checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+    dependencies:
+      - ZC-005
+    required_tests:
+      - git worktree list --porcelain
+      - Codex task 列表复核
+    execution_profile:
+      risk_level: L0
+      profile: fast_bounded
+      rework_count: 0
+      selection_reason: 任务是边界明确的可逆 UI 整理，不涉及代码实现。
+      escalation_trigger: 若发现任何任务与未知 Worktree 关联，立即停止并提升到 frontier_control 复核。
+    public_interface:
+      change_allowed: false
+      approval: null
+    file_lease:
+      status: NONE
+      write_paths: []
+      acquired_at: null
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification:
+        - 已只读确认三个旧专项 Worktree 与任务映射；未执行删除。
+      review:
+        verdict: NOT_REQUIRED
+        checkpoint: null
+        task_id: null
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations:
+        - 用户确认执行窗口整理方案，但未授权删除 Worktree 或分支。
+    risks:
+      - severity: P1
+        status: MITIGATED
+        owner: control
+        summary: 归档关联 Worktree 的任务可能触发托管 Worktree 删除，因此历史专项不归档。
+    handoff_target: control
+    exception:
+      blocked_from: READY
+      waiting_for: ZC-005
+      exit_condition: 首次独立验收完成后执行 UI 整理。
+      resume_status: READY
+    history:
+      - from: BACKLOG
+        to: DEFERRED
+        actor: control
+        at: "2026-08-31T00:31:37+08:00"
+        checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+        reason: 先完成控制面验收，再整理窗口，避免改变审计对象。
+
+legacy_records:
+  issue_prefix: ZZ
+  status: RETIRED_READ_ONLY
+  note: 旧编号不再用于新任务，只保留历史提交和 Worktree 证据。
+  worktrees:
+    - task: ZZ-01 SEO & Static Platform
+      branch: codex/platform-seo-static-routes
+      checkpoint: 2a64a5c
+      disposition: retained_read_only
+    - task: ZZ-02 Visual & Performance
+      branch: codex/visual-performance
+      checkpoint: 5d71970
+      disposition: retained_read_only
+    - task: ZZ-05 QA Release
+      branch: null
+      checkpoint: 72dad7f
+      disposition: retained_detached_read_only
