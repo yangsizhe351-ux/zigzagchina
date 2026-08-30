@@ -8,11 +8,11 @@
 - GitHub：<https://github.com/yangsizhe351-ux/zigzagchina>
 - 生产站：<https://zigzagchina.netlify.app/>
 - 本地主分支：`main`
-- 当前本地集成 HEAD：`72dad7f`；其中 `c99fd2f` 是网站与工程功能基线，`72dad7f` 是协作规则提交。
+- 当前已审核功能基线：`bca4e4c`；已包含网站基线、协作规则、视觉性能优化与静态路由/SEO 修复。其后的交接文档提交不改变网站功能候选。
 - 正式发布链路：GitHub `main` → Netlify 自动构建；不要上传本地构建产物。
-- 发布状态：`main` 比 `origin/main` 领先 2 个提交，尚未推送或部署；`origin/main` 仍为 `57dd73b`。
-- 开发提交：`ZZ-01` 平台与 SEO 为 `0f18bc5`；`ZZ-02` 视觉与性能为 `5d71970`。两者尚未合并到 `main`。
-- 第一阶段独立审核已完成：`5d71970` 为 `PASS`；`0f18bc5` 因多语言 hydration 不一致为 `BLOCK`，已退回 `ZZ-01` 修复。
+- 发布状态：`main` 比 `origin/main` 领先 9 个提交（其中最后 1 个仅更新交接记录），尚未推送或部署；`origin/main` 仍为 `57dd73b`。
+- 已合并开发提交：`ZZ-01` 平台与 SEO 修复为 `2a64a5c`；`ZZ-02` 视觉与性能为 `5d71970`。
+- 两阶段独立审核均已完成：两个开发提交分别 `PASS`；最终发布候选 `bca4e4c` 也为 `PASS`。这只表示可以进入用户授权后的发布流程，不等于已经部署。
 - 旅游产品的价格、时长、人数、包含项、政策和真人资料尚待业务负责人提供，不要自行补写。
 
 源代码与 Git 提交是事实来源。本文件记录“本地集成基线、远端基线、线上状态”三者，不把脏工作区或预览站误写成正式发布。
@@ -93,9 +93,9 @@
 
 当前窗口状态：
 
-- `ZZ-01` / `codex/platform-seo-static-routes`：提交 `0f18bc5` 被 `BLOCK`。原因是预渲染固定英文，而客户端首次渲染立即读取已保存的 FR/ZH，产生 React hydration error；必须修复后重新审核。
-- `ZZ-02` / `codex/visual-performance`：提交 `5d71970` 已 `PASS`，允许总控单独合并，但不等于允许部署。
-- `ZZ-05 QA Release`：第一阶段审核完成；待 `ZZ-01` 新提交后复审，全部合并后还要对最终 `main` SHA 做第二阶段发布候选审核。
+- `ZZ-01` / `codex/platform-seo-static-routes`：原提交 `0f18bc5` 被 hydration 审核阻断；修复提交 `2a64a5c` 已复审 `PASS` 并合并。
+- `ZZ-02` / `codex/visual-performance`：提交 `5d71970` 已审核 `PASS` 并合并。
+- `ZZ-05 QA Release`：最终 `main` 精确 SHA `bca4e4c` 已完成第二阶段审核并 `PASS`；构建、三条公开路由、真实 404、中法文回访、关键响应式和 Logo 均通过。尚未验证 Netlify 线上环境。
 
 ## 关键文件
 
