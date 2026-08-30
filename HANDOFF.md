@@ -1,6 +1,6 @@
 # ZigZag China 项目交接
 
-更新时间：2026-08-30 19:28（Asia/Shanghai）
+更新时间：2026-08-30 20:52（Asia/Shanghai）
 
 ## 30 秒看懂当前状态
 
@@ -8,9 +8,11 @@
 - GitHub：<https://github.com/yangsizhe351-ux/zigzagchina>
 - 生产站：<https://zigzagchina.netlify.app/>
 - 本地主分支：`main`
-- 当前功能基线：`c99fd2f`（首页转化、资质页、无障碍、短屏修复与单一构建链路）
+- 当前本地集成 HEAD：`72dad7f`；其中 `c99fd2f` 是网站与工程功能基线，`72dad7f` 是协作规则提交。
 - 正式发布链路：GitHub `main` → Netlify 自动构建；不要上传本地构建产物。
-- 发布状态：`c99fd2f` 仅在本地，尚未推送或部署；`origin/main` 仍为 `57dd73b`。
+- 发布状态：`main` 比 `origin/main` 领先 2 个提交，尚未推送或部署；`origin/main` 仍为 `57dd73b`。
+- 开发提交：`ZZ-01` 平台与 SEO 为 `0f18bc5`；`ZZ-02` 视觉与性能为 `5d71970`。两者尚未合并到 `main`。
+- 第一阶段独立审核已完成：`5d71970` 为 `PASS`；`0f18bc5` 因多语言 hydration 不一致为 `BLOCK`，已退回 `ZZ-01` 修复。
 - 旅游产品的价格、时长、人数、包含项、政策和真人资料尚待业务负责人提供，不要自行补写。
 
 源代码与 Git 提交是事实来源。本文件记录“本地集成基线、远端基线、线上状态”三者，不把脏工作区或预览站误写成正式发布。
@@ -82,11 +84,18 @@
 
 当前推荐不是六个窗口，而是：
 
-1. 总控台（Local）：持有 `main`，负责拆任务、合并、回归、交接和发布。
-2. 平台与 SEO（Worktree）：静态预渲染、真实 404、页面级 metadata。
-3. 视觉与性能（Worktree）：只优化现有资产、加载、字号、触控和响应式，不生成新图。
+1. `ZZ-99 Control & Integration`（Local）：持有 `main`，负责拆任务、合并、回归、交接和发布。
+2. `ZZ-01 SEO & Static Platform`（Worktree）：静态预渲染、真实 404、页面级 metadata。
+3. `ZZ-02 Visual & Performance`（Worktree）：只优化现有资产、加载、字号、触控和响应式，不生成新图。
+4. `ZZ-05 QA Release`（独立 Worktree）：只读审核开发提交和最终发布候选，输出 `BLOCK / WARN / PASS`，不改代码、不合并、不部署。
 
-拿到真实旅游数据后再创建“产品与内容”窗口，并让已完成窗口退出，避免多个窗口同时修改 `src/main.jsx`、`src/content.js` 和 `src/styles.css`。
+拿到真实旅游数据后再创建 `ZZ-03 Product & Content`，并让已完成窗口退出，避免多个窗口同时修改 `src/main.jsx`、`src/content.js` 和 `src/styles.css`。编号用于识别职责，不代表必须凑满所有窗口。
+
+当前窗口状态：
+
+- `ZZ-01` / `codex/platform-seo-static-routes`：提交 `0f18bc5` 被 `BLOCK`。原因是预渲染固定英文，而客户端首次渲染立即读取已保存的 FR/ZH，产生 React hydration error；必须修复后重新审核。
+- `ZZ-02` / `codex/visual-performance`：提交 `5d71970` 已 `PASS`，允许总控单独合并，但不等于允许部署。
+- `ZZ-05 QA Release`：第一阶段审核完成；待 `ZZ-01` 新提交后复审，全部合并后还要对最终 `main` SHA 做第二阶段发布候选审核。
 
 ## 关键文件
 
@@ -134,7 +143,7 @@ git status --short --branch
 1. 确认资质信息、翻译与个人姓名公开授权。它是业务/合规确认，不能由代码推断。
 2. 把 `mailto:` 升级为可靠站内询价。需要先确定隐私说明、接收流程、字段和回复承诺。
 3. 补隐私、条款、取消/改期、服务范围等政策。政策内容必须由业务负责人提供。
-4. 将 SPA 公开路由改为独立静态 HTML，并提供真实 404、页面级 title/description/canonical/OG。
+4. 将 SPA 公开路由改为独立静态 HTML，并提供真实 404、页面级 title/description；提交 `0f18bc5` 的基础功能通过，但被多语言 hydration P1 阻断，修复和复审后才能合并。正式域名确定前不伪造 canonical/OG URL。
 5. 购买域名后配置品牌邮箱、canonical、sitemap 与 Netlify HTTPS。当前没有域名，因此不伪造最终 URL。
 
 ### 高价值但等待真实数据
@@ -152,10 +161,12 @@ git status --short --branch
 ## 提交与发布规则
 
 1. 工作窗口只提交自己的分支，不推送 `main`、不部署。
-2. 总控逐个合并并在每次合并后运行目标检查。
-3. 全部合并后运行完整构建与浏览器回归，更新本文件。
-4. 只有用户明确要求上线，才推送 `main` 并等待 Netlify 自动发布。
-5. 发布后检查 `/`、`/about`、`/business-credentials`、三语、移动端和构建 SHA。
+2. QA / Release Gate 先审核每个开发提交；`BLOCK` 不得合并，`WARN` 必须记录，`PASS` 才进入合并队列。
+3. 总控逐个合并并在每次合并后运行目标检查。
+4. 全部合并后生成唯一发布候选 SHA，运行完整构建与浏览器回归。
+5. QA / Release Gate 对最终 SHA 再审核一次；没有绑定该 SHA 的最终 `PASS`，不得推送或部署。
+6. 只有用户明确要求上线，总控才推送 `main` 并等待 Netlify 自动发布。
+7. 发布后检查 `/`、`/about`、`/business-credentials`、真实 404、三语、移动端、控制台和部署 SHA。
 
 源码异常使用 `git revert <commit>` 生成可追溯的反向提交；不要强推或改写历史。线上紧急回退可在 Netlify Deploys 中重新发布上一个成功构建。
 
