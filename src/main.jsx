@@ -36,6 +36,7 @@ const credentialDetails = {
   legalRepresentative: '阳书美',
   permitNumber: 'L-CQ-101179',
 };
+const englishAboutPageTitle = 'About ZigZag China | Private Guides in Chengdu & Chongqing';
 
 function BrandLockup() {
   return <><img src={zigzagMarkUrl} alt="" aria-hidden="true" /><span>ZigZag China</span></>;
@@ -131,10 +132,8 @@ function App({ initialPath = '/' }) {
   const [scrolled, setScrolled] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
-  const [language, setLanguage] = useState(() => {
-    const saved = typeof window !== 'undefined' ? window.localStorage.getItem('cdqc-language') : null;
-    return languages.some(({ code }) => code === saved) ? saved : 'EN';
-  });
+  const [language, setLanguage] = useState('EN');
+  const [languageReady, setLanguageReady] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [experienceOpen, setExperienceOpen] = useState(null);
   const [selectedExperience, setSelectedExperience] = useState(null);
@@ -145,20 +144,43 @@ function App({ initialPath = '/' }) {
   const aboutPage = currentPath === '/about';
   const credentialsPage = currentPath === '/business-credentials';
   const innerPage = aboutPage || credentialsPage;
+  const pageTitle = credentialsPage ? t.credentials.pageTitle : aboutPage ? language === 'EN' ? englishAboutPageTitle : `${t.aboutKicker} | ZigZag China` : t.pageTitle;
   useEffect(() => {
-    document.documentElement.lang = language === '中' ? 'zh-CN' : language === 'FR' ? 'fr' : 'en';
-    document.title = credentialsPage ? t.credentials.pageTitle : aboutPage ? `${t.aboutKicker} | ZigZag China` : t.pageTitle;
-    localStorage.setItem('cdqc-language', language);
-  }, [aboutPage, credentialsPage, language, t.aboutKicker, t.credentials.pageTitle, t.pageTitle]);
+    try {
+      const saved = window.localStorage.getItem('cdqc-language');
+      if (languages.some(({ code }) => code === saved)) setLanguage(saved);
+    } catch {
+      document.documentElement.removeAttribute('data-language-pending');
+    } finally {
+      setLanguageReady(true);
+    }
+  }, []);
 
   useEffect(() => {
+    document.documentElement.lang = language === '中' ? 'zh-CN' : language === 'FR' ? 'fr' : 'en';
+    document.title = pageTitle;
+  }, [language, pageTitle]);
+
+  useEffect(() => {
+    if (!languageReady) return;
+    try {
+      localStorage.setItem('cdqc-language', language);
+    } catch {
+      // Language still applies for this visit when browser storage is unavailable.
+    } finally {
+      document.documentElement.removeAttribute('data-language-pending');
+    }
+  }, [language, languageReady]);
+
+  useEffect(() => {
+    if (!languageReady) return undefined;
     let active = true;
     const apiLanguage = language === '中' ? 'zh' : language.toLowerCase();
     getPublishedContent(apiLanguage).then((result) => {
       if (active && result.content) setContentData(result.content);
     });
     return () => { active = false; };
-  }, [language]);
+  }, [language, languageReady]);
 
   useEffect(() => {
     const onKey = (event) => {
