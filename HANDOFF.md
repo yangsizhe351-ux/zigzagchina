@@ -1,196 +1,166 @@
-# ZigZag China 项目交接（下一窗口从这里开始）
+# ZigZag China 项目交接
 
-更新时间：2026-08-26（Asia/Shanghai）
+更新时间：2026-08-30 19:28（Asia/Shanghai）
 
 ## 30 秒看懂当前状态
 
-- 项目目录：`/Users/yangsizhe/Documents/Codex/2026-08-22/new-chat/CDQC`
-- 公开首页：<https://zigzagchina.netlify.app/>
-- About 页面：<https://zigzagchina.netlify.app/about>
+- 本地项目：`/Users/yangsizhe/Documents/Codex/2026-08-22/new-chat/CDQC`
 - GitHub：<https://github.com/yangsizhe351-ux/zigzagchina>
-- 当前分支：`main`
-- 最新功能提交：`3976489`（压缩 About 页面，使桌面端首屏显示三个版块）；交接文档更新以 `main` 当前 HEAD 为准。
-- 部署方式：Netlify 自动部署 GitHub `main`，这是唯一正式发布链路。
-- 当前状态：`main` 与 `origin/main` 同步，工作区在本交接文件更新前无代码改动。
+- 生产站：<https://zigzagchina.netlify.app/>
+- 本地主分支：`main`
+- 当前功能基线：`c99fd2f`（首页转化、资质页、无障碍、短屏修复与单一构建链路）
+- 正式发布链路：GitHub `main` → Netlify 自动构建；不要上传本地构建产物。
+- 发布状态：`c99fd2f` 仅在本地，尚未推送或部署；`origin/main` 仍为 `57dd73b`。
+- 旅游产品的价格、时长、人数、包含项、政策和真人资料尚待业务负责人提供，不要自行补写。
 
-当前版本是面向美国用户的成都、重庆私人向导品牌网站。它不是纯长单页：主页保留目的地、体验和预约内容，About Us 已拆成独立的 `/about` 页面。
+源代码与 Git 提交是事实来源。本文件记录“本地集成基线、远端基线、线上状态”三者，不把脏工作区或预览站误写成正式发布。
 
-## 当前页面结构
+## 已完成的当前修复
 
-### 首页 `/`
+### 首页与跳转
 
-- 英文、法文、中文三语切换
-- Hero 主文案：`Explore Southwestern China`
-- 副标语：`Chilli & Chill Journeys`
-- 成都、重庆入口卡片
-- Destinations 城市介绍
-- 4 个 Experiences 体验卡片及详情弹层
-- Booking 预约区和邮件入口
-- 响应式导航及移动端菜单
+- Hero 已明确为成都、重庆私人本地向导服务，加入主 CTA 和体验入口。
+- 成都/重庆入口不再错误打开一个固定体验；现在会滚动到体验区并筛选对应城市。
+- 体验 CTA 会把选择带到预约区，预约区可见、可移除已选体验。
+- PayPal 改为“确认日期、行程与价格后才付款”的说明，不再造成当前可付款的误解。
+- 语言选择从 `localStorage` 恢复，刷新后不会自动回到英文。
 
-首页导航顺序固定为：
+### 信任与页面
 
-1. About Us → `/about`
-2. Destinations → `#destinations`
-3. Experiences → `#experiences`
-4. Book Your Trip → `#booking`
+- 新增 `/business-credentials`，并从全站 Footer 提供入口。
+- 资质页展示经营主体、许可证号、许可范围与法定代表人；不提供高清证件、二维码、投资人或完整注册地址下载。
+- `/about`、资质页和首页均有正确的 `header` / `main` / `footer` 结构及跳转到正文链接。
 
-### About 页面 `/about`
+公开前仍必须由业务负责人确认资质信息、英文/法文翻译和个人姓名的公开授权。代码中的当前数据：
 
-- 独立路由，不再嵌在首页长页面中。
-- 内容分为 `About Us`、`Why Choose Us?`、`What to Expect?` 三个版块。
-- 桌面端采用左右布局：左侧品牌主张，右侧三个正文版块。
-- 已缩小标题、正文、上下留白和版块间距；在 1280×720 视口中三个版块可同时出现在首屏。
-- 正文使用自然左对齐和均衡换行，不要恢复强制两端对齐；强制对齐曾造成明显的单词间距拉伸。
-- `ZigZag China` 在首段中加粗并略大于正文。
-- 移动端自动改为上下排列，允许正常纵向滚动。
+- 经营主体：`重庆渝养恬年文化旅游有限公司`
+- 许可证号：`L-CQ-101179`
+- 许可范围：境内旅游业务、入境旅游业务
+- 法定代表人：`阳书美`
 
-`public/_redirects` 提供 SPA 回退，因此直接打开 `/about` 也能正常加载。
+### 无障碍与响应式
 
-## 英文与文案基线
+- 体验弹层具备可访问名称、初始焦点、焦点循环、Esc 关闭、背景 `inert`、滚动锁定和关闭后焦点恢复。
+- ARIA 标签随英文、法文、中文切换。
+- Hero 指针效果使用 `requestAnimationFrame + ref`，不再因鼠标移动反复重渲染整个 App。
+- 320×568 短屏隐藏次要信息并保留清晰主 CTA；平板 Footer 与体验网格新增中间断点。
 
-网站面向美国用户，英文统一使用美式拼写，例如：
+### 工程基线
 
-- `neighborhoods`
-- `flavors`
-- `travelers`
-- `favorite`
-- `handcrafted`
+- 正式链路收敛为 Vite 静态构建；删除未采用的 Vinext/RSC 配置、脚本与依赖。
+- Node 版本固定为 22（`.nvmrc` 与 `package.json#engines`）。
+- 构建工具移入 `devDependencies`。
+- `dist-netlify/` 不再由 Git 跟踪，但本地构建仍会生成它；这消除了各 Worktree 最频繁的合并冲突。
+- `npm install --package-lock-only --ignore-scripts --offline` 已更新锁文件，依赖审计结果为 0 个漏洞。
 
-当前首页关键英文：
+## 当前页面和产品范围
 
-- `Uncover the hidden gems of an enchanting land…`
-- `Explore Southwestern China`
-- `Chilli & Chill Journeys`
-- 成都：`Giant pandas · Tea houses · Sichuan flavors`
-- 重庆：`Spicy hotpot · Vibrant nights · Rivers & bridges`
+### 已保留
 
-Hero 顶部说明后面原有的黄色圆点已经删除，不要恢复。
+- `/`：Hero、双城入口、城市介绍、4 个体验、预约区。
+- `/about`：品牌理念的三个版块。
+- `/business-credentials`：经营资质信息。
+- 英文、法文、中文三语切换。
+- 邮件预约入口：`yangsizhe351@gmail.com`。
+- 可选 Supabase 已发布内容读取；无环境变量时使用本地内容。
 
-三语 About 内容都存放在 `src/content.js` 的 `aboutSections` 中。内容检查要求每种语言必须有三个完整版块。
+### 明确不恢复
 
-## 品牌与图片基线
+- 搜索
+- 复杂路线系统
+- 行程收藏与分享
+- 实用指南
+- 候补名单
+- 为了“显得完整”而添加的 CMS
 
-当前实际使用的新品牌标记：
+## 并行开发方式
 
-- `assets/brand/zigzag-mark-new.png`
-- 透明底 PNG，页面 Header 和加载状态均引用此文件。
-- 旧的 `zigzag-mark-02.png` 不再是当前页面基线。
+详细规则见：
 
-页面三个大区块的背景图：
+- `AGENTS.md`
+- `docs/WORKTREE_OPERATING_MODEL.md`
 
-| 文件 | 用途 |
-| --- | --- |
-| `assets/images/generated/cdqc-tea-lane.jpg` | Destinations 介绍区 |
-| `assets/images/generated/cdqc-chongqing-hillside-night.jpg` | Experiences 区 |
-| `assets/images/generated/cdqc-sichuan-table.jpg` | Booking 区 |
+当前推荐不是六个窗口，而是：
 
-体验卡片和城市图片继续使用 `assets/images/webp/` 下的已有文件。不要随意重新生成、替换或混用这些图片。
+1. 总控台（Local）：持有 `main`，负责拆任务、合并、回归、交接和发布。
+2. 平台与 SEO（Worktree）：静态预渲染、真实 404、页面级 metadata。
+3. 视觉与性能（Worktree）：只优化现有资产、加载、字号、触控和响应式，不生成新图。
 
-## 当前产品范围
-
-保留功能：
-
-- 三语内容
-- 首页和独立 About 页面
-- 成都、重庆城市卡片
-- 4 个体验详情弹层
-- 城市卡片直接打开对应体验
-- 弹层 CTA 回到预约区，并使用体验名称生成邮件主题
-- 预订邮箱：`yangsizhe351@gmail.com`
-- PayPal 仅作为支付方式说明文字，尚未接入在线付款
-
-明确不在当前产品范围：搜索、路线详情、旅程收藏与分享、实用指南、候补名单表单。仓库中的旧字段或 Supabase 数据层不代表这些功能需要恢复。
+拿到真实旅游数据后再创建“产品与内容”窗口，并让已完成窗口退出，避免多个窗口同时修改 `src/main.jsx`、`src/content.js` 和 `src/styles.css`。
 
 ## 关键文件
 
-- `src/main.jsx`：主页、About 页面路由、导航、语言切换、弹层和预约交互
-- `src/styles.css`：主页与 About 页面视觉、响应式和动效
-- `src/content.js`：英文、法文、中文内容
-- `scripts/check-content.mjs`：内容字段、版块数量和多语言基线检查
-- `src/lib/contentRepository.js`：可选 Supabase 内容读取；未配置时使用本地内容
-- `assets/brand/zigzag-mark-new.png`：当前 Logo
-- `assets/images/generated/`：三个选定的大区块背景图
-- `assets/images/webp/`：城市和体验卡片图片
-- `public/_redirects`：Netlify SPA 路由回退
-- `netlify.toml`、`vite.static.config.js`：Netlify 静态构建配置
-- `dist-netlify/`：Netlify 发布目录，由构建生成，当前仓库会跟踪它
+- `src/main.jsx`：页面路由、Header/Footer、体验筛选、弹层和预约交互。
+- `src/styles.css`：全站视觉、响应式和动效。
+- `src/content.js`：三语文案、预约和资质内容。
+- `src/lib/contentRepository.js`：可选 Supabase 读取和本地兜底。
+- `scripts/check-content.mjs`：三语必填字段与结构检查。
+- `index.html`：当前 SPA 共用元数据。
+- `public/_redirects`：当前 Netlify SPA 回退。
+- `vite.static.config.js`、`netlify.toml`：唯一正式构建链路。
+- `assets/`：品牌、城市、体验和已选背景图片。
 
-## 本地运行与验证
+不要直接编辑 `dist-netlify/`；它已被 Git 忽略。
+
+## 已验证结果
+
+2026-08-30 本地验证：
+
+- `npm run check`：通过。
+- 内容检查：3 个语言、4 个导航项、4 个体验通过。
+- Vite 生产构建：通过，28 个模块。
+- 当前生产包：JS 228.81 kB（gzip 74.06 kB），CSS 26.30 kB（gzip 6.15 kB）。
+- `git diff --check`：通过。
+- 依赖审计：0 个漏洞。
+- 浏览器 1280×720：首页、`/about`、`/business-credentials` 均正常，无控制台错误。
+- 体验验证：成都筛选显示 2 个体验；弹层初始焦点、背景 `inert`、选择反馈和预填邮件主题正常。
+- 浏览器 390×844：桌面导航隐藏、移动菜单可开关、无横向溢出。
+- 浏览器 320×568：主 CTA 可见、无横向溢出、短屏 scroll note 隐藏、无控制台错误。
+
+验证命令：
 
 ```bash
+nvm use
 npm install
-npm run dev
-```
-
-默认本地地址：`http://127.0.0.1:5173/`
-
-提交前必须运行：
-
-```bash
 npm run check
 git diff --check
 git status --short --branch
 ```
 
-`npm run check` 会执行三语内容检查，并重新生成 `dist-netlify` 静态生产构建。不要直接编辑压缩后的构建文件。
+## 尚未处理与原因
 
-2026-08-26 已验证：
+### 必须在正式推广前处理
 
-- 三种语言、4 个导航项、4 个体验和 3 个 About 版块通过内容检查。
-- Netlify 静态生产构建成功。
-- 首页和 `/about` 均返回 HTTP 200。
-- About 页面在 1280×720 下三个版块都位于首屏，正文为自然左对齐，浏览器控制台无错误。
-- 当前线上资源：JS `assets/index-_SuzXQ4k.js`，CSS `assets/index-CqRzrTk0.css`。
+1. 确认资质信息、翻译与个人姓名公开授权。它是业务/合规确认，不能由代码推断。
+2. 把 `mailto:` 升级为可靠站内询价。需要先确定隐私说明、接收流程、字段和回复承诺。
+3. 补隐私、条款、取消/改期、服务范围等政策。政策内容必须由业务负责人提供。
+4. 将 SPA 公开路由改为独立静态 HTML，并提供真实 404、页面级 title/description/canonical/OG。
+5. 购买域名后配置品牌邮箱、canonical、sitemap 与 Netlify HTTPS。当前没有域名，因此不伪造最终 URL。
 
-## 提交与部署
+### 高价值但等待真实数据
 
-标准流程：
+1. 把 4 个体验升级为结构化对象：时长、人数、价格方式、包含/不包含、强度、语言、天气与政策。
+2. 增加 Meet your local、真人照片、真实服务过程和经过授权的评价。
+3. 增加 How it works、FAQ 和回复时限；内容确认后再实现。
 
-1. 修改 `src/`、`assets/`、`public/` 或 `index.html` 的源文件。
-2. 运行 `npm run check`。
-3. 检查差异和工作区状态。
-4. 提交源文件及重新生成的 `dist-netlify`。
-5. 推送 `main`，等待 Netlify 自动发布。
-6. 打开首页和 `/about` 验证线上资源。
+### 可延后
 
-本机浏览器使用 macOS 系统代理，但终端不一定自动继承。若浏览器网络正常、GitHub 推送却连接 `github.com:443` 超时：
+- 清理 Supabase 和旧的死内容/死样式：先等产品范围与内容录入方式确定。
+- 重做 Logo 或生成新 Hero：用户尚未选定新图，且图片生成链路此前不稳定；当前保留现有资产。
+- 搜索、收藏、复杂路线、CMS 和更多动效：不能解决当前理解、信任和询价问题。
 
-1. 先运行 `scutil --proxy` 确认当前代理地址和端口。
-2. 只为本次推送指定代理，不要擅自写入全局 Git 配置。
-3. 2026-08-26 使用过的临时命令为：
+## 提交与发布规则
 
-```bash
-git -c http.proxy=http://127.0.0.1:1087 push origin main
+1. 工作窗口只提交自己的分支，不推送 `main`、不部署。
+2. 总控逐个合并并在每次合并后运行目标检查。
+3. 全部合并后运行完整构建与浏览器回归，更新本文件。
+4. 只有用户明确要求上线，才推送 `main` 并等待 Netlify 自动发布。
+5. 发布后检查 `/`、`/about`、`/business-credentials`、三语、移动端和构建 SHA。
+
+源码异常使用 `git revert <commit>` 生成可追溯的反向提交；不要强推或改写历史。线上紧急回退可在 Netlify Deploys 中重新发布上一个成功构建。
+
+## 下一窗口开场说明
+
+```text
+先阅读 /Users/yangsizhe/Documents/Codex/2026-08-22/new-chat/CDQC/AGENTS.md、HANDOFF.md 和 docs/WORKTREE_OPERATING_MODEL.md。以 main 当前 HEAD 为唯一集成基线，先检查 git status 与最近提交。本任务只修改分配给你的文件范围，不部署、不提交 dist-netlify、不编造旅游或政策数据。完成后提交到当前 Worktree 分支，并报告提交 SHA、修改文件、验证结果、残余风险和需要总控协调的共享变更。
 ```
-
-端口可能变化，必须以当时 `scutil --proxy` 的结果为准。
-
-## 最近关键提交
-
-- `3976489`：压缩 About 页面，修复正文间距，桌面端首屏显示三个版块
-- `756afa5`：首页大小写和关键词调整，删除 Hero 黄色圆点
-- `7a1a0a7`：About 页面改为左右布局
-- `777ac7e`：About 正文加大并突出 `ZigZag China`
-- `de52337`：About Us 从首页拆成独立 `/about` 页面
-- `eb80c2a`：加入三段 About 文案并统一美式英语
-- `cb63944`：更新首页文案和新 Logo
-
-## 后续仍需处理
-
-1. 购买并绑定正式域名，配置 DNS 和 Netlify HTTPS。
-2. 域名确定后补 canonical URL、站点地图及 OG / X 分享图。
-3. 补充服务说明、取消与改期规则、隐私政策和正式联系方式。
-4. 如未来确实需要后台编辑内容，再单独评估 Supabase；它不是当前上线前置条件。
-
-## 下一窗口第一步
-
-先读本文件，再查看 `src/main.jsx`、`src/styles.css`、`src/content.js`。随后运行：
-
-```bash
-git status --short --branch
-git log -3 --oneline
-npm run check
-```
-
-默认基线是 `main` 最新提交和当前 Netlify 线上版本。继续修改时保持小步调整，不做大规模重构，不恢复已明确删除的功能。

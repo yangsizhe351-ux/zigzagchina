@@ -4,18 +4,21 @@ ZigZag China 是面向国际游客的成都与重庆私人向导展示网站。
 
 ## 当前功能
 
-- 成都 / 重庆单页品牌展示
+- 首页、独立 `/about` 与 `/business-credentials` 页面
 - 英文、法文、中文三语切换
-- 四个体验卡片与详情弹层
-- 响应式导航和移动端菜单
-- 邮件预订入口
+- 城市筛选、四个体验卡片与无障碍详情弹层
+- 已选体验反馈、付款时点说明与邮件预约备用入口
+- 响应式导航、移动端菜单和短屏适配
 - 可选 Supabase 已发布内容读取，本地内容自动兜底
 
-路线、搜索、旅程保存/分享、实用指南和候补名单表单已为了保持页面精简而主动删除。当前单页版本是正式基线；仓库中残留的相关内容字段和后端封装不代表待恢复功能。
+路线、搜索、旅程保存/分享、实用指南和候补名单表单已为了保持页面精简而主动删除。当前首页加独立 About 页是正式基线；仓库中残留的相关内容字段和后端封装不代表待恢复功能。
 
 ## 本地运行
 
+项目固定使用 Node.js 22。
+
 ```bash
+nvm use
 npm install
 npm run dev
 ```
@@ -26,10 +29,18 @@ npm run dev
 
 ```bash
 npm run check
-npm exec vite -- build --config vite.static.config.js
+git diff --check
 ```
 
-这条命令检查三种语言的数据并生成 Netlify 使用的 `dist-netlify` 静态版本。
+`npm run check` 检查三种语言的数据并生成 Netlify 使用的 `dist-netlify` 静态版本。该目录不再由 Git 跟踪，Netlify 会从源码重新生成。
+
+## 并行开发
+
+项目采用动态的“总控 + Worktree”架构，默认只同时运行两个文件边界互不重叠的编码窗口。开始新任务前阅读：
+
+- `AGENTS.md`
+- `HANDOFF.md`
+- `docs/WORKTREE_OPERATING_MODEL.md`
 
 ## 可选 Supabase
 
