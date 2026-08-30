@@ -1,1 +1,5 @@
-/*    /index.html   200
+/about                   /about/index.html                   200
+/about/                  /about/index.html                   200
+/business-credentials    /business-credentials/index.html    200
+/business-credentials/   /business-credentials/index.html    200
+/*                       /404.html                            404

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import heroImage from '../assets/images/cdqc-hero-clean.jpg';
 import cityChengduImage from '../assets/images/webp/cdqc-city-chengdu.webp';
 import cityChongqingImage from '../assets/images/webp/cdqc-city-chongqing.webp';
@@ -122,7 +122,7 @@ function CredentialsPageContent({ t }) {
   </>;
 }
 
-function App() {
+function App({ initialPath = '/' }) {
   const pageRef = useRef(null);
   const heroMediaRef = useRef(null);
   const modalRef = useRef(null);
@@ -141,15 +141,15 @@ function App() {
   const [cityFilter, setCityFilter] = useState(null);
   const [contentData, setContentData] = useState(content);
   const t = contentData[language];
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname.replace(/\/+$/, '') || '/' : '/';
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname.replace(/\/+$/, '') || '/' : initialPath;
   const aboutPage = currentPath === '/about';
   const credentialsPage = currentPath === '/business-credentials';
   const innerPage = aboutPage || credentialsPage;
   useEffect(() => {
     document.documentElement.lang = language === '中' ? 'zh-CN' : language === 'FR' ? 'fr' : 'en';
-    document.title = credentialsPage ? t.credentials.pageTitle : t.pageTitle;
+    document.title = credentialsPage ? t.credentials.pageTitle : aboutPage ? `${t.aboutKicker} | ZigZag China` : t.pageTitle;
     localStorage.setItem('cdqc-language', language);
-  }, [credentialsPage, language, t.credentials.pageTitle, t.pageTitle]);
+  }, [aboutPage, credentialsPage, language, t.aboutKicker, t.credentials.pageTitle, t.pageTitle]);
 
   useEffect(() => {
     let active = true;
@@ -341,5 +341,7 @@ function App() {
 export default App;
 
 if (typeof document !== 'undefined' && document.getElementById('root')) {
-  createRoot(document.getElementById('root')).render(<App />);
+  const rootElement = document.getElementById('root');
+  if (rootElement.hasAttribute('data-prerendered')) hydrateRoot(rootElement, <App />);
+  else createRoot(rootElement).render(<App />);
 }
