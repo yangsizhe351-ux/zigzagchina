@@ -2,7 +2,7 @@
 
 :root { color: #f5f0e7; background: #07131a; font-family: 'DM Sans', sans-serif; font-synthesis: none; }
 * { box-sizing: border-box; }
- .skip-link { position: fixed; z-index: 30; top: 10px; left: 10px; padding: 10px 14px; color: #07131a; background: #d6a476; transform: translateY(-150%); transition: transform .2s; }
+ .skip-link { position: fixed; z-index: 30; top: 10px; left: 10px; min-height: 44px; display: flex; align-items: center; padding: 10px 14px; color: #07131a; background: #d6a476; transform: translateY(-150%); transition: transform .2s; }
  .skip-link:focus { transform: translateY(0); }
 html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; }
@@ -24,7 +24,7 @@ section[id] { scroll-margin-top: 92px; }
 .hero-shade { position: absolute; inset: 0; z-index: -2; background: linear-gradient(90deg, rgba(3,13,10,.42), transparent 45%, rgba(2,7,12,.2)), linear-gradient(0deg, rgba(4,10,13,.72), transparent 38%); }
 .hero-split { position: absolute; z-index: -1; top: -5%; bottom: -5%; left: 50%; width: 2px; background: linear-gradient(180deg, transparent, rgba(247,238,220,.68) 35%, rgba(247,238,220,.14) 80%, transparent); transform: rotate(5deg); transform-origin: center; box-shadow: 0 0 24px rgba(255,242,215,.2); }
 .site-header { position: absolute; inset: 0 0 auto; height: 90px; display: flex; align-items: center; padding: 0 clamp(24px, 4vw, 68px); gap: 32px; border-bottom: 1px solid rgba(255,255,255,.16); transition: background .35s, backdrop-filter .35s; }
-.brand-mark { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand-mark { min-height: 44px; display: flex; align-items: center; gap: 12px; text-decoration: none; }
 .brand-mark img { display: block; width: 92px; height: auto; }
 .brand-mark span { font-size: 22px; font-weight: 500; letter-spacing: -.06em; white-space: nowrap; }
 .is-scrolled .site-header { position: fixed; z-index: 5; background: rgba(5,16,21,.68); backdrop-filter: blur(18px); }
@@ -226,6 +226,17 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
 .toast { position: fixed; z-index: 10; right: 22px; bottom: 22px; background: #f4eee3; color: #102529; padding: 15px 18px; font-size: 12px; box-shadow: 0 16px 50px rgba(0,0,0,.25); }
 .toast button { color: inherit; margin-left: 20px; font-size: 18px; line-height: 0; }
 @media (max-width: 960px) and (min-width: 761px) {
+  .site-header { gap: 18px; padding-inline: 32px; }
+  .brand-mark { gap: 9px; }
+  .brand-mark img { width: 78px; }
+  .brand-mark span { font-size: 19px; }
+  .nav-links { gap: clamp(14px, 2vw, 24px); font-size: 11px; }
+  .teaser, .experience-section, .booking-section { padding-inline: 7vw; }
+  .city-strip { grid-template-columns: 92px 1fr 1fr; }
+  .section-label { padding-left: 26px; }
+  .city-panel { padding-inline: 4vw; }
+  .credentials-page-layout { padding-inline: 7vw; }
+  .credentials-hero { grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr); gap: 5vw; }
   .site-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .footer-credentials { padding-left: 0; border-left: 0; }
   .experience-grid { grid-template-columns: repeat(2, 1fr); }
@@ -234,7 +245,10 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
   .site-header { height: 72px; padding: 0 20px; }
   .nav-links { display: none; }
   .mobile-menu { top: 72px; }
+  .mobile-menu a { min-height: 48px; align-items: center; font-size: 12px; }
   .header-actions { margin-left: auto; }
+  .language-menu { top: 42px; }
+  .language-menu button { min-height: 44px; align-items: center; font-size: 12px !important; }
   .journey-button { max-width: 54px; overflow: hidden; white-space: nowrap; }
   .hero-copy { width: min(100% - 40px, 620px); padding-top: 84px; }
   .hero-copy h1 { font-size: clamp(41px, 11.5vw, 66px); line-height: .95; }
@@ -261,6 +275,7 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
   .credentials-privacy > div:last-child { margin-top: 42px; }
   .teaser { min-height: 80vh; padding: 18vh 28px; display: block; }
   .teaser-copy { margin-top: 42px; }
+  .teaser-copy a, .about-copy a, .about-page-action a, .credentials-privacy a { min-height: 44px; align-items: center; font-size: 12px; }
   .proof-stats { margin-top: 70px; }
   .proof-stat { min-height: 115px; }
   .city-strip { display: block; }
@@ -283,6 +298,10 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
   .site-footer small { display: block; margin-top: 45px; }
   .section-label { padding: 28px; writing-mode: initial; }
   .city-panel { min-height: 55vh; }
+  .city-panel button { min-height: 44px; display: inline-flex; align-items: center; padding: 0 0 4px; font-size: 12px; }
+  .panel-index, .experience-card span, .experience-card small, .modal-index, .modal-card small { font-size: 11px; }
+  .site-footer a { min-height: 44px; display: inline-flex; align-items: center; font-size: 12px; }
+  .site-footer small { font-size: 11px; line-height: 1.5; }
   .modal-card { min-height: min(500px, calc(100svh - 32px)); padding: 34px 24px; }
   .modal-close { top: 12px; right: 12px; width: 44px; height: 44px; }
   .modal-index { top: 25px; left: 24px; }
@@ -304,7 +323,7 @@ h1 em, h2 em { font-family: 'Playfair Display', serif; font-weight: 500; text-tr
   .hero-copy h1 { margin: 12px 0; font-size: clamp(36px, 10.5vw, 50px); }
   .intro { margin-top: 12px; font-size: 14px; line-height: 1.4; }
   .hero-actions { margin-top: 16px; }
-  .hero-actions a { min-height: 42px; }
+  .hero-actions a { min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
