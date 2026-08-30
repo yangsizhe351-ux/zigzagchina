@@ -1,6 +1,6 @@
 # ZigZag China 当前交接
 
-更新时间：2026-08-31 00:31（Asia/Shanghai）
+更新时间：2026-08-31 00:44（Asia/Shanghai）
 
 ## 30 秒接管
 
@@ -16,7 +16,8 @@
 - Git 远端：`https://github.com/yangsizhe351-ux/zigzagchina.git`
 - 分支：`main`
 - 本轮只读审计基准：`03efa5cca19b4371bd10afb99b7061cdd985a800`
-- 审计时远端跟踪基准：`origin/main` = `57dd73b`；本地 `main` 领先 9 个提交
+- ZC-001 交付 commit：`ae8bdb687b973fc68f92d9a4037fef0cbee41645`
+- 远端跟踪基准：`origin/main` = `57dd73b`；本次证据收口提交完成后本地 `main` 领先 11 个提交
 - 历史最终功能候选：`bca4e4c` 曾获独立 `PASS`，但该结论不覆盖当前 HEAD
 - 生产地址配置：`https://zigzagchina.netlify.app/`；本轮未验证线上部署状态
 
@@ -27,16 +28,17 @@
 - 技术栈：React 19.2.8、Vite 8.2.2、Node 22、Netlify 静态构建。
 - `npm run check` 仅执行三语内容结构检查和生产构建；仓库没有 lint、单元测试、E2E 或 CI 配置。
 - 静态路由、真实 404、hydration、视觉性能和响应式修复已合并到本地 `main`。
-- 当前工作是 ZC-001 协作控制面落地；没有业务源代码修改。
+- ZC-001 已产生聚焦协作文档 commit 并进入 `REVIEW`；没有业务源代码修改。
+- 在 ZC-001 commit 上，YAML 解析、`npm run check`、`git diff --check` 和干净工作区检查均通过。
 - 正式推广状态：`BLOCKED / PENDING_USER_ACTION`。独立验收通过也不等于获得 push 或部署授权。
 
 ## 活跃与阻塞任务
 
-- `ZC-001`：协作控制面落地与状态纠偏，当前交给独立验收前的文档阶段。
+- `ZC-001`：协作控制面落地与状态纠偏，`REVIEW`，交付 commit 为 `ae8bdb687b973fc68f92d9a4037fef0cbee41645`。
 - `ZC-002`：等待用户/业务负责人确认发布范围、资质、翻译、姓名授权、联系与政策、Supabase 决定。
 - `ZC-003`：站内询价与政策实现，阻塞于 ZC-002。
 - `ZC-004`：正式域名与发布级 SEO，阻塞于 ZC-002。
-- `ZC-005`：首次工作流与交接独立验收，使用 `frontier_gate` 档位。
+- `ZC-005`：首次工作流与交接独立验收，`READY`，明天使用 `frontier_gate` 档位创建只读任务。
 - `ZC-006`：旧窗口安全收口，等待首次验收后执行。
 
 完整字段、依赖、验收标准、证据与状态历史见 `TASKS.yaml`，本节不构成第二份台账。
@@ -68,10 +70,10 @@
 
 ## 下一步
 
-1. 完成 ZC-001 文档、YAML 和构建验证，提交聚焦 commit。
-2. 回写该 commit 与检查证据，冻结候选。
-3. 新建独立 `gpt-5.6-sol / xhigh` 验收任务，对精确候选和台账收口提交做两次只读检查。
-4. 最终 `PASS` 后创建预声明的本地 gate tag；不 push、不部署。
+1. 从干净 `main` 读取本提交的精确 HEAD，并作为 ZC-005 首轮验收目标。
+2. 新建独立 `gpt-5.6-sol / xhigh` 只读任务，检查 ZC-001 的 AC、YAML、构建、diff 和交接一致性。
+3. 首轮 `PASS` 后只回写台账收口；对新的精确 SHA 做第二次只读验收。
+4. 最终 `PASS` 后创建 `refs/tags/qa-pass/ZC-005-20260831-01`；不 push、不部署。
 5. 完成 ZC-006 的安全窗口整理；保留历史 Worktree 只读。
 6. 等用户处理 ZC-002 后，再决定是否开启 ZC-003 或 ZC-004。
 

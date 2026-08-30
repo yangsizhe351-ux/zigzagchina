@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T00:31:37+08:00"
+updated_at: "2026-08-31T00:44:37+08:00"
 
 status_flow:
   normal:
@@ -36,7 +36,7 @@ tasks:
   - issue_id: ZC-001
     title: 协作控制面落地与状态纠偏
     priority: P0
-    status: IN_PROGRESS
+    status: REVIEW
     owner: control
     problem: 现有交接与工作树文档重复定义角色和状态，且旧发布候选结论与当前 main 不一致。
     scope:
@@ -103,8 +103,31 @@ tasks:
       acquired_at: "2026-08-31T00:31:37+08:00"
       released_at: null
     evidence:
-      commits: []
-      checks: []
+      commits:
+        - checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
+          role: delivery
+          summary: 建立单一事实来源、任务台账、交付模板、模型分级和状态纠偏。
+      checks:
+        - command: ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
+          result: PASS
+          checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
+          run_at: "2026-08-31T00:44:37+08:00"
+          summary: YAML 成功解析，共 6 个任务。
+        - command: npm run check
+          result: PASS
+          checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
+          run_at: "2026-08-31T00:44:37+08:00"
+          summary: 三语内容检查通过；Vite 生产构建通过，共转换 38 个模块。
+        - command: git diff --check
+          result: PASS
+          checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
+          run_at: "2026-08-31T00:44:37+08:00"
+          summary: 无空白错误。
+        - command: git status --short --branch
+          result: PASS
+          checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
+          run_at: "2026-08-31T00:44:37+08:00"
+          summary: 工作区干净；main 相对 origin/main 领先 10 个提交。
       manual_verification:
         - Git、文档、任务和 Worktree 只读审计已完成。
       review:
@@ -112,7 +135,7 @@ tasks:
         checkpoint: null
         task_id: null
       integration:
-        checkpoint: null
+        checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
       verification: []
       user_confirmations:
         - 用户于 2026-08-31 确认执行审计后的整合方案。
@@ -121,7 +144,7 @@ tasks:
       - severity: P1
         status: OPEN
         owner: control
-        summary: 当前 main 尚无绑定 03efa5c 之后文档变更的独立最终 PASS。
+        summary: ZC-001 交付 commit 尚未完成独立验收；历史 PASS 不覆盖该 SHA。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
@@ -130,6 +153,12 @@ tasks:
         at: "2026-08-31T00:31:37+08:00"
         checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
         reason: 用户确认落地工作流。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: control
+        at: "2026-08-31T00:44:37+08:00"
+        checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
+        reason: 聚焦文档提交及要求的自动化检查已完成，等待独立验收。
 
   - issue_id: ZC-002
     title: 发布范围与公开信息确认
@@ -378,7 +407,7 @@ tasks:
   - issue_id: ZC-005
     title: 首次工作流与交接独立验收
     priority: P0
-    status: BLOCKED
+    status: READY
     owner: qa-gate
     problem: 新控制面必须由未参与实现的窗口对精确 commit 做独立验收。
     scope:
@@ -400,7 +429,7 @@ tasks:
       path: null
       mode: read_only_worktree
       expected_branch: null
-    base_checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
+    base_checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
     gate_ref: refs/tags/qa-pass/ZC-005-20260831-01
     dependencies:
       - ZC-001
@@ -437,15 +466,10 @@ tasks:
       user_confirmations: []
     risks:
       - severity: P1
-        status: OPEN
+        status: MITIGATED
         owner: qa-gate
-        summary: 验收前必须回填 ZC-001 交付 commit 作为完整 base_checkpoint。
+        summary: ZC-001 已产生聚焦交付 commit；下一窗口必须对总控证据收口后的精确 HEAD 验收。
     handoff_target: control
-    exception:
-      blocked_from: READY
-      waiting_for: ZC-001
-      exit_condition: ZC-001 产生聚焦交付 commit，且总控回填测试和风险证据。
-      resume_status: READY
     history:
       - from: BACKLOG
         to: BLOCKED
@@ -453,6 +477,12 @@ tasks:
         at: "2026-08-31T00:31:37+08:00"
         checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
         reason: 用户确认创建更强模型的独立验收任务；等待 ZC-001 交付 commit。
+      - from: BLOCKED
+        to: READY
+        actor: control
+        at: "2026-08-31T00:44:37+08:00"
+        checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
+        reason: ZC-001 已提交并回填可复现验证证据。
 
   - issue_id: ZC-006
     title: 旧窗口与 Worktree 安全收口
