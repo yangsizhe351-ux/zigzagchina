@@ -1,6 +1,10 @@
 node_modules/
 dist/
+dist-netlify/
 .env.local
 .DS_Store
 .next/
 next-env.d.ts
+
+# Local Netlify folder
+.netlify

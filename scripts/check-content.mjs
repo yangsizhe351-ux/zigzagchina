@@ -2,14 +2,21 @@ import { content, languageNames } from '../src/content.js';
 
 const locales = Object.keys(content);
 const requiredPaths = [
-  'pageTitle', 'skipToContent', 'nav', 'kicker', 'title', 'intro', 'explore', 'scroll',
+  'pageTitle', 'skipToContent', 'nav', 'kicker', 'title', 'intro', 'heroPrimary', 'heroSecondary', 'explore', 'scroll',
   'teaserKicker', 'teaserTitle', 'teaserBody', 'begin', 'sectionLabel',
   'aboutKicker', 'aboutTitle', 'aboutBody', 'aboutAction', 'aboutSections',
   'city.Chengdu.eyebrow', 'city.Chengdu.title', 'city.Chengdu.body', 'city.Chengdu.action',
   'city.Chongqing.eyebrow', 'city.Chongqing.title', 'city.Chongqing.body', 'city.Chongqing.action',
-  'cityComing', 'experienceKicker', 'experienceTitle', 'experienceCards', 'experienceDetails', 'experienceDetail',
+  'cityComing', 'experienceKicker', 'experienceTitle', 'filterAll', 'experienceCards', 'experienceDetails', 'experienceDetail',
   'footerText', 'close', 'booking.kicker', 'booking.title', 'booking.body', 'booking.action',
-  'booking.paymentLabel', 'booking.payment',
+  'booking.selectedLabel', 'booking.clearSelection', 'booking.paymentLabel', 'booking.payment',
+  'a11y.home', 'a11y.openMenu', 'a11y.closeMenu', 'a11y.mainNav', 'a11y.chooseLanguage', 'a11y.experiences',
+  'credentials.pageTitle', 'credentials.kicker', 'credentials.title', 'credentials.intro',
+  'credentials.licenseType', 'credentials.detailsLabel', 'credentials.operatorLabel',
+  'credentials.permitNumberLabel', 'credentials.scopeLabel', 'credentials.representativeLabel',
+  'credentials.scope', 'credentials.privacyKicker', 'credentials.privacyTitle',
+  'credentials.privacyBody', 'credentials.verificationLink', 'credentials.credentialsLink',
+  'credentials.footerLicence',
 ];
 const errors = [];
 
@@ -55,6 +62,7 @@ for (const locale of locales) {
     if (content[locale][field].length !== 2) errors.push(`${locale}.${field} must contain two lines`);
   }
   if (content[locale].booking.title.length !== 2) errors.push(`${locale}.booking.title must contain two lines`);
+  if (content[locale].credentials.title.length !== 2) errors.push(`${locale}.credentials.title must contain two lines`);
   for (const [index, card] of content[locale].experienceCards.entries()) {
     if (!Array.isArray(card) || card.length !== 3 || card.some((value) => !String(value).trim())) errors.push(`${locale}.experienceCards[${index}] is incomplete`);
   }
