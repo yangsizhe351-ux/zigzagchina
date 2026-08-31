@@ -1,6 +1,6 @@
 # ZigZag China 当前交接
 
-更新时间：2026-08-31 11:08（Asia/Shanghai）
+更新时间：2026-08-31 11:12（Asia/Shanghai）
 
 ## 30 秒接管
 
@@ -23,8 +23,10 @@
 - 模型升级分配 commit：`3ccc584e712d19d573c4b3bd59e110391bbd4d63`
 - ZC-007 根因复审：`PASS`，任务 `01a055b9-8f82-74d0-b498-110267e74cc0`，实际 `gpt-5.6-sol / xhigh`
 - 第三次复验目标：`ead18f18fb950a55c860e3868ea97de3225dad1b`，结论 `BLOCK`
+- ZC-008 分配 commit：`4312223a68edef5c7f8e12c9250ba62c924dfc3f`
+- ZC-008 任务：`01a055cc-8022-7050-b6a6-3aa10486cc6f`，分支 `codex/zc-008-workflow-validator`
 - 独立验收任务：`01a05590-acd0-73b1-808e-04fc11b95db2`
-- 远端跟踪基准：`origin/main` = `57dd73b`；ZC-008 分配提交前本地 `main` 领先 15 个提交
+- 远端跟踪基准：`origin/main` = `57dd73b`；ZC-008 启动状态提交完成后本地 `main` 领先 17 个提交
 - 历史最终功能候选：`bca4e4c` 曾获独立 `PASS`，但该结论不覆盖当前 HEAD
 - 生产地址配置：`https://zigzagchina.netlify.app/`；本轮未验证线上部署状态
 
@@ -48,7 +50,7 @@
 - `ZC-005`：首次工作流与交接独立验收，`BLOCKED`，等待 ZC-008 分支提交与验收。
 - `ZC-006`：旧窗口安全收口，等待首次验收后执行。
 - `ZC-007`：第二次控制面模型升级根因复审，`DONE`，三项 AC 均有独立 PASS 证据。
-- `ZC-008`：确定性工作流语义校验器，`READY`，独立 `gpt-5.6-sol / xhigh` 开发 Worktree。
+- `ZC-008`：确定性工作流语义校验器，`IN_PROGRESS`；独立 `gpt-5.6-sol / xhigh` Worktree 已附着目标分支，并持有仅 `package.json`、`scripts/check-workflow.rb` 的租约。
 
 完整字段、依赖、验收标准、证据与状态历史见 `TASKS.yaml`，本节不构成第二份台账。
 
@@ -79,7 +81,7 @@
 
 ## 下一步
 
-1. 提交 ZC-008 完整任务包，然后创建 `codex/zc-008-workflow-validator` 独立 Worktree。
+1. 将 ZC-008 分支快进到包含 `IN_PROGRESS`、实际 Worktree 与文件租约的新权威基线。
 2. ZC-008 只修改 `package.json` 与 `scripts/check-workflow.rb`，运行正向、负向和完整项目检查，提交给原 qa-gate 做分支验收。
 3. 分支 `PASS` 后由总控快进集成，回写证据并重新形成 ZC-005 第一阶段候选。
 4. 第一阶段 `PASS` 后只回写台账收口；对新的精确 SHA 做第二阶段最终验收。

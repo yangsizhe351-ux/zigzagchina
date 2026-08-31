@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T11:08:14+08:00"
+updated_at: "2026-08-31T11:12:48+08:00"
 
 status_flow:
   normal:
@@ -904,7 +904,7 @@ tasks:
   - issue_id: ZC-008
     title: 确定性工作流语义校验器
     priority: P0
-    status: READY
+    status: IN_PROGRESS
     owner: workflow-validator-specialist
     problem: 三次人工验收均发现新的控制面语义漂移；需要机器校验状态、异常来源、模型升级、证据与集成时点，终止补丁式返工。
     scope:
@@ -933,7 +933,7 @@ tasks:
         evidence_required: package.json diff、npm run check、git diff --check 与干净分支。
     branch: codex/zc-008-workflow-validator
     workspace:
-      path: null
+      path: /Users/yangsizhe/.codex/worktrees/f79a/CDQC
       mode: worktree
       expected_branch: codex/zc-008-workflow-validator
     base_checkpoint: ead18f18fb950a55c860e3868ea97de3225dad1b
@@ -954,9 +954,11 @@ tasks:
       change_allowed: false
       approval: null
     file_lease:
-      status: NONE
-      write_paths: []
-      acquired_at: null
+      status: HELD
+      write_paths:
+        - package.json
+        - scripts/check-workflow.rb
+      acquired_at: "2026-08-31T11:12:48+08:00"
       released_at: null
     evidence:
       commits: []
@@ -965,7 +967,7 @@ tasks:
       review:
         verdict: PENDING
         checkpoint: null
-        task_id: null
+        task_id: 01a055cc-8022-7050-b6a6-3aa10486cc6f
       integration:
         checkpoint: null
       verification: []
@@ -984,6 +986,12 @@ tasks:
         at: "2026-08-31T11:08:14+08:00"
         checkpoint: ead18f18fb950a55c860e3868ea97de3225dad1b
         reason: 第三次同类 BLOCK 触发停止规则，转为确定性校验器根因修复。
+      - from: READY
+        to: IN_PROGRESS
+        actor: control
+        at: "2026-08-31T11:12:48+08:00"
+        checkpoint: 4312223a68edef5c7f8e12c9250ba62c924dfc3f
+        reason: 目标分支已附着且 Worktree 干净；总控授予 package.json 与 scripts/check-workflow.rb 独占租约。
 
 legacy_records:
   issue_prefix: ZZ
