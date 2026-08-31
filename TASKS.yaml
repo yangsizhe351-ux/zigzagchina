@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T12:10:55+08:00"
+updated_at: "2026-08-31T12:19:38+08:00"
 
 status_flow:
   normal:
@@ -43,12 +43,14 @@ role_registry:
   roles:
     control:
       title: ZigZag 总控台（项目内唯一入口）
-      task_id: 01a05304-9679-7ff3-9bc8-39e233cc722a
-      status: ACTIVE_PREDECESSOR
+      task_id: 01a05605-cf05-7722-b5e6-1efc32e20ab0
+      status: ACTIVE_SUCCESSOR_PENDING_FINAL
+      predecessor_task_id: 01a05304-9679-7ff3-9bc8-39e233cc722a
       default_profile: frontier_control
       model: gpt-5.6-sol
       reasoning_effort: high
       workspace_mode: local_main
+      workspace_path: /Users/yangsizhe/Documents/Codex/2026-08-22/new-chat/CDQC
     content-localization:
       title: ZigZag 文本与翻译
       task_id: 01a05600-619c-7820-877a-82ca45e5e9cd
@@ -116,6 +118,12 @@ role_registry:
 
 control_handoff_policy:
   skill: control-context-handoff
+  current_handoff:
+    successor_task_id: 01a05605-cf05-7722-b5e6-1efc32e20ab0
+    predecessor_task_id: 01a05304-9679-7ff3-9bc8-39e233cc722a
+    phase: AWAITING_FINAL_SHA_VERIFICATION
+    phase_1_checkpoint: 73eeaed07fb499552cf15f4dad455fabeb797898
+    phase_1_result: READY
   standing_authorization:
     granted: true
     granted_at: "2026-08-31T11:57:58+08:00"
@@ -1312,6 +1320,11 @@ tasks:
           checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
           run_at: "2026-08-31T12:10:55+08:00"
           summary: 文本、政策、网站、图像和 QA 五个角色均已映射；三个新专项位于干净的独立只读 Worktree。
+        - command: 继任总控第一阶段项目、路径、main、HEAD、工作区、台账和 Skill 边界核验
+          result: PASS
+          checkpoint: 73eeaed07fb499552cf15f4dad455fabeb797898
+          run_at: "2026-08-31T12:19:38+08:00"
+          summary: 继任 task 01a05605-cf05-7722-b5e6-1efc32e20ab0 回报 READY_PHASE_1_RECHECK；应用创建记录与保存项目清单确认 Zigzag 绑定。
         - command: git diff --check
           result: PASS
           checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
@@ -1322,6 +1335,7 @@ tasks:
         - SKILL.md SHA-256 为 b2e030d0287c957eff29b82ac95ec6b3972826d8fc002caf0e8652852ed9685b；agents/openai.yaml SHA-256 为 599968a9ccbe3257953b50ac5e01b8b9e0da646c9b0ad4d44dc9a0debcf51a47。
         - 独立 gpt-5.6-sol / xhigh 安全复审覆盖干净自动交接、未知脏修改和继任项目/HEAD 不匹配三个场景，结论 PASS。
         - 文本、政策和图像窗口在没有具体 issue 与任务分支时保持 detached/IDLE_READ_ONLY；不得从该状态编辑。
+        - 继任总控第一阶段核验时发现本地 project_id 缓存为空并正确停止；应用层 create_thread 目标、list_projects、task ID、cwd 与 host 复核一致后解除该单项阻断。
       review:
         verdict: PENDING
         checkpoint: null

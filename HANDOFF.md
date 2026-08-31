@@ -1,6 +1,6 @@
 # ZigZag China 当前交接
 
-更新时间：2026-08-31 12:10（Asia/Shanghai）
+更新时间：2026-08-31 12:19（Asia/Shanghai）
 
 ## 最短接管
 
@@ -11,7 +11,7 @@
 
 ## 当前检查点
 
-- 当前 `main` 检查点：`a0fcd7c19a6b7c251a3a19306c27c2781ef30076`；尚未 push。
+- 第一阶段交接检查点：`73eeaed07fb499552cf15f4dad455fabeb797898`；当前 `main` 以 `git rev-parse HEAD` 为准，尚未 push。
 - `origin/main`：`57dd73b`；本地尚未 push。
 - 当前专项分支：`codex/zc-008-workflow-validator`。
 - 暂停交付：`90f62b5b03932631e48e54258ac1fa6ef192aafe`，未合并。
@@ -22,7 +22,7 @@
 
 | 窗口 | Task ID | 默认执行配置 | 当前状态 |
 | --- | --- | --- | --- |
-| `ZigZag 总控台（项目内唯一入口）` | `01a05304-9679-7ff3-9bc8-39e233cc722a` | `gpt-5.6-sol / high` | 前任总控，等待安全换代 |
+| `ZigZag 总控台（接管中）` | `01a05605-cf05-7722-b5e6-1efc32e20ab0` | `gpt-5.6-sol / high` | 第一阶段 READY，等待最终 SHA 核验 |
 | `ZigZag 文本与翻译` | `01a05600-619c-7820-877a-82ca45e5e9cd` | `gpt-5.6-terra / high` | `IDLE_READ_ONLY` |
 | `ZigZag 政策与合规` | `01a05600-76b4-7170-aea1-5c19ed47c909` | `gpt-5.6-sol / xhigh` | `IDLE_READ_ONLY` |
 | `ZigZag 网站结构与实现` | `01a055cc-8022-7050-b6a6-3aa10486cc6f` | `gpt-5.6-terra / high` | `IDLE_WITH_BLOCKED_TASK` |
@@ -38,13 +38,14 @@ Fast 仅由总控按单次任务切到 `gpt-5.6-luna / medium`；政策结论、
 - `ZC-001`、`ZC-005`：继续等待 ZC-008，不开启新窗口。
 - `ZC-002`：等待用户确认经营主体、许可/翻译/姓名授权、联系方式、政策、Supabase 数据与正式域名。
 - `ZC-009`：`IN_PROGRESS`；五个非总控角色已就位，全局自动交接 Skill 已校验，下一步只剩新总控核验与旧总控归档。
+- 前任总控：`01a05304-9679-7ff3-9bc8-39e233cc722a`，在继任者完成最终 SHA 核验前继续保留。
 - 未获得 push、部署或发布授权。
 
 ## 当前交接动作
 
-1. 在保存项目的真实根目录创建 `gpt-5.6-sol / high` 继任总控。
-2. 继任总控核验项目绑定、绝对路径、`main`、精确 HEAD、工作区和 ZC-009 并回报 `READY`。
-3. 前任总控回写 active control，形成最终检查点；继任者复核该精确 SHA 后才可归档前任。
+1. 前任总控提交 active control 过渡状态，形成最终待核验 SHA。
+2. 继任总控再次核验该精确 SHA、`main` 和干净工作区，并回报 `READY_FINAL`。
+3. 独立 QA 对同一 SHA 给出结论；通过后归档前任并由继任总控收口 ZC-009。
 4. ZC-008 仍停在 `90f62b5b03932631e48e54258ac1fa6ef192aafe`；本任务不得顺手修复它。
 
 ## 红线
