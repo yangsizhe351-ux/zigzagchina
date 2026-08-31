@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T13:33:08+08:00"
+updated_at: "2026-08-31T13:37:44+08:00"
 
 status_flow:
   normal:
@@ -1552,6 +1552,9 @@ tasks:
         - checkpoint: cca309ff9e113104e452e0d47d63ce7209e7a78f
           role: blocked_candidate
           summary: 效率规则本身通过 AC-001 至 AC-003，但因在最终独立验收前标记 DONE 被 AC-004 阻断。
+        - checkpoint: 6a547132667b3f8c12f2b765e89a751915728ddd
+          role: blocked_candidate
+          summary: 状态已恢复 REVIEW，但遗留的 integration checkpoint 与 owner PASS 仍提前声明闸门完成。
       checks:
         - command: ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
           result: PASS
@@ -1580,21 +1583,21 @@ tasks:
         - AC-004：owner 先做最小机械预检，完整矩阵只在冻结候选运行一次；Sol/xhigh 与政策、安全、共享架构、QA、发布质量闸门保持不变。
       review:
         verdict: BLOCK
-        checkpoint: cca309ff9e113104e452e0d47d63ce7209e7a78f
+        checkpoint: 6a547132667b3f8c12f2b765e89a751915728ddd
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
       integration:
-        checkpoint: 492a868fe898247151b088dea947f168118f623e
+        checkpoint: null
       verification:
-        - verdict: PASS
-          checkpoint: 492a868fe898247151b088dea947f168118f623e
-          task_id: 01a05605-cf05-7722-b5e6-1efc32e20ab0
-          checked_at: "2026-08-31T13:27:43+08:00"
-          scope: ZC-010 四项 AC 的工作区语义、结构和文件边界预检；最终精确提交由 qa-gate 在任务对话中记录，不制造自引用提交。
         - verdict: BLOCK
           checkpoint: cca309ff9e113104e452e0d47d63ce7209e7a78f
           task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
           checked_at: "2026-08-31T13:31:59+08:00"
           scope: AC-004；任务不得在最终精确 SHA 获得独立验收前标记 DONE。
+        - verdict: BLOCK
+          checkpoint: 6a547132667b3f8c12f2b765e89a751915728ddd
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-08-31T13:36:55+08:00"
+          scope: AC-004；REVIEW 阶段不得保留 integration checkpoint 或 owner verification PASS。
       user_confirmations:
         - 用户要求当前总控自我优化，并提供近期 ZigZag 与 PartnerFit token 浪费诊断截图作为问题背景。
     risks:
@@ -1619,9 +1622,9 @@ tasks:
       - from: IN_PROGRESS
         to: REVIEW
         actor: control
-        at: "2026-08-31T13:33:08+08:00"
-        checkpoint: cca309ff9e113104e452e0d47d63ce7209e7a78f
-        reason: 四份治理文档通过范围、YAML、引用与空白检查；精确候选因提前标记 DONE 被独立 QA 阻断，现保持 REVIEW 等待新候选验收。
+        at: "2026-08-31T13:37:44+08:00"
+        checkpoint: 6a547132667b3f8c12f2b765e89a751915728ddd
+        reason: 四份治理文档通过范围、YAML、引用与空白检查；两次 AC-004 阻断均已如实记录，integration 与 verification 保持未通过状态等待新候选验收。
 
 legacy_records:
   issue_prefix: ZZ
