@@ -1,6 +1,6 @@
 # ZigZag China 当前交接
 
-更新时间：2026-08-31 10:38（Asia/Shanghai）
+更新时间：2026-08-31 10:47（Asia/Shanghai）
 
 ## 30 秒接管
 
@@ -19,8 +19,9 @@
 - ZC-001 交付 commit：`ae8bdb687b973fc68f92d9a4037fef0cbee41645`
 - 首轮验收目标：`b555d92a2cd72341c26ec2508d4e4eb17d20cf22`，结论 `BLOCK`
 - 状态机纠正 commit：`9768d0f1a0cece9ee203de6677a6fcbf8a105a7a`
+- 第二次复审目标：`7242a8bb6cd7e6d9b7d64fbc6b40ef7a873259f8`，结论 `BLOCK`
 - 独立验收任务：`01a05590-acd0-73b1-808e-04fc11b95db2`
-- 远端跟踪基准：`origin/main` = `57dd73b`；本次复审候选提交完成后本地 `main` 领先 13 个提交
+- 远端跟踪基准：`origin/main` = `57dd73b`；模型升级分配提交前本地 `main` 领先 13 个提交
 - 历史最终功能候选：`bca4e4c` 曾获独立 `PASS`，但该结论不覆盖当前 HEAD
 - 生产地址配置：`https://zigzagchina.netlify.app/`；本轮未验证线上部署状态
 
@@ -31,18 +32,19 @@
 - 技术栈：React 19.2.8、Vite 8.2.2、Node 22、Netlify 静态构建。
 - `npm run check` 仅执行三语内容结构检查和生产构建；仓库没有 lint、单元测试、E2E 或 CI 配置。
 - 静态路由、真实 404、hydration、视觉性能和响应式修复已合并到本地 `main`。
-- ZC-001 首轮 `BLOCK` 的状态历史、异常来源与 integration 时点矛盾已在 `9768d0f` 根因修复，现重新进入 `REVIEW`；没有业务源代码修改。
+- ZC-001 的状态机根因已经通过复核，但第二次同类验收因模型升级记录缺失再次 `BLOCK`；现按规则提升为 `frontier_gate / gpt-5.6-sol / xhigh`，等待干净上下文 ZC-007 复审。
 - 在 ZC-001 commit 上，YAML 解析、`npm run check`、`git diff --check` 和干净工作区检查均通过。
 - 正式推广状态：`BLOCKED / PENDING_USER_ACTION`。独立验收通过也不等于获得 push 或部署授权。
 
 ## 活跃与阻塞任务
 
-- `ZC-001`：协作控制面落地与状态纠偏，`REVIEW`，`rework_count: 1`；等待同一独立任务复审。
+- `ZC-001`：协作控制面落地与状态纠偏，`BLOCKED`，`rework_count: 2`，执行档位升级为 `frontier_gate`。
 - `ZC-002`：等待用户/业务负责人确认发布范围、资质、翻译、姓名授权、联系与政策、Supabase 决定。
 - `ZC-003`：站内询价与政策实现，阻塞于 ZC-002。
 - `ZC-004`：正式域名与发布级 SEO，阻塞于 ZC-002。
-- `ZC-005`：首次工作流与交接独立验收，`READY`；同一 `frontier_gate` 任务复审纠正后的精确 SHA。
+- `ZC-005`：首次工作流与交接独立验收，`BLOCKED`，等待模型升级复审完成。
 - `ZC-006`：旧窗口安全收口，等待首次验收后执行。
+- `ZC-007`：第二次控制面模型升级根因复审，`READY`，必须显式使用 `gpt-5.6-sol / xhigh` 的新任务。
 
 完整字段、依赖、验收标准、证据与状态历史见 `TASKS.yaml`，本节不构成第二份台账。
 
@@ -73,12 +75,13 @@
 
 ## 下一步
 
-1. 读取当前干净 `main` 的精确 HEAD，直接交给现有 `gpt-5.6-sol / xhigh` 只读验收任务复审。
-2. 要求验收者重点复核首轮三个阻断根因及所有原验收项。
-3. 首轮 `PASS` 后只回写台账收口；对新的精确 SHA 做第二次只读验收。
-4. 最终 `PASS` 后创建 `refs/tags/qa-pass/ZC-005-20260831-01`；不 push、不部署。
-5. 完成 ZC-006 的安全窗口整理；保留历史 Worktree 只读。
-6. 等用户处理 ZC-002 后，再决定是否开启 ZC-003 或 ZC-004。
+1. 提交 ZC-001 的模型升级分配和 ZC-007 任务包，保持 `main` 干净。
+2. 新建显式 `gpt-5.6-sol / xhigh` 的 ZC-007 只读 Worktree，验证升级规则和最小根因方案。
+3. ZC-007 `PASS` 后由总控回写证据，再把新精确 SHA 交给原 ZC-005 qa-gate。
+4. 第一阶段 `PASS` 后只回写台账收口；对新的精确 SHA 做第二阶段最终验收。
+5. 最终 `PASS` 后创建 `refs/tags/qa-pass/ZC-005-20260831-01`；不 push、不部署。
+6. 完成 ZC-006 的安全窗口整理；保留历史 Worktree 只读。
+7. 等用户处理 ZC-002 后，再决定是否开启 ZC-003 或 ZC-004。
 
 ## 接管红线
 
