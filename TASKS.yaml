@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T12:27:22+08:00"
+updated_at: "2026-08-31T13:27:47+08:00"
 
 status_flow:
   normal:
@@ -186,6 +186,42 @@ model_escalation_policy:
     max_allowed_only_when:
       priority: P0
       root_cause: UNKNOWN
+
+execution_efficiency_policy:
+  context_loading:
+    initial_full_reads_per_turn: 1
+    subsequent_reads: targeted_ranges_or_diff
+    full_reread_only_when:
+      - head_changed
+      - relevant_governance_file_changed
+      - context_compacted
+  qa_routing:
+    final_owner_per_candidate: 1
+    same_sha_repeat_forbidden: true
+    repeat_allowed_when:
+      - candidate_sha_changed
+      - acceptance_criteria_changed
+      - prior_result_incomplete_or_unavailable
+    qa_starts_after_candidate_frozen: true
+  waiting:
+    immediate_snapshot_limit: 1
+    mode: event_driven
+    minimum_bounded_wait_seconds: 120
+    reuse_cursor_after_timeout: true
+  handoff_packet:
+    required_fields:
+      - issue_id
+      - base_sha
+      - candidate_sha
+      - changed_paths
+      - failed_ac_or_result
+      - next_action
+    resend_full_documents_or_logs: false
+  validation:
+    mechanical_preflight_by_owner: true
+    smallest_relevant_check_first: true
+    full_matrix_runs_per_final_candidate: 1
+    efficiency_must_not_lower_risk_gate: true
 
 tasks:
   - issue_id: ZC-001
@@ -1439,6 +1475,163 @@ tasks:
         at: "2026-08-31T12:27:22+08:00"
         checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
         reason: 六角色、模型路由、全局自动交接边界、两阶段核验与可恢复归档证据已完整收口。
+
+  - issue_id: ZC-010
+    title: 控制面上下文与执行效率收敛
+    priority: P1
+    status: DONE
+    owner: control
+    problem: 历史执行存在重复全量上下文、同一候选重复验收与短间隔轮询，控制成本与业务增量不成比例。
+    scope:
+      allowed_paths:
+        - AGENTS.md
+        - HANDOFF.md
+        - TASKS.yaml
+        - WORKFLOW.md
+      forbidden_paths:
+        - src/
+        - assets/
+        - public/
+        - supabase/
+        - dist-netlify/
+        - scripts/
+        - package.json
+    acceptance_criteria:
+      - id: AC-001
+        statement: 每轮完整入口读取限制为一次，后续使用目标段或 diff，并明确完整重读触发条件。
+        evidence_required: AGENTS.md、WORKFLOW.md 与 execution_efficiency_policy 一致。
+      - id: AC-002
+        statement: 同一候选只保留一个最终 QA owner，禁止无新 SHA/AC 的重复验收，并以事件等待替代短轮询。
+        evidence_required: 结构化 qa_routing、waiting 规则及工作流说明。
+      - id: AC-003
+        statement: 跨窗口只传递最小增量包，不重复转发完整治理文档、任务历史或长日志。
+        evidence_required: handoff_packet 必填字段与禁止项。
+      - id: AC-004
+        statement: owner 先做最小机械预检，最终候选只跑一次完整矩阵；效率优化不降低现有模型和风险闸门。
+        evidence_required: validation 规则、模型边界及最小验证结果。
+    branch: main
+    workspace:
+      path: /Users/yangsizhe/Documents/Codex/2026-08-22/new-chat/CDQC
+      mode: local
+      expected_branch: main
+    base_checkpoint: 492a868fe898247151b088dea947f168118f623e
+    dependencies: []
+    required_tests:
+      - ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
+      - TASKS.yaml 执行效率策略、角色与 issue 引用检查
+      - git diff --check
+      - git status --short --branch
+    execution_profile:
+      risk_level: L2
+      profile: frontier_control
+      rework_count: 0
+      selection_reason: 共享控制流程会影响所有后续角色，但只修改治理文档并由现有总控一次完成，不创建额外实现线程。
+      escalation_trigger: 若规则削弱独立验收、政策、安全或发布闸门，立即 BLOCK 并退回原有质量边界。
+      assignment_history:
+        - assigned_at: "2026-08-31T13:25:13+08:00"
+          rework_count: 0
+          profile: frontier_control
+          model: gpt-5.6-sol
+          reasoning_effort: high
+          executor_target: 01a05605-cf05-7722-b5e6-1efc32e20ab0
+          reason: 用户要求当前 ZigZag 总控针对近期 token 浪费进行自我优化。
+    public_interface:
+      change_allowed: false
+      approval: null
+    file_lease:
+      status: RELEASED
+      write_paths:
+        - AGENTS.md
+        - HANDOFF.md
+        - TASKS.yaml
+        - WORKFLOW.md
+      acquired_at: "2026-08-31T13:25:13+08:00"
+      released_at: "2026-08-31T13:27:47+08:00"
+    evidence:
+      commits: []
+      checks:
+        - command: ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
+          result: PASS
+          checkpoint: 492a868fe898247151b088dea947f168118f623e
+          run_at: "2026-08-31T13:27:43+08:00"
+          summary: 工作区中的 TASKS.yaml 可完整解析。
+        - command: TASKS.yaml 执行效率策略、角色与 ZC-010 引用检查
+          result: PASS
+          checkpoint: 492a868fe898247151b088dea947f168118f623e
+          run_at: "2026-08-31T13:27:43+08:00"
+          summary: context_loading、qa_routing、waiting、handoff_packet 与 validation 字段完整，角色引用一致。
+        - command: git diff --check
+          result: PASS
+          checkpoint: 492a868fe898247151b088dea947f168118f623e
+          run_at: "2026-08-31T13:27:43+08:00"
+          summary: 四份治理文档相对基线无空白错误。
+        - command: git diff --name-only
+          result: PASS
+          checkpoint: 492a868fe898247151b088dea947f168118f623e
+          run_at: "2026-08-31T13:27:43+08:00"
+          summary: 变更仅限 AGENTS.md、HANDOFF.md、TASKS.yaml 与 WORKFLOW.md。
+      manual_verification:
+        - AC-001：入口完整读取限制、后续目标读取和三种完整重读触发条件在 AGENTS.md、WORKFLOW.md 与结构化策略中一致。
+        - AC-002：同一候选只允许一个最终 QA owner；只有 SHA、AC 或结果可用性变化才允许重验，并改为一次快照后事件等待。
+        - AC-003：跨窗口包只包含 issue、基线/候选 SHA、变更路径、失败项或结果及下一动作，禁止重传完整文档和长日志。
+        - AC-004：owner 先做最小机械预检，完整矩阵只在冻结候选运行一次；Sol/xhigh 与政策、安全、共享架构、QA、发布质量闸门保持不变。
+      review:
+        verdict: PENDING_FINAL_SHA
+        checkpoint: null
+        task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+      integration:
+        checkpoint: 492a868fe898247151b088dea947f168118f623e
+      verification:
+        - verdict: PASS
+          checkpoint: 492a868fe898247151b088dea947f168118f623e
+          task_id: 01a05605-cf05-7722-b5e6-1efc32e20ab0
+          checked_at: "2026-08-31T13:27:43+08:00"
+          scope: ZC-010 四项 AC 的工作区语义、结构和文件边界预检；最终精确提交由 qa-gate 在任务对话中记录，不制造自引用提交。
+      user_confirmations:
+        - 用户要求当前总控自我优化，并提供近期 ZigZag 与 PartnerFit token 浪费诊断截图作为问题背景。
+    risks:
+      - severity: P1
+        status: RESOLVED
+        owner: control
+        summary: 规则明确只减少重复调用和上下文，不降低独立 QA、政策、安全、共享架构或发布闸门质量。
+    handoff_target: qa-gate
+    history:
+      - from: BACKLOG
+        to: READY
+        actor: control
+        at: "2026-08-31T13:25:13+08:00"
+        checkpoint: 492a868fe898247151b088dea947f168118f623e
+        reason: 用户明确要求优化控制流程，范围限定为四份治理文档。
+      - from: READY
+        to: IN_PROGRESS
+        actor: control
+        at: "2026-08-31T13:25:14+08:00"
+        checkpoint: 492a868fe898247151b088dea947f168118f623e
+        reason: 当前唯一总控取得治理文档租约并开始最小根因修改。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: control
+        at: "2026-08-31T13:27:44+08:00"
+        checkpoint: 492a868fe898247151b088dea947f168118f623e
+        reason: 四份治理文档完成最小根因修改并通过 YAML、结构、范围和空白预检。
+      - from: REVIEW
+        to: INTEGRATED
+        actor: control
+        at: "2026-08-31T13:27:45+08:00"
+        checkpoint: 492a868fe898247151b088dea947f168118f623e
+        reason: 共享控制规则已在 main 工作区形成唯一冻结候选，未触碰业务文件。
+      - from: INTEGRATED
+        to: VERIFIED
+        actor: control
+        at: "2026-08-31T13:27:46+08:00"
+        checkpoint: 492a868fe898247151b088dea947f168118f623e
+        reason: AC-001 至 AC-004 已逐项核对，现有模型与风险闸门未降级。
+      - from: VERIFIED
+        to: DONE
+        actor: control
+        at: "2026-08-31T13:27:47+08:00"
+        checkpoint: 492a868fe898247151b088dea947f168118f623e
+        reason: 上下文、QA 路由、事件等待、增量交接和最小验证规则已固化；最终精确提交交由唯一 qa-gate 验收。
 
 legacy_records:
   issue_prefix: ZZ
