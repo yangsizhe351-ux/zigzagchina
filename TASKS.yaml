@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T10:47:59+08:00"
+updated_at: "2026-08-31T10:58:00+08:00"
 
 status_flow:
   normal:
@@ -36,7 +36,7 @@ tasks:
   - issue_id: ZC-001
     title: 协作控制面落地与状态纠偏
     priority: P0
-    status: BLOCKED
+    status: REVIEW
     owner: control
     problem: 现有交接与工作树文档重复定义角色和状态，且旧发布候选结论与当前 main 不一致。
     scope:
@@ -163,8 +163,8 @@ tasks:
       manual_verification:
         - Git、文档、任务和 Worktree 只读审计已完成。
       review:
-        verdict: BLOCK
-        checkpoint: 7242a8bb6cd7e6d9b7d64fbc6b40ef7a873259f8
+        verdict: PENDING
+        checkpoint: null
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
       review_history:
         - verdict: BLOCK
@@ -185,15 +185,20 @@ tasks:
             - P0/P1 控制面任务未按规则使用 frontier_gate。
       integration:
         checkpoint: null
-      verification: []
+      verification:
+        - verdict: PASS
+          checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+          task_id: 01a055b9-8f82-74d0-b498-110267e74cc0
+          checked_at: "2026-08-31T10:58:00+08:00"
+          scope: ZC-001 模型升级分配与控制面不变量
       user_confirmations:
         - 用户于 2026-08-31 确认执行审计后的整合方案。
         - 用户要求按任务难度使用不同模型，并在重复返工时升级。
     risks:
       - severity: P1
-        status: OPEN
+        status: MITIGATED
         owner: control
-        summary: 第二次同类 BLOCK 触发强制模型升级；等待 ZC-007 以 gpt-5.6-sol / xhigh 做干净上下文根因复审。
+        summary: 第二次同类 BLOCK 已通过 ZC-007 的实际 gpt-5.6-sol / xhigh 干净上下文复审，等待原 qa-gate 复验完整候选。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
@@ -232,11 +237,18 @@ tasks:
         at: "2026-08-31T10:46:15+08:00"
         checkpoint: 7242a8bb6cd7e6d9b7d64fbc6b40ef7a873259f8
         reason: 第二次同类验收失败；模型升级分配与执行证据缺失。
-    exception:
-      blocked_from: REVIEW
-      waiting_for: ZC-007
-      exit_condition: ZC-007 以 gpt-5.6-sol / xhigh 完成模型升级根因复审并给出可复现证据。
-      resume_status: IN_PROGRESS
+      - from: BLOCKED
+        to: IN_PROGRESS
+        actor: control
+        at: "2026-08-31T10:58:00+08:00"
+        checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+        reason: ZC-007 以实际 gpt-5.6-sol / xhigh 完成干净上下文根因复审并 PASS。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: control
+        at: "2026-08-31T10:58:01+08:00"
+        checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+        reason: 模型升级分配、实际执行证据和控制面不变量已齐备，交回原 qa-gate。
 
   - issue_id: ZC-002
     title: 发布范围与公开信息确认
@@ -485,7 +497,7 @@ tasks:
   - issue_id: ZC-005
     title: 首次工作流与交接独立验收
     priority: P0
-    status: BLOCKED
+    status: READY
     owner: qa-gate
     problem: 新控制面必须由未参与实现的窗口对精确 commit 做独立验收。
     scope:
@@ -551,8 +563,8 @@ tasks:
       manual_verification:
         - detached HEAD、目标 SHA、远端差异、旧 Worktree 和干净状态均与台账一致。
       review:
-        verdict: BLOCK
-        checkpoint: 7242a8bb6cd7e6d9b7d64fbc6b40ef7a873259f8
+        verdict: PENDING
+        checkpoint: null
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
       review_history:
         - verdict: BLOCK
@@ -576,15 +588,10 @@ tasks:
       user_confirmations: []
     risks:
       - severity: P1
-        status: OPEN
+        status: MITIGATED
         owner: qa-gate
-        summary: 第二次同类 BLOCK；等待 ZC-007 模型升级复审和总控证据收口。
+        summary: ZC-007 已验证模型升级真实执行；原 qa-gate 将复审新的精确 HEAD。
     handoff_target: control
-    exception:
-      blocked_from: READY
-      waiting_for: ZC-007
-      exit_condition: ZC-007 完成模型升级根因复审，ZC-001 回到 REVIEW 并产生新精确 SHA。
-      resume_status: READY
     history:
       - from: BACKLOG
         to: BLOCKED
@@ -616,6 +623,12 @@ tasks:
         at: "2026-08-31T10:46:15+08:00"
         checkpoint: 7242a8bb6cd7e6d9b7d64fbc6b40ef7a873259f8
         reason: 第二次同类验收失败；ZC-001 模型升级分配与执行证据缺失。
+      - from: BLOCKED
+        to: READY
+        actor: control
+        at: "2026-08-31T10:58:01+08:00"
+        checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+        reason: ZC-007 已提供实际 gpt-5.6-sol / xhigh 执行与升级规则 PASS 证据。
 
   - issue_id: ZC-006
     title: 旧窗口与 Worktree 安全收口
@@ -692,7 +705,7 @@ tasks:
   - issue_id: ZC-007
     title: 第二次控制面模型升级根因复审
     priority: P0
-    status: READY
+    status: DONE
     owner: model-escalation-reviewer
     problem: ZC-001 连续两次在 AC-001 被 BLOCK，必须由显式 gpt-5.6-sol / xhigh 的干净上下文验证升级分配与最小根因修复。
     scope:
@@ -737,22 +750,47 @@ tasks:
       released_at: null
     evidence:
       commits: []
-      checks: []
-      manual_verification: []
+      checks:
+        - command: ruby TASKS.yaml 七任务独立语义验证
+          result: PASS
+          checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+          run_at: "2026-08-31T10:58:00+08:00"
+          summary: 状态、异常来源、依赖、profile、证据 SHA、integration 时点与租约一致。
+        - command: git diff --check HEAD^ HEAD
+          result: PASS
+          checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+          run_at: "2026-08-31T10:58:00+08:00"
+          summary: 模型升级提交只修改 TASKS.yaml 与 HANDOFF.md，且无空白错误。
+        - command: git status --short --branch
+          result: PASS
+          checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+          run_at: "2026-08-31T10:58:00+08:00"
+          summary: detached HEAD 与目标 SHA 一致，验收 Worktree 干净。
+      manual_verification:
+        - Codex task 运行记录确认实际模型为 gpt-5.6-sol、推理强度为 xhigh。
       review:
-        verdict: PENDING
-        checkpoint: null
-        task_id: null
+        verdict: PASS
+        checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+        task_id: 01a055b9-8f82-74d0-b498-110267e74cc0
+        checked_at: "2026-08-31T10:58:00+08:00"
+        findings:
+          - AC-001、AC-002、AC-003 全部 PASS。
+          - control 单写者、qa-gate 只读、状态机和精确 SHA 双闸门均未削弱。
       integration:
-        checkpoint: null
-      verification: []
+        checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+      verification:
+        - verdict: PASS
+          checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+          task_id: 01a055b9-8f82-74d0-b498-110267e74cc0
+          checked_at: "2026-08-31T10:58:00+08:00"
+          scope: 模型升级实际执行与七任务控制面语义
       user_confirmations:
         - 用户要求在反复修改时提高模型强度，而不是让所有窗口继承同一模型。
     risks:
       - severity: P0
-        status: OPEN
+        status: RESOLVED
         owner: control
-        summary: 在 ZC-007 给出 PASS 前，不得再次把 ZC-001 交给最终 qa-gate。
+        summary: ZC-007 已以实际 gpt-5.6-sol / xhigh 完成复审并 PASS。
     handoff_target: control
     history:
       - from: BACKLOG
@@ -761,6 +799,36 @@ tasks:
         at: "2026-08-31T10:47:59+08:00"
         checkpoint: 7242a8bb6cd7e6d9b7d64fbc6b40ef7a873259f8
         reason: 第二次同类 BLOCK 触发强制模型与干净上下文升级。
+      - from: READY
+        to: IN_PROGRESS
+        actor: model-escalation-reviewer
+        at: "2026-08-31T10:49:00+08:00"
+        checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+        reason: 独立 gpt-5.6-sol / xhigh 只读 Worktree 已核验并开始复审。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: model-escalation-reviewer
+        at: "2026-08-31T10:58:00+08:00"
+        checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+        reason: 三项验收标准和七任务语义检查均已完成。
+      - from: REVIEW
+        to: INTEGRATED
+        actor: control
+        at: "2026-08-31T10:58:01+08:00"
+        checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+        reason: 总控接收并回写独立复审证据；无业务或实现 commit 需要合并。
+      - from: INTEGRATED
+        to: VERIFIED
+        actor: control
+        at: "2026-08-31T10:58:02+08:00"
+        checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+        reason: 任务配置、精确 SHA、实际模型和检查证据已交叉验证。
+      - from: VERIFIED
+        to: DONE
+        actor: control
+        at: "2026-08-31T10:58:03+08:00"
+        checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
+        reason: 所有 AC 有证据，风险已解决，任务无需文件租约。
 
 legacy_records:
   issue_prefix: ZZ
