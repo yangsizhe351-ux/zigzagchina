@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T10:37:10+08:00"
+updated_at: "2026-08-31T10:38:55+08:00"
 
 status_flow:
   normal:
@@ -36,7 +36,7 @@ tasks:
   - issue_id: ZC-001
     title: 协作控制面落地与状态纠偏
     priority: P0
-    status: IN_PROGRESS
+    status: REVIEW
     owner: control
     problem: 现有交接与工作树文档重复定义角色和状态，且旧发布候选结论与当前 main 不一致。
     scope:
@@ -107,6 +107,9 @@ tasks:
         - checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
           role: delivery
           summary: 建立单一事实来源、任务台账、交付模板、模型分级和状态纠偏。
+        - checkpoint: 9768d0f1a0cece9ee203de6677a6fcbf8a105a7a
+          role: correction
+          summary: 修复状态历史、异常状态来源与提前填写 integration checkpoint 的语义矛盾。
       checks:
         - command: ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
           result: PASS
@@ -128,17 +131,36 @@ tasks:
           checkpoint: ae8bdb687b973fc68f92d9a4037fef0cbee41645
           run_at: "2026-08-31T00:44:37+08:00"
           summary: 工作区干净；main 相对 origin/main 领先 10 个提交。
+        - command: ruby TASKS.yaml 状态机语义验证
+          result: PASS
+          checkpoint: 9768d0f1a0cece9ee203de6677a6fcbf8a105a7a
+          run_at: "2026-08-31T10:38:55+08:00"
+          summary: 历史转换连续、异常状态来源匹配，且不存在未通过验收的提前 integration checkpoint。
+        - command: npm run check
+          result: PASS
+          checkpoint: 9768d0f1a0cece9ee203de6677a6fcbf8a105a7a
+          run_at: "2026-08-31T10:38:55+08:00"
+          summary: 三语内容检查和 Vite 构建通过，转换 38 个模块。
+        - command: git diff --check
+          result: PASS
+          checkpoint: 9768d0f1a0cece9ee203de6677a6fcbf8a105a7a
+          run_at: "2026-08-31T10:38:55+08:00"
+          summary: 纠正提交无空白错误。
       manual_verification:
         - Git、文档、任务和 Worktree 只读审计已完成。
       review:
-        verdict: BLOCK
-        checkpoint: b555d92a2cd72341c26ec2508d4e4eb17d20cf22
+        verdict: PENDING
+        checkpoint: null
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
-        checked_at: "2026-08-31T10:36:11+08:00"
-        findings:
-          - ZC-001 状态历史跳过 READY。
-          - REVIEW/PENDING 阶段提前写入 integration checkpoint。
-          - 四个异常任务的 blocked_from 与实际历史来源不一致。
+      review_history:
+        - verdict: BLOCK
+          checkpoint: b555d92a2cd72341c26ec2508d4e4eb17d20cf22
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-08-31T10:36:11+08:00"
+          findings:
+            - ZC-001 状态历史跳过 READY。
+            - REVIEW/PENDING 阶段提前写入 integration checkpoint。
+            - 四个异常任务的 blocked_from 与实际历史来源不一致。
       integration:
         checkpoint: null
       verification: []
@@ -149,7 +171,7 @@ tasks:
       - severity: P1
         status: OPEN
         owner: control
-        summary: 首轮独立验收在 b555d92 上因状态机语义矛盾 BLOCK；本轮正在做根因纠正。
+        summary: 首轮 BLOCK 的状态机语义矛盾已在 9768d0f 修复，等待同一 qa-gate 复审新候选。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
@@ -176,6 +198,12 @@ tasks:
         at: "2026-08-31T10:37:10+08:00"
         checkpoint: b555d92a2cd72341c26ec2508d4e4eb17d20cf22
         reason: 首轮独立验收 BLOCK；按 rework_count 1 做状态机根因纠正。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: control
+        at: "2026-08-31T10:38:55+08:00"
+        checkpoint: 9768d0f1a0cece9ee203de6677a6fcbf8a105a7a
+        reason: 根因纠正和要求的检查完成，交回同一独立验收任务复审。
 
   - issue_id: ZC-002
     title: 发布范围与公开信息确认
@@ -424,7 +452,7 @@ tasks:
   - issue_id: ZC-005
     title: 首次工作流与交接独立验收
     priority: P0
-    status: BLOCKED
+    status: READY
     owner: qa-gate
     problem: 新控制面必须由未参与实现的窗口对精确 commit 做独立验收。
     scope:
@@ -490,29 +518,28 @@ tasks:
       manual_verification:
         - detached HEAD、目标 SHA、远端差异、旧 Worktree 和干净状态均与台账一致。
       review:
-        verdict: BLOCK
-        checkpoint: b555d92a2cd72341c26ec2508d4e4eb17d20cf22
+        verdict: PENDING
+        checkpoint: null
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
-        checked_at: "2026-08-31T10:36:11+08:00"
-        findings:
-          - ZC-001 AC-001 BLOCK。
-          - ZC-001 AC-002 与 AC-003 PASS。
-          - ZC-005 AC-003 等待纠正后的第二阶段封板。
+      review_history:
+        - verdict: BLOCK
+          checkpoint: b555d92a2cd72341c26ec2508d4e4eb17d20cf22
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-08-31T10:36:11+08:00"
+          findings:
+            - ZC-001 AC-001 BLOCK。
+            - ZC-001 AC-002 与 AC-003 PASS。
+            - ZC-005 AC-003 等待纠正后的第二阶段封板。
       integration:
         checkpoint: null
       verification: []
       user_confirmations: []
     risks:
       - severity: P1
-        status: OPEN
+        status: MITIGATED
         owner: qa-gate
-        summary: 首轮验收已 BLOCK；等待 ZC-001 状态机纠正 commit 后复审。
+        summary: 首轮 BLOCK 的根因已在 9768d0f 修复；同一 qa-gate 将复审新的精确 HEAD。
     handoff_target: control
-    exception:
-      blocked_from: READY
-      waiting_for: ZC-001
-      exit_condition: 状态历史、blocked_from 与 integration checkpoint 矛盾修复并产生新精确 SHA。
-      resume_status: READY
     history:
       - from: BACKLOG
         to: BLOCKED
@@ -532,6 +559,12 @@ tasks:
         at: "2026-08-31T10:36:11+08:00"
         checkpoint: b555d92a2cd72341c26ec2508d4e4eb17d20cf22
         reason: 首轮独立验收发现状态机与集成证据语义矛盾。
+      - from: BLOCKED
+        to: READY
+        actor: control
+        at: "2026-08-31T10:38:55+08:00"
+        checkpoint: 9768d0f1a0cece9ee203de6677a6fcbf8a105a7a
+        reason: 首轮阻断项已做根因纠正并通过本地语义、构建与 diff 检查。
 
   - issue_id: ZC-006
     title: 旧窗口与 Worktree 安全收口
