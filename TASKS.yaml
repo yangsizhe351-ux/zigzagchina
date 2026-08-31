@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T11:57:58+08:00"
+updated_at: "2026-08-31T12:10:55+08:00"
 
 status_flow:
   normal:
@@ -51,20 +51,24 @@ role_registry:
       workspace_mode: local_main
     content-localization:
       title: ZigZag 文本与翻译
-      task_id: null
-      status: PROVISIONING
+      task_id: 01a05600-619c-7820-877a-82ca45e5e9cd
+      status: IDLE_READ_ONLY
       default_profile: balanced_build
       model: gpt-5.6-terra
       reasoning_effort: high
-      workspace_mode: worktree
+      workspace_mode: read_only_worktree
+      workspace_path: /Users/yangsizhe/.codex/worktrees/7027/CDQC
+      checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
     policy-compliance:
       title: ZigZag 政策与合规
-      task_id: null
-      status: PROVISIONING
+      task_id: 01a05600-76b4-7170-aea1-5c19ed47c909
+      status: IDLE_READ_ONLY
       default_profile: frontier_gate
       model: gpt-5.6-sol
       reasoning_effort: xhigh
       workspace_mode: read_only_worktree
+      workspace_path: /Users/yangsizhe/.codex/worktrees/d40d/CDQC
+      checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
     site-architecture:
       title: ZigZag 网站结构与实现
       task_id: 01a055cc-8022-7050-b6a6-3aa10486cc6f
@@ -73,14 +77,17 @@ role_registry:
       model: gpt-5.6-terra
       reasoning_effort: high
       workspace_mode: worktree
+      workspace_path: /Users/yangsizhe/.codex/worktrees/f79a/CDQC
     image-studio:
       title: ZigZag 图像生成
-      task_id: null
-      status: PROVISIONING
+      task_id: 01a05600-6c1c-7412-b091-063e90c9175d
+      status: IDLE_READ_ONLY
       default_profile: balanced_visual
       model: gpt-5.6-terra
       reasoning_effort: medium
-      workspace_mode: worktree
+      workspace_mode: read_only_worktree
+      workspace_path: /Users/yangsizhe/.codex/worktrees/82aa/CDQC
+      checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
       required_tool: imagegen
     qa-gate:
       title: ZigZag 集成验收
@@ -90,6 +97,7 @@ role_registry:
       model: gpt-5.6-sol
       reasoning_effort: xhigh
       workspace_mode: read_only_worktree
+      workspace_path: /Users/yangsizhe/.codex/worktrees/c386/CDQC
   fast_routing:
     profile: fast_bounded
     model: gpt-5.6-luna
@@ -1284,9 +1292,36 @@ tasks:
       acquired_at: "2026-08-31T11:57:58+08:00"
       released_at: null
     evidence:
-      commits: []
-      checks: []
-      manual_verification: []
+      commits:
+        - checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
+          role: workflow_definition
+          summary: 建立六角色、按角色模型与思考深度、Fast 总控路由及安全总控交接规则。
+      checks:
+        - command: ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
+          result: PASS
+          checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
+          run_at: "2026-08-31T12:00:00+08:00"
+          summary: YAML、角色/profile 引用与任务状态历史成功解析。
+        - command: PYTHONPATH=/private/tmp/control-context-handoff-validator-deps python3 quick_validate.py /Users/yangsizhe/.codex/skills/control-context-handoff
+          result: PASS
+          checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
+          run_at: "2026-08-31T12:00:00+08:00"
+          summary: 全局 Skill 结构有效；依赖仅为临时校验环境，未写入项目。
+        - command: Codex project task 身份、cwd、HEAD 与创建参数复核
+          result: PASS
+          checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
+          run_at: "2026-08-31T12:10:55+08:00"
+          summary: 文本、政策、网站、图像和 QA 五个角色均已映射；三个新专项位于干净的独立只读 Worktree。
+        - command: git diff --check
+          result: PASS
+          checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
+          run_at: "2026-08-31T12:00:00+08:00"
+          summary: 六角色工作流提交无空白错误。
+      manual_verification:
+        - 全局 Skill 位于 /Users/yangsizhe/.codex/skills/control-context-handoff，仅包含总控健康检测、安全接管和前任归档规则，不含 ZigZag 六角色或 Fast 配置。
+        - SKILL.md SHA-256 为 b2e030d0287c957eff29b82ac95ec6b3972826d8fc002caf0e8652852ed9685b；agents/openai.yaml SHA-256 为 599968a9ccbe3257953b50ac5e01b8b9e0da646c9b0ad4d44dc9a0debcf51a47。
+        - 独立 gpt-5.6-sol / xhigh 安全复审覆盖干净自动交接、未知脏修改和继任项目/HEAD 不匹配三个场景，结论 PASS。
+        - 文本、政策和图像窗口在没有具体 issue 与任务分支时保持 detached/IDLE_READ_ONLY；不得从该状态编辑。
       review:
         verdict: PENDING
         checkpoint: null
@@ -1304,9 +1339,9 @@ tasks:
         owner: control
         summary: 旧总控只能在新总控明确 READY 且台账已更新后归档。
       - severity: P1
-        status: OPEN
+        status: RESOLVED
         owner: control
-        summary: 自动交接不得根据虚构 token 百分比触发，只能使用可观察的上下文压缩、状态重建、矛盾或用户卡顿反馈。
+        summary: Skill 已改用上下文压缩、状态重建、矛盾或用户卡顿反馈等可观察信号，不声明虚构 token 百分比。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
