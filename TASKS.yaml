@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T13:37:44+08:00"
+updated_at: "2026-08-31T13:39:53+08:00"
 
 status_flow:
   normal:
@@ -1479,7 +1479,7 @@ tasks:
   - issue_id: ZC-010
     title: 控制面上下文与执行效率收敛
     priority: P1
-    status: REVIEW
+    status: DONE
     owner: control
     problem: 历史执行存在重复全量上下文、同一候选重复验收与短间隔轮询，控制成本与业务增量不成比例。
     scope:
@@ -1555,6 +1555,9 @@ tasks:
         - checkpoint: 6a547132667b3f8c12f2b765e89a751915728ddd
           role: blocked_candidate
           summary: 状态已恢复 REVIEW，但遗留的 integration checkpoint 与 owner PASS 仍提前声明闸门完成。
+        - checkpoint: 259848523074bcd023ef850b243557dd0d25735a
+          role: qa_passed_candidate
+          summary: 清除全部提前闸门证据后，独立 qa-gate 对 AC-001 至 AC-004 给出 PASS。
       checks:
         - command: ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
           result: PASS
@@ -1582,11 +1585,11 @@ tasks:
         - AC-003：跨窗口包只包含 issue、基线/候选 SHA、变更路径、失败项或结果及下一动作，禁止重传完整文档和长日志。
         - AC-004：owner 先做最小机械预检，完整矩阵只在冻结候选运行一次；Sol/xhigh 与政策、安全、共享架构、QA、发布质量闸门保持不变。
       review:
-        verdict: BLOCK
-        checkpoint: 6a547132667b3f8c12f2b765e89a751915728ddd
+        verdict: PASS
+        checkpoint: 259848523074bcd023ef850b243557dd0d25735a
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
       integration:
-        checkpoint: null
+        checkpoint: 259848523074bcd023ef850b243557dd0d25735a
       verification:
         - verdict: BLOCK
           checkpoint: cca309ff9e113104e452e0d47d63ce7209e7a78f
@@ -1598,13 +1601,18 @@ tasks:
           task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
           checked_at: "2026-08-31T13:36:55+08:00"
           scope: AC-004；REVIEW 阶段不得保留 integration checkpoint 或 owner verification PASS。
+        - verdict: PASS
+          checkpoint: 259848523074bcd023ef850b243557dd0d25735a
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-08-31T13:39:42+08:00"
+          scope: ZC-010 AC-001 至 AC-004、YAML/引用、文件范围、空白、模型与风险闸门的独立最终候选验收。
       user_confirmations:
         - 用户要求当前总控自我优化，并提供近期 ZigZag 与 PartnerFit token 浪费诊断截图作为问题背景。
     risks:
       - severity: P1
-        status: OPEN
+        status: RESOLVED
         owner: control
-        summary: 效率规则本身未降低质量闸门；候选必须先保持 REVIEW，待精确 SHA 独立 PASS 后才能收口 DONE。
+        summary: 精确候选 259848523074bcd023ef850b243557dd0d25735a 已由独立 qa-gate PASS，效率规则未降低任何质量闸门。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
@@ -1625,6 +1633,24 @@ tasks:
         at: "2026-08-31T13:37:44+08:00"
         checkpoint: 6a547132667b3f8c12f2b765e89a751915728ddd
         reason: 四份治理文档通过范围、YAML、引用与空白检查；两次 AC-004 阻断均已如实记录，integration 与 verification 保持未通过状态等待新候选验收。
+      - from: REVIEW
+        to: INTEGRATED
+        actor: control
+        at: "2026-08-31T13:39:50+08:00"
+        checkpoint: 259848523074bcd023ef850b243557dd0d25735a
+        reason: 唯一 qa-gate 对精确候选给出 PASS，AC-001 至 AC-004 均无失败项。
+      - from: INTEGRATED
+        to: VERIFIED
+        actor: control
+        at: "2026-08-31T13:39:51+08:00"
+        checkpoint: 259848523074bcd023ef850b243557dd0d25735a
+        reason: YAML、引用、文件范围、空白、模型与风险闸门证据均由独立验收确认。
+      - from: VERIFIED
+        to: DONE
+        actor: control
+        at: "2026-08-31T13:39:53+08:00"
+        checkpoint: 259848523074bcd023ef850b243557dd0d25735a
+        reason: 上下文、单一 QA、事件等待、增量交接和最小验证规则完成收口。
 
 legacy_records:
   issue_prefix: ZZ
