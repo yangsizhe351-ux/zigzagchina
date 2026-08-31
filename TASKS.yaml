@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T11:35:09+08:00"
+updated_at: "2026-08-31T11:57:58+08:00"
 
 status_flow:
   normal:
@@ -25,12 +25,121 @@ model_profiles:
   balanced_build:
     model: gpt-5.6-terra
     reasoning_effort: high
+  balanced_visual:
+    model: gpt-5.6-terra
+    reasoning_effort: medium
   frontier_control:
     model: gpt-5.6-sol
     reasoning_effort: high
   frontier_gate:
     model: gpt-5.6-sol
     reasoning_effort: xhigh
+
+role_registry:
+  visible_window_limit: 6
+  active_specialist_limit: 1
+  conditional_parallel_limit: 2
+  fast_controlled_by: control
+  roles:
+    control:
+      title: ZigZag 总控台（项目内唯一入口）
+      task_id: 01a05304-9679-7ff3-9bc8-39e233cc722a
+      status: ACTIVE_PREDECESSOR
+      default_profile: frontier_control
+      model: gpt-5.6-sol
+      reasoning_effort: high
+      workspace_mode: local_main
+    content-localization:
+      title: ZigZag 文本与翻译
+      task_id: null
+      status: PROVISIONING
+      default_profile: balanced_build
+      model: gpt-5.6-terra
+      reasoning_effort: high
+      workspace_mode: worktree
+    policy-compliance:
+      title: ZigZag 政策与合规
+      task_id: null
+      status: PROVISIONING
+      default_profile: frontier_gate
+      model: gpt-5.6-sol
+      reasoning_effort: xhigh
+      workspace_mode: read_only_worktree
+    site-architecture:
+      title: ZigZag 网站结构与实现
+      task_id: 01a055cc-8022-7050-b6a6-3aa10486cc6f
+      status: IDLE_WITH_BLOCKED_TASK
+      default_profile: balanced_build
+      model: gpt-5.6-terra
+      reasoning_effort: high
+      workspace_mode: worktree
+    image-studio:
+      title: ZigZag 图像生成
+      task_id: null
+      status: PROVISIONING
+      default_profile: balanced_visual
+      model: gpt-5.6-terra
+      reasoning_effort: medium
+      workspace_mode: worktree
+      required_tool: imagegen
+    qa-gate:
+      title: ZigZag 集成验收
+      task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+      status: IDLE
+      default_profile: frontier_gate
+      model: gpt-5.6-sol
+      reasoning_effort: xhigh
+      workspace_mode: read_only_worktree
+  fast_routing:
+    profile: fast_bounded
+    model: gpt-5.6-luna
+    reasoning_effort: medium
+    allowed_roles:
+      - content-localization
+      - site-architecture
+      - image-studio
+    forbidden_work:
+      - policy_or_public_fact_decision
+      - final_translation_approval
+      - shared_architecture_decision
+      - final_image_selection
+      - qa_gate
+      - release_or_rollback
+
+control_handoff_policy:
+  skill: control-context-handoff
+  standing_authorization:
+    granted: true
+    granted_at: "2026-08-31T11:57:58+08:00"
+    scope: zigzag_control_thread_only
+    create_successor_in_saved_project: true
+    archive_predecessor_after_successor_ready: true
+    push_or_deploy: false
+    delete_branch_or_worktree: false
+  health_signals:
+    - conversation_context_compacted
+    - repeated_state_reconstruction
+    - two_consecutive_context_omissions_or_contradictions
+    - user_reports_lag_or_context_overuse
+  warning_action: 更新 HANDOFF.md 并提醒用户可交接。
+  automatic_action: 形成安全检查点，创建并核验项目内继任总控，更新台账后可恢复归档旧总控。
+  successor_requirements:
+    project_binding: Zigzag
+    workspace_mode: local_main
+    model: gpt-5.6-sol
+    reasoning_effort: high
+    must_verify:
+      - absolute_project_path
+      - main_branch
+      - exact_head
+      - worktree_state
+      - task_ledger
+      - handoff
+  stop_conditions:
+    - unknown_dirty_changes
+    - project_binding_mismatch
+    - head_or_branch_mismatch
+    - successor_not_ready
 
 model_escalation_policy:
   first_same_ac_failure:
@@ -1103,6 +1212,115 @@ tasks:
         at: "2026-08-31T11:34:17+08:00"
         checkpoint: 90f62b5b03932631e48e54258ac1fa6ef192aafe
         reason: AC-001 缺少合法状态转换边验证；按额度要求停在干净提交点，明日复用现有窗口继续。
+
+  - issue_id: ZC-009
+    title: 六角色窗口与总控自动交接
+    priority: P0
+    status: IN_PROGRESS
+    owner: control
+    problem: 三窗口结构过度合并内容、政策、网站和图像职责；同时总控在上下文过长或卡顿时缺少可验证、可恢复的换窗机制。
+    scope:
+      allowed_paths:
+        - AGENTS.md
+        - HANDOFF.md
+        - TASKS.yaml
+        - WORKFLOW.md
+      forbidden_paths:
+        - src/
+        - assets/
+        - public/
+        - supabase/
+        - dist-netlify/
+    acceptance_criteria:
+      - id: AC-001
+        statement: 项目固定为总控、文本与翻译、政策与合规、网站结构与实现、图像生成、集成验收六个角色，职责和文件边界不重叠。
+        evidence_required: WORKFLOW.md、AGENTS.md、role_registry 与项目任务列表一致。
+      - id: AC-002
+        statement: 每个角色有明确默认模型、思考深度和升级规则；Fast 仅由总控按单次任务管理。
+        evidence_required: role_registry、模型路由记录及实际创建参数。
+      - id: AC-003
+        statement: 全局 control-context-handoff Skill 只管理总控上下文健康与安全交接，并通过 skill validator。
+        evidence_required: 全局 Skill 路径、校验命令与结果。
+      - id: AC-004
+        statement: 新总控位于保存项目的真实根目录，核验 main、HEAD、工作区和台账后接管；旧总控随后可恢复归档。
+        evidence_required: 新旧 task ID、项目绑定、核验消息、台账 active control 与归档结果。
+    branch: main
+    workspace:
+      path: /Users/yangsizhe/Documents/Codex/2026-08-22/new-chat/CDQC
+      mode: local
+      expected_branch: main
+    base_checkpoint: 5ab0a22b1444d9d439d386a4c58319eba5bbde2d
+    dependencies: []
+    required_tests:
+      - ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
+      - python3 quick_validate.py control-context-handoff
+      - Codex project task 列表与模型参数复核
+      - git diff --check
+      - git status --short --branch
+    execution_profile:
+      risk_level: L3
+      profile: frontier_control
+      rework_count: 0
+      selection_reason: 跨项目规则、模型调度与总控换代会影响所有后续任务，使用 gpt-5.6-sol / high；最终交接核验由 frontier_gate 执行。
+      escalation_trigger: 若新总控项目绑定、HEAD 或工作区核验失败，停止自动交接并保持旧总控 ACTIVE，不新增替代窗口。
+      assignment_history:
+        - assigned_at: "2026-08-31T11:57:58+08:00"
+          rework_count: 0
+          profile: frontier_control
+          model: gpt-5.6-sol
+          reasoning_effort: high
+          executor_target: 01a05304-9679-7ff3-9bc8-39e233cc722a
+          reason: 用户授权落地六角色并为本项目启用安全自动交接。
+    public_interface:
+      change_allowed: false
+      approval: null
+    file_lease:
+      status: HELD
+      write_paths:
+        - AGENTS.md
+        - HANDOFF.md
+        - TASKS.yaml
+        - WORKFLOW.md
+      acquired_at: "2026-08-31T11:57:58+08:00"
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification: []
+      review:
+        verdict: PENDING
+        checkpoint: null
+        task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations:
+        - 用户确认 Fast 由总控统一管理。
+        - 用户确认全局 Skill 仅包含自动交接能力，项目角色配置不进入全局 Skill。
+        - 用户授权新总控核验成功后将旧总控移出项目可见区。
+    risks:
+      - severity: P0
+        status: OPEN
+        owner: control
+        summary: 旧总控只能在新总控明确 READY 且台账已更新后归档。
+      - severity: P1
+        status: OPEN
+        owner: control
+        summary: 自动交接不得根据虚构 token 百分比触发，只能使用可观察的上下文压缩、状态重建、矛盾或用户卡顿反馈。
+    handoff_target: qa-gate
+    history:
+      - from: BACKLOG
+        to: READY
+        actor: control
+        at: "2026-08-31T11:57:58+08:00"
+        checkpoint: 5ab0a22b1444d9d439d386a4c58319eba5bbde2d
+        reason: 用户确认六角色方向、模型分工、Fast 总控管理和自动交接范围。
+      - from: READY
+        to: IN_PROGRESS
+        actor: control
+        at: "2026-08-31T11:57:59+08:00"
+        checkpoint: 5ab0a22b1444d9d439d386a4c58319eba5bbde2d
+        reason: 总控取得四个协作文档租约并开始落地。
 
 legacy_records:
   issue_prefix: ZZ
