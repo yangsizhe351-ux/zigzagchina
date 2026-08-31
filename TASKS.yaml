@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T10:58:00+08:00"
+updated_at: "2026-08-31T11:08:14+08:00"
 
 status_flow:
   normal:
@@ -32,11 +32,29 @@ model_profiles:
     model: gpt-5.6-sol
     reasoning_effort: xhigh
 
+model_escalation_policy:
+  first_same_ac_failure:
+    action: ROOT_CAUSE_RETRY
+    keep_or_raise_model: true
+    raise_reasoning_effort: true
+  second_same_ac_failure:
+    action: REFRAME_OR_SPLIT
+    raise_model_profile: true
+    require_clean_context: true
+  third_same_ac_failure:
+    action: BLOCK_AND_ARCHITECTURE_REVIEW
+    status: BLOCKED
+    default_profile: frontier_gate
+    default_reasoning_effort: xhigh
+    max_allowed_only_when:
+      priority: P0
+      root_cause: UNKNOWN
+
 tasks:
   - issue_id: ZC-001
     title: 协作控制面落地与状态纠偏
     priority: P0
-    status: REVIEW
+    status: BLOCKED
     owner: control
     problem: 现有交接与工作树文档重复定义角色和状态，且旧发布候选结论与当前 main 不一致。
     scope:
@@ -82,9 +100,17 @@ tasks:
     execution_profile:
       risk_level: L3
       profile: frontier_gate
-      rework_count: 2
-      selection_reason: 同一 AC-001 已连续两次 BLOCK；按升级规则切换到 gpt-5.6-sol / xhigh，并由干净上下文的 ZC-007 复核后才能重开。
-      escalation_trigger: 第三次同类失败时停止实现并保持 BLOCKED，由独立 gpt-5.6-sol / max 做根因复审。
+      rework_count: 3
+      selection_reason: 同一 AC-001 已连续三次 BLOCK；停止人工补丁，保持 gpt-5.6-sol / xhigh，由 ZC-008 建立确定性工作流校验器后才能重开。
+      escalation_trigger: 第三次同类失败保持 BLOCKED；根因已知时使用 frontier_gate / xhigh，只有 P0 且根因未知时才允许 max。
+      next_escalation:
+        status: BLOCKED
+        profile: frontier_gate
+        model: gpt-5.6-sol
+        reasoning_effort: xhigh
+        max_allowed_only_when:
+          priority: P0
+          root_cause: UNKNOWN
       assignment_history:
         - assigned_at: "2026-08-31T00:31:37+08:00"
           rework_count: 0
@@ -99,6 +125,13 @@ tasks:
           reasoning_effort: xhigh
           executor_target: ZC-007
           reason: 第二次同类 BLOCK 后强制升级模型档位、推理强度和干净上下文。
+        - assigned_at: "2026-08-31T11:08:14+08:00"
+          rework_count: 3
+          profile: frontier_gate
+          model: gpt-5.6-sol
+          reasoning_effort: xhigh
+          executor_target: ZC-008
+          reason: 第三次同类 BLOCK 后停止人工补丁，转为确定性工作流校验器根因修复；根因已知，不启用 max。
     public_interface:
       change_allowed: false
       approval: null
@@ -163,8 +196,8 @@ tasks:
       manual_verification:
         - Git、文档、任务和 Worktree 只读审计已完成。
       review:
-        verdict: PENDING
-        checkpoint: null
+        verdict: BLOCK
+        checkpoint: ead18f18fb950a55c860e3868ea97de3225dad1b
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
       review_history:
         - verdict: BLOCK
@@ -183,6 +216,14 @@ tasks:
             - 首轮三个状态机根因均已通过复核。
             - rework_count 已增加但模型档位与推理强度未同步升级。
             - P0/P1 控制面任务未按规则使用 frontier_gate。
+        - verdict: BLOCK
+          checkpoint: ead18f18fb950a55c860e3868ea97de3225dad1b
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-08-31T11:06:47+08:00"
+          findings:
+            - 两轮 BLOCK、模型升级和 ZC-007 实际执行证据均已通过。
+            - HANDOFF 下一步仍包含已完成的 ZC-007 收口动作。
+            - 第三次失败的 max 条件未限定为 P0 且根因未知。
       integration:
         checkpoint: null
       verification:
@@ -196,9 +237,9 @@ tasks:
         - 用户要求按任务难度使用不同模型，并在重复返工时升级。
     risks:
       - severity: P1
-        status: MITIGATED
+        status: OPEN
         owner: control
-        summary: 第二次同类 BLOCK 已通过 ZC-007 的实际 gpt-5.6-sol / xhigh 干净上下文复审，等待原 qa-gate 复验完整候选。
+        summary: 第三次同类 BLOCK 已停止人工补丁；等待 ZC-008 建立可重复的工作流语义校验器。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
@@ -249,6 +290,17 @@ tasks:
         at: "2026-08-31T10:58:01+08:00"
         checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
         reason: 模型升级分配、实际执行证据和控制面不变量已齐备，交回原 qa-gate。
+      - from: REVIEW
+        to: BLOCKED
+        actor: qa-gate
+        at: "2026-08-31T11:06:47+08:00"
+        checkpoint: ead18f18fb950a55c860e3868ea97de3225dad1b
+        reason: 第三次同类 AC-001 失败；停止人工补丁并转为确定性校验器根因修复。
+    exception:
+      blocked_from: REVIEW
+      waiting_for: ZC-008
+      exit_condition: ZC-008 实现并通过工作流语义校验器，覆盖状态、异常来源、模型升级条件、证据和交接一致性。
+      resume_status: IN_PROGRESS
 
   - issue_id: ZC-002
     title: 发布范围与公开信息确认
@@ -497,7 +549,7 @@ tasks:
   - issue_id: ZC-005
     title: 首次工作流与交接独立验收
     priority: P0
-    status: READY
+    status: BLOCKED
     owner: qa-gate
     problem: 新控制面必须由未参与实现的窗口对精确 commit 做独立验收。
     scope:
@@ -531,7 +583,7 @@ tasks:
     execution_profile:
       risk_level: L3
       profile: frontier_gate
-      rework_count: 2
+      rework_count: 3
       selection_reason: 首次控制面和精确 SHA 闸门属于高风险独立验收，显式使用最高审查档位。
       escalation_trigger: 若发现阻断项，退回原 owner；连续两轮同类失败时重建干净验收任务并拆分问题。
     public_interface:
@@ -563,8 +615,8 @@ tasks:
       manual_verification:
         - detached HEAD、目标 SHA、远端差异、旧 Worktree 和干净状态均与台账一致。
       review:
-        verdict: PENDING
-        checkpoint: null
+        verdict: BLOCK
+        checkpoint: ead18f18fb950a55c860e3868ea97de3225dad1b
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
       review_history:
         - verdict: BLOCK
@@ -582,16 +634,29 @@ tasks:
           findings:
             - 首轮状态机阻断项已通过。
             - ZC-001 模型返工升级规则未落实，AC-001 与 ZC-005 AC-002 BLOCK。
+        - verdict: BLOCK
+          checkpoint: ead18f18fb950a55c860e3868ea97de3225dad1b
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-08-31T11:06:47+08:00"
+          findings:
+            - ZC-007 模型升级证据已通过。
+            - HANDOFF 当前步骤与 DONE 状态不一致。
+            - 第三次失败的 max 条件与 WORKFLOW.md 不一致。
       integration:
         checkpoint: null
       verification: []
       user_confirmations: []
     risks:
       - severity: P1
-        status: MITIGATED
+        status: OPEN
         owner: qa-gate
-        summary: ZC-007 已验证模型升级真实执行；原 qa-gate 将复审新的精确 HEAD。
+        summary: 第三次同类 BLOCK；等待 ZC-008 确定性校验器提交及分支验收。
     handoff_target: control
+    exception:
+      blocked_from: READY
+      waiting_for: ZC-008
+      exit_condition: ZC-008 的校验器提交通过分支验收并集成，ZC-001 产生新候选。
+      resume_status: READY
     history:
       - from: BACKLOG
         to: BLOCKED
@@ -629,6 +694,12 @@ tasks:
         at: "2026-08-31T10:58:01+08:00"
         checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
         reason: ZC-007 已提供实际 gpt-5.6-sol / xhigh 执行与升级规则 PASS 证据。
+      - from: READY
+        to: BLOCKED
+        actor: qa-gate
+        at: "2026-08-31T11:06:47+08:00"
+        checkpoint: ead18f18fb950a55c860e3868ea97de3225dad1b
+        reason: 第三次同类 AC-001 失败；转由 ZC-008 建立机器校验根因修复。
 
   - issue_id: ZC-006
     title: 旧窗口与 Worktree 安全收口
@@ -829,6 +900,90 @@ tasks:
         at: "2026-08-31T10:58:03+08:00"
         checkpoint: 3ccc584e712d19d573c4b3bd59e110391bbd4d63
         reason: 所有 AC 有证据，风险已解决，任务无需文件租约。
+
+  - issue_id: ZC-008
+    title: 确定性工作流语义校验器
+    priority: P0
+    status: READY
+    owner: workflow-validator-specialist
+    problem: 三次人工验收均发现新的控制面语义漂移；需要机器校验状态、异常来源、模型升级、证据与集成时点，终止补丁式返工。
+    scope:
+      allowed_paths:
+        - package.json
+        - scripts/check-workflow.rb
+      forbidden_paths:
+        - TASKS.yaml
+        - HANDOFF.md
+        - WORKFLOW.md
+        - AGENTS.md
+        - src/
+        - assets/
+        - public/
+        - supabase/
+        - dist-netlify/
+    acceptance_criteria:
+      - id: AC-001
+        statement: check:workflow 可确定性验证必填字段、唯一 ID/owner、状态历史连续性、异常来源、依赖无环、profile 与 assignment、租约、证据 SHA 和 integration 时点。
+        evidence_required: 校验器源码、正向运行结果与至少一个负向 fixture/临时变体证明失败可被捕获。
+      - id: AC-002
+        statement: 校验器验证结构化第三次失败策略：默认 xhigh，max 仅允许 P0 且根因 UNKNOWN。
+        evidence_required: 正向与负向命令证据。
+      - id: AC-003
+        statement: npm run check 在内容与构建前执行 check:workflow，且原项目检查仍通过。
+        evidence_required: package.json diff、npm run check、git diff --check 与干净分支。
+    branch: codex/zc-008-workflow-validator
+    workspace:
+      path: null
+      mode: worktree
+      expected_branch: codex/zc-008-workflow-validator
+    base_checkpoint: ead18f18fb950a55c860e3868ea97de3225dad1b
+    dependencies: []
+    required_tests:
+      - npm run check:workflow
+      - 校验器负向测试：破坏异常来源或 max 条件时必须非零退出
+      - npm run check
+      - git diff --check
+      - git status --short --branch
+    execution_profile:
+      risk_level: L3
+      profile: frontier_gate
+      rework_count: 0
+      selection_reason: 第三次同类 P0 控制面失败需要独立 gpt-5.6-sol / xhigh 架构性根因修复；根因已知，不使用 max。
+      escalation_trigger: 若校验器无法覆盖已知三类漂移，保持 BLOCKED 并由独立 gpt-5.6-sol / xhigh 重新拆分规则与实现。
+    public_interface:
+      change_allowed: false
+      approval: null
+    file_lease:
+      status: NONE
+      write_paths: []
+      acquired_at: null
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification: []
+      review:
+        verdict: PENDING
+        checkpoint: null
+        task_id: null
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations:
+        - 用户要求反复修改时提升模型强度并进行根因修复。
+    risks:
+      - severity: P0
+        status: OPEN
+        owner: workflow-validator-specialist
+        summary: 校验器必须捕获现有三轮人工发现的问题，不能只验证 YAML 可解析。
+    handoff_target: qa-gate
+    history:
+      - from: BACKLOG
+        to: READY
+        actor: control
+        at: "2026-08-31T11:08:14+08:00"
+        checkpoint: ead18f18fb950a55c860e3868ea97de3225dad1b
+        reason: 第三次同类 BLOCK 触发停止规则，转为确定性校验器根因修复。
 
 legacy_records:
   issue_prefix: ZZ
