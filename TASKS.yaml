@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T11:18:28+08:00"
+updated_at: "2026-08-31T11:35:09+08:00"
 
 status_flow:
   normal:
@@ -726,7 +726,7 @@ tasks:
   - issue_id: ZC-006
     title: 旧窗口与 Worktree 安全收口
     priority: P2
-    status: DEFERRED
+    status: DONE
     owner: control
     problem: 旧总控、诊断窗口与三个历史专项任务仍存在，容易造成入口和开发基线混淆。
     scope:
@@ -743,8 +743,7 @@ tasks:
     branch: null
     workspace: null
     base_checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
-    dependencies:
-      - ZC-005
+    dependencies: []
     required_tests:
       - git worktree list --porcelain
       - Codex task 列表复核
@@ -764,29 +763,41 @@ tasks:
       released_at: null
     evidence:
       commits: []
-      checks: []
+      checks:
+        - command: Codex task 列表复核
+          result: PASS
+          checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+          run_at: "2026-08-31T11:33:00+08:00"
+          summary: ZigZag 项目区只保留唯一总控、一个当前专项和一个集成验收；旧总控、诊断和一次性复审均已可恢复归档。
+        - command: git worktree list --porcelain
+          result: PASS
+          checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+          run_at: "2026-08-31T11:34:30+08:00"
+          summary: 四个历史 Worktree 已按原分支或精确提交恢复并保留，只从侧边栏归档对应任务。
       manual_verification:
-        - 已只读确认三个旧专项 Worktree 与任务映射；未执行删除。
+        - 总控窗口已改名为 ZigZag 总控台（项目内唯一入口）。
+        - ZC-008 与 ZC-005 分别复用为当前专项和集成验收；不再为每轮诊断或复审新建窗口。
+        - 历史 Worktree 4beb、6781、8ebb、a162 均保留在原路径且不继续开发。
       review:
-        verdict: NOT_REQUIRED
-        checkpoint: null
-        task_id: null
+        verdict: PASS
+        checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+        task_id: 01a05304-9679-7ff3-9bc8-39e233cc722a
       integration:
-        checkpoint: null
-      verification: []
+        checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+      verification:
+        - verdict: PASS
+          checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+          task_id: 01a05304-9679-7ff3-9bc8-39e233cc722a
+          checked_at: "2026-08-31T11:34:30+08:00"
+          scope: 侧边栏三窗口预算与历史 Worktree 保留
       user_confirmations:
         - 用户确认执行窗口整理方案，但未授权删除 Worktree 或分支。
     risks:
       - severity: P1
-        status: MITIGATED
+        status: RESOLVED
         owner: control
-        summary: 归档关联 Worktree 的任务可能触发托管 Worktree 删除，因此历史专项不归档。
+        summary: 归档曾移除旧托管 Worktree；总控已在原路径按原分支或精确提交完整恢复，侧边栏保持简洁。
     handoff_target: control
-    exception:
-      blocked_from: BACKLOG
-      waiting_for: ZC-005
-      exit_condition: 首次独立验收完成后执行 UI 整理。
-      resume_status: READY
     history:
       - from: BACKLOG
         to: DEFERRED
@@ -794,6 +805,42 @@ tasks:
         at: "2026-08-31T00:31:37+08:00"
         checkpoint: 03efa5cca19b4371bd10afb99b7061cdd985a800
         reason: 先完成控制面验收，再整理窗口，避免改变审计对象。
+      - from: DEFERRED
+        to: READY
+        actor: control
+        at: "2026-08-31T11:32:00+08:00"
+        checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+        reason: 用户明确要求立即将项目区收缩为最小可见角色集合。
+      - from: READY
+        to: IN_PROGRESS
+        actor: control
+        at: "2026-08-31T11:32:01+08:00"
+        checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+        reason: 开始执行可恢复归档、窗口改名与 Worktree 保全核对。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: control
+        at: "2026-08-31T11:33:00+08:00"
+        checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+        reason: 侧边栏已收缩为总控、当前专项和集成验收三个可见角色。
+      - from: REVIEW
+        to: INTEGRATED
+        actor: control
+        at: "2026-08-31T11:34:00+08:00"
+        checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+        reason: 归档结果与项目绑定已复核，无需代码合并。
+      - from: INTEGRATED
+        to: VERIFIED
+        actor: control
+        at: "2026-08-31T11:34:30+08:00"
+        checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+        reason: 历史 Worktree 均在原路径恢复，分支和提交未丢失。
+      - from: VERIFIED
+        to: DONE
+        actor: control
+        at: "2026-08-31T11:35:00+08:00"
+        checkpoint: 51c8f4655dd3428f512273c9eb7652c3569a5999
+        reason: 三窗口预算已落地，旧任务可恢复归档且历史 Git 状态完整保留。
 
   - issue_id: ZC-007
     title: 第二次控制面模型升级根因复审
@@ -926,7 +973,7 @@ tasks:
   - issue_id: ZC-008
     title: 确定性工作流语义校验器
     priority: P0
-    status: IN_PROGRESS
+    status: BLOCKED
     owner: workflow-validator-specialist
     problem: 三次人工验收均发现新的控制面语义漂移；需要机器校验状态、异常来源、模型升级、证据与集成时点，终止补丁式返工。
     scope:
@@ -969,27 +1016,58 @@ tasks:
     execution_profile:
       risk_level: L3
       profile: frontier_gate
-      rework_count: 0
-      selection_reason: 第三次同类 P0 控制面失败需要独立 gpt-5.6-sol / xhigh 架构性根因修复；根因已知，不使用 max。
-      escalation_trigger: 若校验器无法覆盖已知三类漂移，保持 BLOCKED 并由独立 gpt-5.6-sol / xhigh 重新拆分规则与实现。
+      rework_count: 1
+      selection_reason: 校验器首轮仅遗漏合法状态边检查；复用现有当前专项，以 gpt-5.6-sol / xhigh 做一次边界明确的根因修复，不创建新窗口。
+      escalation_trigger: 若同一非法状态边验收再次失败，保持 BLOCKED 并先缩小规则，不再新增窗口或扩大审计。
+      assignment_history:
+        - assigned_at: "2026-08-31T11:08:14+08:00"
+          rework_count: 0
+          profile: frontier_gate
+          model: gpt-5.6-sol
+          reasoning_effort: xhigh
+          executor_target: 01a055cc-8022-7050-b6a6-3aa10486cc6f
+          reason: 第三次控制面失败后的确定性校验器专项。
+        - assigned_at: "2026-08-31T11:35:09+08:00"
+          rework_count: 1
+          profile: frontier_gate
+          model: gpt-5.6-sol
+          reasoning_effort: xhigh
+          executor_target: 01a055cc-8022-7050-b6a6-3aa10486cc6f
+          reason: 首次验收定位为单一状态边缺口；复用原窗口，明日继续。
     public_interface:
       change_allowed: false
       approval: null
     file_lease:
-      status: HELD
-      write_paths:
-        - package.json
-        - scripts/check-workflow.rb
+      status: NONE
+      write_paths: []
       acquired_at: "2026-08-31T11:12:48+08:00"
-      released_at: null
+      released_at: "2026-08-31T11:35:09+08:00"
     evidence:
-      commits: []
-      checks: []
-      manual_verification: []
+      commits:
+        - checkpoint: 90f62b5b03932631e48e54258ac1fa6ef192aafe
+          role: blocked_delivery
+          summary: 两文件校验器交付；正向、负向矩阵和 Node 22 完整检查通过，但缺少合法状态边验证。
+      checks:
+        - command: npm run check:workflow
+          result: PASS
+          checkpoint: 90f62b5b03932631e48e54258ac1fa6ef192aafe
+          run_at: "2026-08-31T11:34:00+08:00"
+          summary: 当前八任务台账通过；QA 证明非法 BACKLOG → IN_PROGRESS 变体仍会误通过。
+        - command: npm run check
+          result: PASS
+          checkpoint: 90f62b5b03932631e48e54258ac1fa6ef192aafe
+          run_at: "2026-08-31T11:34:00+08:00"
+          summary: 内容检查和 Vite 构建通过，共转换 38 个模块。
+      manual_verification:
+        - 分支 diff 仅包含 package.json 与 scripts/check-workflow.rb，专项与 QA Worktree 均干净。
       review:
-        verdict: PENDING
-        checkpoint: null
-        task_id: 01a055cc-8022-7050-b6a6-3aa10486cc6f
+        verdict: BLOCK
+        checkpoint: 90f62b5b03932631e48e54258ac1fa6ef192aafe
+        task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+        checked_at: "2026-08-31T11:34:17+08:00"
+        findings:
+          - AC-001 BLOCK：只检查历史连续性，未检查状态转换边是否合法；BACKLOG → IN_PROGRESS 会误通过。
+          - AC-002 与 AC-003 PASS。
       integration:
         checkpoint: null
       verification: []
@@ -999,8 +1077,13 @@ tasks:
       - severity: P0
         status: OPEN
         owner: workflow-validator-specialist
-        summary: 校验器必须捕获现有三轮人工发现的问题，不能只验证 YAML 可解析。
+        summary: 唯一剩余缺口是合法状态转换边校验；分支不得集成，明日由同一当前专项做一次聚焦修复。
     handoff_target: qa-gate
+    exception:
+      blocked_from: IN_PROGRESS
+      waiting_for: workflow-validator-specialist
+      exit_condition: 现有当前专项补充允许状态边映射及 BACKLOG → IN_PROGRESS 负向测试，并由现有集成验收窗口 PASS。
+      resume_status: IN_PROGRESS
     history:
       - from: BACKLOG
         to: READY
@@ -1014,6 +1097,12 @@ tasks:
         at: "2026-08-31T11:12:48+08:00"
         checkpoint: 4312223a68edef5c7f8e12c9250ba62c924dfc3f
         reason: 目标分支已附着且 Worktree 干净；总控授予 package.json 与 scripts/check-workflow.rb 独占租约。
+      - from: IN_PROGRESS
+        to: BLOCKED
+        actor: qa-gate
+        at: "2026-08-31T11:34:17+08:00"
+        checkpoint: 90f62b5b03932631e48e54258ac1fa6ef192aafe
+        reason: AC-001 缺少合法状态转换边验证；按额度要求停在干净提交点，明日复用现有窗口继续。
 
 legacy_records:
   issue_prefix: ZZ

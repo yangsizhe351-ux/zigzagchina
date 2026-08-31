@@ -1,11 +1,11 @@
 # ZigZag China 智能体规则
 
-开始任何任务前，按顺序完整阅读：
+开始任务时只读取当前角色需要的最小上下文：
 
-1. `WORKFLOW.md`
-2. `TASKS.yaml`
-3. `HANDOFF.md`
-4. `docs/WORKTREE_OPERATING_MODEL.md`
+1. 所有窗口先读 `HANDOFF.md` 和本文件。
+2. 专项只读 `TASKS.yaml` 顶部策略及自己的 issue 段；不扫描无关历史任务。
+3. `control` 与 `qa-gate` 需要裁决流程时再读 `WORKFLOW.md` 的相关章节。
+4. 只有执行 Worktree 操作前才读 `docs/WORKTREE_OPERATING_MODEL.md`。
 
 然后运行：
 
@@ -23,6 +23,7 @@ git log -3 --oneline
 - 一个任务只能有一个 owner、一个唯一分支和一个清楚的允许/禁止范围。没有完整 40 位 `base_checkpoint` 的开发任务不得开始。
 - 专项负责人使用独立 Worktree；首次编辑前确认目标分支正确且不是 detached HEAD。旧 detached Worktree 只能只读参考。
 - 默认最多一个专项在制；只有文件租约不重叠、依赖已满足时，总控才可增加到两个。
+- 侧边栏最多保留 3 个 ZigZag 窗口：唯一总控、一个当前专项、一个集成验收；诊断和一次性复审完成后立即可恢复归档，不为每个小问题新建窗口。
 - 模型和推理强度必须按 `TASKS.yaml#execution_profile` 执行，owner 不得静默降档。同一验收项连续失败时按 `WORKFLOW.md` 升级模型、复核范围或拆分任务。
 - `qa-gate` 独立且只读，不参与被审实现、不替开发者修复、不更新台账、不合并、不推送、不部署。
 - 分支 commit 和集成后的最终精确 SHA 都必须独立验收；没有证据的任务不能标记为 `DONE`。
