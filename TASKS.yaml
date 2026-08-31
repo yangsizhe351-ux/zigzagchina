@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T12:19:38+08:00"
+updated_at: "2026-08-31T12:27:22+08:00"
 
 status_flow:
   normal:
@@ -44,8 +44,8 @@ role_registry:
     control:
       title: ZigZag 总控台（项目内唯一入口）
       task_id: 01a05605-cf05-7722-b5e6-1efc32e20ab0
-      status: ACTIVE_SUCCESSOR_PENDING_FINAL
-      predecessor_task_id: 01a05304-9679-7ff3-9bc8-39e233cc722a
+      status: ACTIVE
+      previous_control_task_id: 01a05304-9679-7ff3-9bc8-39e233cc722a
       default_profile: frontier_control
       model: gpt-5.6-sol
       reasoning_effort: high
@@ -121,9 +121,21 @@ control_handoff_policy:
   current_handoff:
     successor_task_id: 01a05605-cf05-7722-b5e6-1efc32e20ab0
     predecessor_task_id: 01a05304-9679-7ff3-9bc8-39e233cc722a
-    phase: AWAITING_FINAL_SHA_VERIFICATION
+    phase: COMPLETED
     phase_1_checkpoint: 73eeaed07fb499552cf15f4dad455fabeb797898
     phase_1_result: READY
+    phase_2_checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+    phase_2_result: READY_FINAL
+    phase_2_verified_at: "2026-08-31T12:21:55+08:00"
+    pre_archive_review:
+      verdict: PASS_PRE_ARCHIVE
+      checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+      task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+      checked_at: "2026-08-31T12:24:52+08:00"
+    predecessor_archived: true
+    predecessor_archive_title: 历史—ZigZag 总控台 @ fac3ef7
+    predecessor_archived_at: "2026-08-31T12:25:55+08:00"
+    completed_at: "2026-08-31T12:27:22+08:00"
   standing_authorization:
     granted: true
     granted_at: "2026-08-31T11:57:58+08:00"
@@ -1232,7 +1244,7 @@ tasks:
   - issue_id: ZC-009
     title: 六角色窗口与总控自动交接
     priority: P0
-    status: IN_PROGRESS
+    status: DONE
     owner: control
     problem: 三窗口结构过度合并内容、政策、网站和图像职责；同时总控在上下文过长或卡顿时缺少可验证、可恢复的换窗机制。
     scope:
@@ -1291,19 +1303,22 @@ tasks:
       change_allowed: false
       approval: null
     file_lease:
-      status: HELD
+      status: RELEASED
       write_paths:
         - AGENTS.md
         - HANDOFF.md
         - TASKS.yaml
         - WORKFLOW.md
       acquired_at: "2026-08-31T11:57:58+08:00"
-      released_at: null
+      released_at: "2026-08-31T12:27:22+08:00"
     evidence:
       commits:
         - checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
           role: workflow_definition
           summary: 建立六角色、按角色模型与思考深度、Fast 总控路由及安全总控交接规则。
+        - checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+          role: control_handoff_checkpoint
+          summary: 将 active control 切换到继任总控并形成最终归档前核验基线。
       checks:
         - command: ruby -e "require 'yaml'; YAML.load_file('TASKS.yaml')"
           result: PASS
@@ -1325,6 +1340,21 @@ tasks:
           checkpoint: 73eeaed07fb499552cf15f4dad455fabeb797898
           run_at: "2026-08-31T12:19:38+08:00"
           summary: 继任 task 01a05605-cf05-7722-b5e6-1efc32e20ab0 回报 READY_PHASE_1_RECHECK；应用创建记录与保存项目清单确认 Zigzag 绑定。
+        - command: 继任总控第二阶段 main、精确 SHA、工作区、台账和 Skill 边界核验
+          result: PASS
+          checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+          run_at: "2026-08-31T12:21:55+08:00"
+          summary: 继任 task 01a05605-cf05-7722-b5e6-1efc32e20ab0 回报 READY_FINAL，六角色与交接状态一致。
+        - command: qa-gate 对交接检查点执行归档前独立验收
+          result: PASS_PRE_ARCHIVE
+          checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+          run_at: "2026-08-31T12:24:52+08:00"
+          summary: qa-gate 01a05590-acd0-73b1-808e-04fc11b95db2 确认六角色、模型路由、Skill 边界、继任 READY_FINAL 与干净 main，可安全归档前任。
+        - command: Codex archived task 与活动 task 列表复核
+          result: PASS
+          checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+          run_at: "2026-08-31T12:25:55+08:00"
+          summary: 前任 01a05304-9679-7ff3-9bc8-39e233cc722a 已以“历史—ZigZag 总控台 @ fac3ef7”可恢复归档，继任成为唯一活动总控。
         - command: git diff --check
           result: PASS
           checkpoint: a0fcd7c19a6b7c251a3a19306c27c2781ef30076
@@ -1336,22 +1366,37 @@ tasks:
         - 独立 gpt-5.6-sol / xhigh 安全复审覆盖干净自动交接、未知脏修改和继任项目/HEAD 不匹配三个场景，结论 PASS。
         - 文本、政策和图像窗口在没有具体 issue 与任务分支时保持 detached/IDLE_READ_ONLY；不得从该状态编辑。
         - 继任总控第一阶段核验时发现本地 project_id 缓存为空并正确停止；应用层 create_thread 目标、list_projects、task ID、cwd 与 host 复核一致后解除该单项阻断。
+        - AC-001：总控、文本与翻译、政策与合规、网站结构与实现、图像生成、集成验收六角色及文件边界已在 AGENTS.md、WORKFLOW.md、role_registry 和项目任务中一致落地。
+        - AC-002：六角色默认模型、推理强度、升级规则与实际创建参数一致；Fast 仅由总控按单次任务路由。
+        - AC-003：全局 Skill 哈希与验证器结果一致，内容只覆盖总控上下文健康和安全交接。
+        - AC-004：继任总控在保存项目真实 main 根目录完成两阶段核验，独立 QA 给出 PASS_PRE_ARCHIVE，前任随后可恢复归档。
       review:
-        verdict: PENDING
-        checkpoint: null
+        verdict: PASS
+        stage: PASS_PRE_ARCHIVE
+        checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
       integration:
-        checkpoint: null
-      verification: []
+        checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+      verification:
+        - verdict: PASS
+          checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-08-31T12:24:52+08:00"
+          scope: ZC-009 AC-001 至 AC-004 的归档前独立闸门
+        - verdict: PASS
+          checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+          task_id: 01a05605-cf05-7722-b5e6-1efc32e20ab0
+          checked_at: "2026-08-31T12:25:55+08:00"
+          scope: 前任可恢复归档与唯一活动总控确认
       user_confirmations:
         - 用户确认 Fast 由总控统一管理。
         - 用户确认全局 Skill 仅包含自动交接能力，项目角色配置不进入全局 Skill。
         - 用户授权新总控核验成功后将旧总控移出项目可见区。
     risks:
       - severity: P0
-        status: OPEN
+        status: RESOLVED
         owner: control
-        summary: 旧总控只能在新总控明确 READY 且台账已更新后归档。
+        summary: 继任者 READY_FINAL 与独立 QA PASS_PRE_ARCHIVE 后，旧总控已可恢复归档，唯一总控已切换完成。
       - severity: P1
         status: RESOLVED
         owner: control
@@ -1370,6 +1415,30 @@ tasks:
         at: "2026-08-31T11:57:59+08:00"
         checkpoint: 5ab0a22b1444d9d439d386a4c58319eba5bbde2d
         reason: 总控取得四个协作文档租约并开始落地。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: control
+        at: "2026-08-31T12:21:55+08:00"
+        checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+        reason: 继任总控完成两阶段项目、main、精确 SHA、工作区、台账和 Skill 边界核验并回报 READY_FINAL。
+      - from: REVIEW
+        to: INTEGRATED
+        actor: control
+        at: "2026-08-31T12:24:52+08:00"
+        checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+        reason: 独立 qa-gate 对同一精确 SHA 给出 PASS_PRE_ARCHIVE，允许执行可恢复归档。
+      - from: INTEGRATED
+        to: VERIFIED
+        actor: control
+        at: "2026-08-31T12:25:55+08:00"
+        checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+        reason: 前任总控已以预定历史标题归档，活动任务列表中只保留继任总控。
+      - from: VERIFIED
+        to: DONE
+        actor: control
+        at: "2026-08-31T12:27:22+08:00"
+        checkpoint: fac3ef72e9d2264caa2991fadd53c9e22e226387
+        reason: 六角色、模型路由、全局自动交接边界、两阶段核验与可恢复归档证据已完整收口。
 
 legacy_records:
   issue_prefix: ZZ
