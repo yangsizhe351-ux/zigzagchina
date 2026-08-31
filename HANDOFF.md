@@ -1,6 +1,6 @@
 # ZigZag China 当前交接
 
-更新时间：2026-08-31 11:12（Asia/Shanghai）
+更新时间：2026-08-31 11:18（Asia/Shanghai）
 
 ## 30 秒接管
 
@@ -47,7 +47,7 @@
 - `ZC-002`：等待用户/业务负责人确认发布范围、资质、翻译、姓名授权、联系与政策、Supabase 决定。
 - `ZC-003`：站内询价与政策实现，阻塞于 ZC-002。
 - `ZC-004`：正式域名与发布级 SEO，阻塞于 ZC-002。
-- `ZC-005`：首次工作流与交接独立验收，`BLOCKED`，等待 ZC-008 分支提交与验收。
+- `ZC-005`：首次工作流与交接独立验收，`BLOCKED`，`rework_count: 3`；已结构化记录下一档仍为 `gpt-5.6-sol / xhigh`，根因已知所以不启用 `max`，等待 ZC-008 分支提交与验收。
 - `ZC-006`：旧窗口安全收口，等待首次验收后执行。
 - `ZC-007`：第二次控制面模型升级根因复审，`DONE`，三项 AC 均有独立 PASS 证据。
 - `ZC-008`：确定性工作流语义校验器，`IN_PROGRESS`；独立 `gpt-5.6-sol / xhigh` Worktree 已附着目标分支，并持有仅 `package.json`、`scripts/check-workflow.rb` 的租约。

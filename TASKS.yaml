@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T11:12:48+08:00"
+updated_at: "2026-08-31T11:18:28+08:00"
 
 status_flow:
   normal:
@@ -585,7 +585,29 @@ tasks:
       profile: frontier_gate
       rework_count: 3
       selection_reason: 首次控制面和精确 SHA 闸门属于高风险独立验收，显式使用最高审查档位。
-      escalation_trigger: 若发现阻断项，退回原 owner；连续两轮同类失败时重建干净验收任务并拆分问题。
+      escalation_trigger: 第三次同类失败保持 BLOCKED；根因已知时继续使用 frontier_gate / xhigh，只有 P0 且根因未知时才允许 max。
+      next_escalation:
+        status: BLOCKED
+        profile: frontier_gate
+        model: gpt-5.6-sol
+        reasoning_effort: xhigh
+        max_allowed_only_when:
+          priority: P0
+          root_cause: UNKNOWN
+      assignment_history:
+        - assigned_at: "2026-08-31T00:31:37+08:00"
+          rework_count: 0
+          profile: frontier_gate
+          model: gpt-5.6-sol
+          reasoning_effort: xhigh
+          reason: P0 独立双闸门验收初始分配。
+        - assigned_at: "2026-08-31T11:18:28+08:00"
+          rework_count: 3
+          profile: frontier_gate
+          model: gpt-5.6-sol
+          reasoning_effort: xhigh
+          executor_target: 01a05590-acd0-73b1-808e-04fc11b95db2
+          reason: 第三次同类 BLOCK 后保持独立最高审查档位；根因已由 ZC-008 定位，不启用 max。
     public_interface:
       change_allowed: false
       approval: null
@@ -810,7 +832,7 @@ tasks:
       profile: frontier_gate
       rework_count: 0
       selection_reason: 第二次同类失败要求强制升级到 gpt-5.6-sol / xhigh，并使用干净上下文做根因复审。
-      escalation_trigger: 若该复审仍无法给出一致方案，ZC-001 保持 BLOCKED，第三轮使用 gpt-5.6-sol / max。
+      escalation_trigger: 若该复审仍无法给出一致方案，ZC-001 保持 BLOCKED；第三轮默认使用 gpt-5.6-sol / xhigh，只有 P0 且根因仍为 UNKNOWN 时才允许 max。
     public_interface:
       change_allowed: false
       approval: null
