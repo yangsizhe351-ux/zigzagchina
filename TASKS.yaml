@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T16:31:57+08:00"
+updated_at: "2026-09-01T16:37:32+08:00"
 
 status_flow:
   normal:
@@ -1829,7 +1829,7 @@ tasks:
   - issue_id: ZC-012
     title: 恢复首页原本文案并调整主导航
     priority: P1
-    status: IN_PROGRESS
+    status: REVIEW
     owner: site-architecture
     problem: 用户确认保留当前首页图片和新增下半部分内容，同时恢复图2中的首页原本文案，并按图3替换主导航项目。
     scope:
@@ -1896,9 +1896,28 @@ tasks:
       acquired_at: "2026-09-01T16:31:57+08:00"
       released_at: null
     evidence:
-      commits: []
-      checks: []
-      manual_verification: []
+      commits:
+        - checkpoint: d9e466d15e3860a5243a43b5e773a3f7c3fd8a3d
+          role: site-architecture
+          summary: 恢复三语首页 hero 原本文案，更新桌面/移动主导航标签与既有落点，仅修改两个允许路径。
+      checks:
+        - command: npm run check
+          result: PASS
+          checkpoint: d9e466d15e3860a5243a43b5e773a3f7c3fd8a3d
+          summary: 内容检查与 Vite 生产构建通过；仅有 Node 24 与 package.json Node 22.x 的 engine warning。
+        - command: git diff --check
+          result: PASS
+          checkpoint: d9e466d15e3860a5243a43b5e773a3f7c3fd8a3d
+          summary: 候选提交无空白错误。
+        - command: git status --short --branch
+          result: PASS
+          checkpoint: d9e466d15e3860a5243a43b5e773a3f7c3fd8a3d
+          summary: 候选 Worktree 在交付时干净，分支为 codex/zc-012-home-copy-nav。
+      manual_verification:
+        - AC-001：owner 在本地桌面与 390×844 视口确认三语标题恢复，kicker、intro、两枚 CTA、熊猫双城图和现有布局保持。
+        - AC-002：owner 确认桌面与移动菜单均显示四项新导航，旧标签消失，首页与内页 href 分别指向既有落点。
+        - AC-003：owner 确认本地 1280×720 与 390×844 视口无横向溢出、控制台错误或 hero 资源回归。
+        - AC-004：owner 确认未修改图片、CSS、dist-netlify 或共享治理文件。
       review:
         verdict: PENDING
         checkpoint: null
@@ -1927,6 +1946,12 @@ tasks:
         at: "2026-09-01T16:31:57+08:00"
         checkpoint: 867b6a473951386309502c2ab3b41cc6781bd56a
         reason: 独立 Worktree 已核验为目标分支、正确基线和干净状态，授予 src/content.js 与 src/main.jsx 文件租约。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: site-architecture
+        at: "2026-09-01T16:37:32+08:00"
+        checkpoint: d9e466d15e3860a5243a43b5e773a3f7c3fd8a3d
+        reason: 聚焦 commit 已完成，owner 机械检查、双视口浏览器检查和交付证据齐备，工作区干净。
 
 legacy_records:
   issue_prefix: ZZ

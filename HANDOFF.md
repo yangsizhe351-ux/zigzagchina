@@ -1,6 +1,6 @@
 # ZigZag China 当前交接
 
-更新时间：2026-09-01 16:31（Asia/Shanghai）
+更新时间：2026-09-01 16:37（Asia/Shanghai）
 
 ## 30 秒看懂当前状态
 
@@ -35,7 +35,7 @@ Fast 仅由总控按单次任务切到 `gpt-5.6-luna / medium`；政策结论、
 ## 当前任务状态
 
 - `ZC-011`：`DONE`；精确候选 `9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e` 已由唯一 qa-gate `PASS` 并快进集成到 main，手机裁切风险已记录。
-- `ZC-012`：`IN_PROGRESS`；独立 Worktree `/private/tmp/zc012-home-copy-nav` 已从 `867b6a473951386309502c2ab3b41cc6781bd56a` 建立，负责恢复首页原本文案并调整主导航，尚未提交或验收。
+- `ZC-012`：`REVIEW`；候选 `d9e466d15e3860a5243a43b5e773a3f7c3fd8a3d` 已在独立 Worktree 完成，等待 qa-gate 只读验收。
 - `ZC-010`：`DONE`；精确候选 `259848523074bcd023ef850b243557dd0d25735a` 已由唯一 qa-gate `PASS`，效率规则完成收口。
 - `ZC-009`：`DONE`；六角色、模型路由、全局自动交接边界、两阶段核验及前任可恢复归档已收口。
 - `ZC-008`：`BLOCKED`；唯一缺口仍是合法状态转换边校验，交付 `90f62b5b03932631e48e54258ac1fa6ef192aafe` 未合并。
