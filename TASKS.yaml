@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T18:37:56+08:00"
+updated_at: "2026-09-01T18:48:02+08:00"
 
 status_flow:
   normal:
@@ -1996,7 +1996,7 @@ tasks:
   - issue_id: ZC-013
     title: 主导航右侧抽屉试行
     priority: P1
-    status: INTEGRATED
+    status: DONE
     owner: site-architecture
     problem: 用户认为当前展开菜单占用过大且与顶部导航重复，明确要求试行可回滚的右侧抽屉导航。
     scope:
@@ -2127,6 +2127,7 @@ tasks:
         - AC-003：owner 确认关闭按钮、遮罩、Esc、导航项关闭和语言切换均可用，控制台无错误。
         - AC-004：候选为基于 cd749bb 的独立聚焦提交，ZC-012 annotated tag 保持指向 cd749bb。
         - AC-005：owner 确认未修改 dist-netlify、图片、内容模型或治理文件。
+        - 最终 qa-gate：对集成后精确 SHA 0a34ac7 的首页、About 与 Business Credentials 抽屉完成桌面/手机、关闭路径、语言菜单、href、资源、控制台和宽度验收；AC-001 至 AC-005 均通过。
       review:
         verdict: PASS
         checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
@@ -2145,7 +2146,12 @@ tasks:
           scope: 根因修复候选独立验收；AC-001 至 AC-005 均通过，内页层级和文字对比度回归已消失。
       integration:
         checkpoint: f1735949f2bd49163464f51b4eccad0b37c7fdc9
-      verification: []
+      verification:
+        - verdict: PASS
+          checkpoint: 0a34ac7c9bbffc937e9f0f5eef52011a3fe778f2
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-09-01T18:48:02+08:00"
+          scope: 集成后精确 main SHA 的独立最终验收；AC-001 至 AC-005 全部 PASS，内页层级与文字对比度根因已消失，未发现候选代码级 blocker。
       user_confirmations:
         - 用户明确选择右侧抽屉导航，并要求该试行版本可回滚。
     risks:
@@ -2195,6 +2201,18 @@ tasks:
         at: "2026-09-01T18:37:56+08:00"
         checkpoint: f1735949f2bd49163464f51b4eccad0b37c7fdc9
         reason: 同一 qa-gate 已对修复候选 PASS；control 将首轮抽屉与根因修复两笔提交机械集成到 main，集成构建、diff 与干净状态均通过，业务文件租约释放。
+      - from: INTEGRATED
+        to: VERIFIED
+        actor: qa-gate
+        at: "2026-09-01T18:48:02+08:00"
+        checkpoint: 0a34ac7c9bbffc937e9f0f5eef52011a3fe778f2
+        reason: 独立 qa-gate 对集成后精确 main SHA 完成三条页面、双视口、交互、资源、控制台、构建和 diff 验收，AC-001 至 AC-005 均 PASS。
+      - from: VERIFIED
+        to: DONE
+        actor: control
+        at: "2026-09-01T18:48:02+08:00"
+        checkpoint: 0a34ac7c9bbffc937e9f0f5eef52011a3fe778f2
+        reason: 封板记录回写独立最终验收 PASS，所有 AC 已具证据，业务文件租约已释放，保留 ZC-012 回滚 tag，等待本任务预声明 final gate tag 的精确复核。
 
 legacy_records:
   issue_prefix: ZZ
