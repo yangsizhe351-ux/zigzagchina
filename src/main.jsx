@@ -43,7 +43,7 @@ function BrandLockup() {
 }
 
 function SiteHeader({ t, language, setLanguage, languageOpen, setLanguageOpen, menuOpen, setMenuOpen, innerPage = false }) {
-  const navLinks = innerPage ? ['/about', '/#destinations', '/#experiences', '/#booking'] : ['/about', '#destinations', '#experiences', '#booking'];
+  const navLinks = innerPage ? ['/about', '/#destinations', '/#booking', '/#contact'] : ['/about', '#destinations', '#booking', '#contact'];
   return <>
     <header className={`site-header ${innerPage ? 'inner-page-header' : ''}`}>
       <a className="brand-mark" href={innerPage ? '/' : '#top'} aria-label={t.a11y.home}><BrandLockup /></a>
