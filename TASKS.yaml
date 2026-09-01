@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T16:37:32+08:00"
+updated_at: "2026-09-01T16:59:38+08:00"
 
 status_flow:
   normal:
@@ -74,13 +74,12 @@ role_registry:
     site-architecture:
       title: ZigZag 网站结构与实现
       task_id: 01a055cc-8022-7050-b6a6-3aa10486cc6f
-      status: ACTIVE
+      status: IDLE_WITH_BLOCKED_TASK
       default_profile: balanced_build
       model: gpt-5.6-terra
       reasoning_effort: high
       workspace_mode: worktree
-      workspace_path: /private/tmp/zc012-home-copy-nav
-      current_issue: ZC-012
+      workspace_path: /Users/yangsizhe/.codex/worktrees/f79a/CDQC
     image-studio:
       title: ZigZag 图像生成
       task_id: 01a05600-6c1c-7412-b091-063e90c9175d
@@ -1829,7 +1828,7 @@ tasks:
   - issue_id: ZC-012
     title: 恢复首页原本文案并调整主导航
     priority: P1
-    status: REVIEW
+    status: INTEGRATED
     owner: site-architecture
     problem: 用户确认保留当前首页图片和新增下半部分内容，同时恢复图2中的首页原本文案，并按图3替换主导航项目。
     scope:
@@ -1889,12 +1888,12 @@ tasks:
       change_allowed: true
       approval: 用户明确要求“来吧 开始修改”，并确认图2文案与图3导航标注。
     file_lease:
-      status: HELD
+      status: RELEASED
       write_paths:
         - src/content.js
         - src/main.jsx
       acquired_at: "2026-09-01T16:31:57+08:00"
-      released_at: null
+      released_at: "2026-09-01T16:59:38+08:00"
     evidence:
       commits:
         - checkpoint: d9e466d15e3860a5243a43b5e773a3f7c3fd8a3d
@@ -1913,17 +1912,30 @@ tasks:
           result: PASS
           checkpoint: d9e466d15e3860a5243a43b5e773a3f7c3fd8a3d
           summary: 候选 Worktree 在交付时干净，分支为 codex/zc-012-home-copy-nav。
+        - command: npm run check
+          result: PASS
+          checkpoint: 7860dda0266c2ea2b0ff74c459e08dee132dc074
+          summary: 集成后的 main 内容检查与 Vite 生产构建通过，3 locales、4 navigation items、38 modules。
+        - command: git diff --check 867b6a473951386309502c2ab3b41cc6781bd56a 7860dda0266c2ea2b0ff74c459e08dee132dc074
+          result: PASS
+          checkpoint: 7860dda0266c2ea2b0ff74c459e08dee132dc074
+          summary: 集成 diff 无空白错误。
+        - command: git status --short --branch
+          result: PASS
+          checkpoint: 7860dda0266c2ea2b0ff74c459e08dee132dc074
+          summary: 集成后的 main 工作区干净，未改 dist-netlify。
       manual_verification:
         - AC-001：owner 在本地桌面与 390×844 视口确认三语标题恢复，kicker、intro、两枚 CTA、熊猫双城图和现有布局保持。
         - AC-002：owner 确认桌面与移动菜单均显示四项新导航，旧标签消失，首页与内页 href 分别指向既有落点。
         - AC-003：owner 确认本地 1280×720 与 390×844 视口无横向溢出、控制台错误或 hero 资源回归。
         - AC-004：owner 确认未修改图片、CSS、dist-netlify 或共享治理文件。
       review:
-        verdict: PENDING
-        checkpoint: null
+        verdict: PASS
+        checkpoint: d9e466d15e3860a5243a43b5e773a3f7c3fd8a3d
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+        checked_at: "2026-09-01T16:59:38+08:00"
       integration:
-        checkpoint: null
+        checkpoint: 7860dda0266c2ea2b0ff74c459e08dee132dc074
       verification: []
       user_confirmations:
         - 用户确认图2只作为首页原本文案，当前视觉效果与图1新增内容保持；图3红色标注要求删除 Experiences、Book Your Trip，新增 Practical FAQ、Contact Us。
@@ -1952,6 +1964,12 @@ tasks:
         at: "2026-09-01T16:37:32+08:00"
         checkpoint: d9e466d15e3860a5243a43b5e773a3f7c3fd8a3d
         reason: 聚焦 commit 已完成，owner 机械检查、双视口浏览器检查和交付证据齐备，工作区干净。
+      - from: REVIEW
+        to: INTEGRATED
+        actor: control
+        at: "2026-09-01T16:59:38+08:00"
+        checkpoint: 7860dda0266c2ea2b0ff74c459e08dee132dc074
+        reason: 独立 qa-gate 已对候选 PASS，control 将同一实现提交机械合并到 main；集成构建、diff 与干净状态均通过，业务文件租约释放。
 
 legacy_records:
   issue_prefix: ZZ
