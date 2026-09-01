@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T18:14:52+08:00"
+updated_at: "2026-09-01T18:22:33+08:00"
 
 status_flow:
   normal:
@@ -1996,7 +1996,7 @@ tasks:
   - issue_id: ZC-013
     title: 主导航右侧抽屉试行
     priority: P1
-    status: IN_PROGRESS
+    status: REVIEW
     owner: site-architecture
     problem: 用户认为当前展开菜单占用过大且与顶部导航重复，明确要求试行可回滚的右侧抽屉导航。
     scope:
@@ -2070,9 +2070,29 @@ tasks:
       acquired_at: "2026-09-01T18:14:52+08:00"
       released_at: null
     evidence:
-      commits: []
-      checks: []
-      manual_verification: []
+      commits:
+        - checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
+          role: site-architecture
+          summary: 将全宽展开菜单替换为右侧导航抽屉；菜单打开时隐藏桌面顶部重复导航，仅修改 src/main.jsx 与 src/styles.css。
+      checks:
+        - command: npm run check
+          result: PASS
+          checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
+          summary: owner 在候选 Worktree 完成内容检查与 Vite 生产构建；未修改图片、内容模型或构建产物。
+        - command: git diff --check
+          result: PASS
+          checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
+          summary: 候选相对 cd749bb 的聚焦 diff 无空白错误。
+        - command: git status --short --branch
+          result: PASS
+          checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
+          summary: owner 交付时分支 codex/zc-013-nav-drawer 非 detached 且 Worktree 干净。
+      manual_verification:
+        - AC-001：owner 在桌面与手机菜单打开状态确认四项既有导航及 href 保持，展开层改为右侧抽屉。
+        - AC-002：owner 在 1280×720 与 390×844 确认抽屉宽度、背景可识别性和页面宽度正常，桌面顶部重复导航隐藏。
+        - AC-003：owner 确认关闭按钮、遮罩、Esc、导航项关闭和语言切换均可用，控制台无错误。
+        - AC-004：候选为基于 cd749bb 的独立聚焦提交，ZC-012 annotated tag 保持指向 cd749bb。
+        - AC-005：owner 确认未修改 dist-netlify、图片、内容模型或治理文件。
       review:
         verdict: PENDING
         checkpoint: null
@@ -2101,6 +2121,12 @@ tasks:
         at: "2026-09-01T18:14:52+08:00"
         checkpoint: cd749bbdbc957de13b39e6905a0373f7aa7e3aac
         reason: 独立 Worktree 已核验为目标分支、正确基线和干净状态，授予 src/main.jsx 与 src/styles.css 文件租约。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: site-architecture
+        at: "2026-09-01T18:22:33+08:00"
+        checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
+        reason: 聚焦实现提交、机械检查、双视口交互检查和结构化交付已完成，等待唯一 qa-gate 对精确候选独立验收。
 
 legacy_records:
   issue_prefix: ZZ
