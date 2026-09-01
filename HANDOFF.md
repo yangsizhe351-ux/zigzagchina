@@ -35,7 +35,7 @@ Fast 仅由总控按单次任务切到 `gpt-5.6-luna / medium`；政策结论、
 ## 当前任务状态
 
 - `ZC-011`：`DONE`；精确候选 `9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e` 已由唯一 qa-gate `PASS` 并快进集成到 main，手机裁切风险已记录。
-- `ZC-013`：`REVIEW`；右侧抽屉候选 `ebf5e7beeb1fc9816757327477eec131893b920c` 仅改 `src/main.jsx`、`src/styles.css`，owner 检查通过，正在由唯一 qa-gate 独立验收。基线 `cd749bbdbc957de13b39e6905a0373f7aa7e3aac` 受本地 tag `refs/tags/qa-pass/ZC-012-20260901-01` 保护；若用户不喜欢，仅 revert ZC-013 的单独实现提交，不改写历史。
+- `ZC-013`：`IN_PROGRESS`；首轮候选 `ebf5e7beeb1fc9816757327477eec131893b920c` 被唯一 qa-gate `BLOCK`：共享内页打开抽屉时 header 层级使遮罩拦截关闭/语言按钮，且抽屉文字对比度不足。原 owner 正在同一分支仅修这两个根因；基线 `cd749bbdbc957de13b39e6905a0373f7aa7e3aac` 仍受本地 tag `refs/tags/qa-pass/ZC-012-20260901-01` 保护。
 - `ZC-012`：`DONE`；最终 gate tag `refs/tags/qa-pass/ZC-012-20260901-01` 已精确指向 `cd749bbdbc957de13b39e6905a0373f7aa7e3aac`，P2 导航落点风险已接受。
 - `ZC-010`：`DONE`；精确候选 `259848523074bcd023ef850b243557dd0d25735a` 已由唯一 qa-gate `PASS`，效率规则完成收口。
 - `ZC-009`：`DONE`；六角色、模型路由、全局自动交接边界、两阶段核验及前任可恢复归档已收口。
