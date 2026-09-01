@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T18:29:15+08:00"
+updated_at: "2026-09-01T18:33:43+08:00"
 
 status_flow:
   normal:
@@ -1996,7 +1996,7 @@ tasks:
   - issue_id: ZC-013
     title: 主导航右侧抽屉试行
     priority: P1
-    status: IN_PROGRESS
+    status: REVIEW
     owner: site-architecture
     problem: 用户认为当前展开菜单占用过大且与顶部导航重复，明确要求试行可回滚的右侧抽屉导航。
     scope:
@@ -2081,6 +2081,9 @@ tasks:
         - checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
           role: site-architecture
           summary: 将全宽展开菜单替换为右侧导航抽屉；菜单打开时隐藏桌面顶部重复导航，仅修改 src/main.jsx 与 src/styles.css。
+        - checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
+          role: site-architecture
+          summary: 仅修复内页打开抽屉时 header 层级与抽屉前景色，保留首轮抽屉结构与其余行为。
       checks:
         - command: npm run check
           result: PASS
@@ -2094,6 +2097,18 @@ tasks:
           result: PASS
           checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
           summary: owner 交付时分支 codex/zc-013-nav-drawer 非 detached 且 Worktree 干净。
+        - command: npm run check
+          result: PASS
+          checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
+          summary: 根因修复候选的内容检查与 Vite 生产构建通过。
+        - command: git diff --check
+          result: PASS
+          checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
+          summary: 根因修复候选相对基线的完整任务 diff 无空白错误。
+        - command: git status --short --branch
+          result: PASS
+          checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
+          summary: 根因修复候选在同一目标分支、非 detached 且 Worktree 干净。
       manual_verification:
         - AC-001：owner 在桌面与手机菜单打开状态确认四项既有导航及 href 保持，展开层改为右侧抽屉。
         - AC-002：owner 在 1280×720 与 390×844 确认抽屉宽度、背景可识别性和页面宽度正常，桌面顶部重复导航隐藏。
@@ -2101,13 +2116,9 @@ tasks:
         - AC-004：候选为基于 cd749bb 的独立聚焦提交，ZC-012 annotated tag 保持指向 cd749bb。
         - AC-005：owner 确认未修改 dist-netlify、图片、内容模型或治理文件。
       review:
-        verdict: BLOCK
-        checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
+        verdict: PENDING
+        checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
-        checked_at: "2026-09-01T18:29:15+08:00"
-        findings:
-          - AC-003：About 等共享内页的 site-header 层级被内页规则覆盖，打开抽屉时关闭按钮与语言切换被 backdrop 拦截。
-          - AC-003：内页抽屉继承深色文字叠加深色背景，四项导航对比度不足。
       review_history:
         - verdict: BLOCK
           checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
@@ -2125,9 +2136,9 @@ tasks:
         owner: control
         summary: 当前首页已验收版本由本地 annotated tag refs/tags/qa-pass/ZC-012-20260901-01 固定；ZC-013 不会改写该基线，用户不满意时可单独 revert 新提交。
       - severity: P1
-        status: OPEN
+        status: IN_REVIEW
         owner: site-architecture
-        summary: 首轮候选在共享内页抽屉打开状态存在遮罩层级与深色文字对比度回归；必须以新候选修复并重新独立验收。
+        summary: 首轮候选在共享内页抽屉打开状态存在遮罩层级与深色文字对比度回归；根因修复候选 8217483 正在由同一 qa-gate 重新独立验收。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
@@ -2154,6 +2165,12 @@ tasks:
         at: "2026-09-01T18:29:15+08:00"
         checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
         reason: 独立 qa-gate 对候选给出 BLOCK；原 owner 仅修复内页 header 层级与抽屉文字对比度两个根因，文件租约继续持有。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: site-architecture
+        at: "2026-09-01T18:33:43+08:00"
+        checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
+        reason: 原因限定修复已形成新聚焦提交，owner 机械检查与内页双视口交互复测通过，等待同一 qa-gate 对新 SHA 重新独立验收。
 
 legacy_records:
   issue_prefix: ZZ
