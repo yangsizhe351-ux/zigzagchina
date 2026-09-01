@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T15:04:08+08:00"
+updated_at: "2026-09-01T15:40:14+08:00"
 
 status_flow:
   normal:
@@ -74,13 +74,12 @@ role_registry:
     site-architecture:
       title: ZigZag 网站结构与实现
       task_id: 01a055cc-8022-7050-b6a6-3aa10486cc6f
-      status: ACTIVE
+      status: IDLE_WITH_BLOCKED_TASK
       default_profile: balanced_build
       model: gpt-5.6-terra
       reasoning_effort: high
       workspace_mode: worktree
-      workspace_path: /Users/yangsizhe/.codex/worktrees/zc011/CDQC
-      current_issue: ZC-011
+      workspace_path: /Users/yangsizhe/.codex/worktrees/f79a/CDQC
     image-studio:
       title: ZigZag 图像生成
       task_id: 01a05600-6c1c-7412-b091-063e90c9175d
@@ -1656,7 +1655,7 @@ tasks:
   - issue_id: ZC-011
     title: 替换首页主视觉为用户选定双城熊猫图
     priority: P1
-    status: IN_PROGRESS
+    status: DONE
     owner: site-architecture
     problem: 首页仍使用旧双城主视觉，需替换为用户在 2026-09-01 明确选定的 1672×941 熊猫与成都重庆城市景观图。
     scope:
@@ -1718,30 +1717,68 @@ tasks:
       change_allowed: false
       approval: 用户明确要求“我们首页图换成这张”。
     file_lease:
-      status: HELD
+      status: RELEASED
       write_paths:
         - assets/images/cdqc-hero-panda-city.png
         - src/main.jsx
       acquired_at: "2026-09-01T15:04:08+08:00"
-      released_at: null
+      released_at: "2026-09-01T15:40:14+08:00"
     evidence:
-      commits: []
-      checks: []
-      manual_verification: []
+      commits:
+        - checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+          role: site-architecture
+          summary: 原样接入用户选定 PNG，并仅替换首页 hero import。
+      checks:
+        - command: shasum -a 256 源 PNG 与目标 PNG；cmp 源文件与目标文件
+          result: PASS
+          checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+          run_at: "2026-09-01T15:28:00+08:00"
+          summary: 源/目标 SHA-256 均为 473df6b49751bd3ebb0d5d972b9899cdd8f4c159ca78d791a8c3552e723506d7，字节一致。
+        - command: sips -g pixelWidth -g pixelHeight -g format -g hasAlpha 目标 PNG
+          result: PASS
+          checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+          run_at: "2026-09-01T15:28:00+08:00"
+          summary: 目标为 1672×941、PNG、RGB、无 alpha。
+        - command: npm run check
+          result: PASS
+          checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+          run_at: "2026-09-01T15:40:32+08:00"
+          summary: 三语内容检查通过，Vite 构建转换 38 个模块并输出新 hero 资源。
+        - command: git diff --check 9dbceefaa3b105d0f723902bbb841be7005cc236 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+          result: PASS
+          checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+          run_at: "2026-09-01T15:40:32+08:00"
+          summary: 候选 diff 无空白错误。
+        - command: git status --short --branch
+          result: PASS
+          checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+          run_at: "2026-09-01T15:40:33+08:00"
+          summary: 集成后的 main 工作区干净。
+      manual_verification:
+        - AC-001：独立 QA 确认源/目标 PNG 字节一致、尺寸 1672×941、RGB 且无 alpha。
+        - AC-002：独立 QA 确认变更仅为新 PNG 与 src/main.jsx hero import，旧 JPG、文案、布局和逻辑未改。
+        - AC-003：独立 QA 在精确 SHA 的 1280×720 与 390×844 首页确认新图请求 200、loader 消失、文字可读、无横向溢出且控制台无错误；手机两端裁切作为已声明 P2 风险。
+        - AC-004：owner 与 control 的 npm run check、git diff --check 和干净 main 检查均通过，未改 dist-netlify。
       review:
-        verdict: PENDING
-        checkpoint: null
+        verdict: PASS
+        checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+        checked_at: "2026-09-01T15:34:00+08:00"
       integration:
-        checkpoint: null
-      verification: []
+        checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+      verification:
+        - verdict: PASS
+          checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-09-01T15:34:00+08:00"
+          scope: ZC-011 AC-001 至 AC-004 的独立候选验收；main 以 fast-forward 保持同一精确 SHA。
       user_confirmations:
         - 用户明确选择 /Users/yangsizhe/Desktop/微信图片_20260830173022_2752_6.png 作为首页图；源 SHA-256 为 473df6b49751bd3ebb0d5d972b9899cdd8f4c159ca78d791a8c3552e723506d7。
     risks:
       - severity: P2
-        status: OPEN
+        status: RESOLVED
         owner: site-architecture
-        summary: 16:9 横图在手机纵向 cover 裁切时无法同时完整展示左右两端，需以用户选图不变为前提验证视觉焦点。
+        summary: 独立 QA 确认手机裁切不影响文字可读、无横向溢出或加载错误；用户已选图保持原样，当前任务不改变既有 hero 定位逻辑。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
@@ -1756,6 +1793,30 @@ tasks:
         at: "2026-09-01T15:04:08+08:00"
         checkpoint: 438e920482213c5bc2a58a2caddbca7fae581d6c
         reason: 独立开发 Worktree 已核验为目标分支、正确基线和干净状态，授予两文件租约。
+      - from: IN_PROGRESS
+        to: REVIEW
+        actor: site-architecture
+        at: "2026-09-01T15:28:00+08:00"
+        checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+        reason: 新 PNG 与单行 hero import 完成，构建、资源和桌面/手机视觉检查通过，工作区干净。
+      - from: REVIEW
+        to: INTEGRATED
+        actor: control
+        at: "2026-09-01T15:40:14+08:00"
+        checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+        reason: 独立 qa-gate 已对候选 PASS，control 将同一精确提交 fast-forward 集成到 main。
+      - from: INTEGRATED
+        to: VERIFIED
+        actor: control
+        at: "2026-09-01T15:40:14+08:00"
+        checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+        reason: main 上 npm run check、候选 diff 空白检查与干净状态均通过；无新 SHA，复用候选独立验收。
+      - from: VERIFIED
+        to: DONE
+        actor: control
+        at: "2026-09-01T15:40:14+08:00"
+        checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
+        reason: 用户选定图片已接入首页，风险已记录并接受，租约释放，交接同步。
 
 legacy_records:
   issue_prefix: ZZ
