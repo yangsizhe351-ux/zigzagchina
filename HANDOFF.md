@@ -1,6 +1,6 @@
 # ZigZag China 当前交接
 
-更新时间：2026-09-01 16:59（Asia/Shanghai）
+更新时间：2026-09-01 17:19（Asia/Shanghai）
 
 ## 30 秒看懂当前状态
 
@@ -35,7 +35,7 @@ Fast 仅由总控按单次任务切到 `gpt-5.6-luna / medium`；政策结论、
 ## 当前任务状态
 
 - `ZC-011`：`DONE`；精确候选 `9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e` 已由唯一 qa-gate `PASS` 并快进集成到 main，手机裁切风险已记录。
-- `ZC-012`：`INTEGRATED`；实现候选已通过独立 qa-gate 并合并到 main，当前集成精确 SHA 为 `7860dda0266c2ea2b0ff74c459e08dee132dc074`，等待集成后最终只读验收。
+- `ZC-012`：`VERIFIED`；集成后精确 SHA `9d1c572c6870fa5aee20115e7261a5a8f1230251` 已通过 qa-gate 双视口与构建验收，等待封板提交和最终 tag 复核。
 - `ZC-010`：`DONE`；精确候选 `259848523074bcd023ef850b243557dd0d25735a` 已由唯一 qa-gate `PASS`，效率规则完成收口。
 - `ZC-009`：`DONE`；六角色、模型路由、全局自动交接边界、两阶段核验及前任可恢复归档已收口。
 - `ZC-008`：`BLOCKED`；唯一缺口仍是合法状态转换边校验，交付 `90f62b5b03932631e48e54258ac1fa6ef192aafe` 未合并。

@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T16:59:38+08:00"
+updated_at: "2026-09-01T17:19:17+08:00"
 
 status_flow:
   normal:
@@ -1828,7 +1828,7 @@ tasks:
   - issue_id: ZC-012
     title: 恢复首页原本文案并调整主导航
     priority: P1
-    status: INTEGRATED
+    status: VERIFIED
     owner: site-architecture
     problem: 用户确认保留当前首页图片和新增下半部分内容，同时恢复图2中的首页原本文案，并按图3替换主导航项目。
     scope:
@@ -1936,7 +1936,12 @@ tasks:
         checked_at: "2026-09-01T16:59:38+08:00"
       integration:
         checkpoint: 7860dda0266c2ea2b0ff74c459e08dee132dc074
-      verification: []
+      verification:
+        - verdict: PASS
+          checkpoint: 9d1c572c6870fa5aee20115e7261a5a8f1230251
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-09-01T17:19:17+08:00"
+          scope: 集成后精确 main SHA 的独立只读验收；AC-001 至 AC-004 均通过，普通 DOM/截图/HTTP 检查未使用 full CDP。
       user_confirmations:
         - 用户确认图2只作为首页原本文案，当前视觉效果与图1新增内容保持；图3红色标注要求删除 Experiences、Book Your Trip，新增 Practical FAQ、Contact Us。
     risks:
@@ -1970,6 +1975,12 @@ tasks:
         at: "2026-09-01T16:59:38+08:00"
         checkpoint: 7860dda0266c2ea2b0ff74c459e08dee132dc074
         reason: 独立 qa-gate 已对候选 PASS，control 将同一实现提交机械合并到 main；集成构建、diff 与干净状态均通过，业务文件租约释放。
+      - from: INTEGRATED
+        to: VERIFIED
+        actor: qa-gate
+        at: "2026-09-01T17:19:17+08:00"
+        checkpoint: 9d1c572c6870fa5aee20115e7261a5a8f1230251
+        reason: 独立 qa-gate 对集成后的精确 main SHA 完成双视口、导航、资源、控制台、构建与 diff 验收，AC-001 至 AC-004 均 PASS。
 
 legacy_records:
   issue_prefix: ZZ
