@@ -1,0 +1,70 @@
+{
+  "_main-DVefXRJn.js": {
+    "file": "assets/main-DVefXRJn.js",
+    "name": "main",
+    "css": [
+      "assets/main-liA_jntY.css"
+    ],
+    "assets": [
+      "assets/cdqc-hero-panda-city-BxGNdO3m.png",
+      "assets/cdqc-city-chengdu-3-43R5qG.webp",
+      "assets/cdqc-city-chongqing-Bzu3Pdgd.webp",
+      "assets/cdqc-experience-tea-o1El6Cut.webp",
+      "assets/cdqc-experience-panda-i02wtJl_.webp",
+      "assets/cdqc-experience-hotpot-49PRVYe2.webp",
+      "assets/cdqc-experience-nightscape-Dr4rZYgG.webp",
+      "assets/cdqc-tea-lane-BMwG8nfC.jpg",
+      "assets/cdqc-chongqing-hillside-night-CSHenTgl.jpg",
+      "assets/cdqc-sichuan-table-BpFk5PaO.jpg",
+      "assets/zigzag-mark-new-DvCS5-dw.png"
+    ]
+  },
+  "_main-liA_jntY.css": {
+    "file": "assets/main-liA_jntY.css",
+    "src": "_main-liA_jntY.css"
+  },
+  "assets/brand/zigzag-mark-new.png": {
+    "file": "assets/zigzag-mark-new-DvCS5-dw.png",
+    "src": "assets/brand/zigzag-mark-new.png"
+  },
+  "assets/images/cdqc-hero-panda-city.png": {
+    "file": "assets/cdqc-hero-panda-city-BxGNdO3m.png",
+    "src": "assets/images/cdqc-hero-panda-city.png"
+  },
+  "assets/images/generated/cdqc-chongqing-hillside-night.jpg": {
+    "file": "assets/cdqc-chongqing-hillside-night-CSHenTgl.jpg",
+    "src": "assets/images/generated/cdqc-chongqing-hillside-night.jpg"
+  },
+  "assets/images/generated/cdqc-sichuan-table.jpg": {
+    "file": "assets/cdqc-sichuan-table-BpFk5PaO.jpg",
+    "src": "assets/images/generated/cdqc-sichuan-table.jpg"
+  },
+  "assets/images/generated/cdqc-tea-lane.jpg": {
+    "file": "assets/cdqc-tea-lane-BMwG8nfC.jpg",
+    "src": "assets/images/generated/cdqc-tea-lane.jpg"
+  },
+  "assets/images/webp/cdqc-city-chengdu.webp": {
+    "file": "assets/cdqc-city-chengdu-3-43R5qG.webp",
+    "src": "assets/images/webp/cdqc-city-chengdu.webp"
+  },
+  "assets/images/webp/cdqc-city-chongqing.webp": {
+    "file": "assets/cdqc-city-chongqing-Bzu3Pdgd.webp",
+    "src": "assets/images/webp/cdqc-city-chongqing.webp"
+  },
+  "assets/images/webp/cdqc-experience-hotpot.webp": {
+    "file": "assets/cdqc-experience-hotpot-49PRVYe2.webp",
+    "src": "assets/images/webp/cdqc-experience-hotpot.webp"
+  },
+  "assets/images/webp/cdqc-experience-nightscape.webp": {
+    "file": "assets/cdqc-experience-nightscape-Dr4rZYgG.webp",
+    "src": "assets/images/webp/cdqc-experience-nightscape.webp"
+  },
+  "assets/images/webp/cdqc-experience-panda.webp": {
+    "file": "assets/cdqc-experience-panda-i02wtJl_.webp",
+    "src": "assets/images/webp/cdqc-experience-panda.webp"
+  },
+  "assets/images/webp/cdqc-experience-tea.webp": {
+    "file": "assets/cdqc-experience-tea-o1El6Cut.webp",
+    "src": "assets/images/webp/cdqc-experience-tea.webp"
+  }
+}
