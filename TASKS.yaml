@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T15:49:46+08:00"
+updated_at: "2026-09-01T16:31:57+08:00"
 
 status_flow:
   normal:
@@ -74,12 +74,13 @@ role_registry:
     site-architecture:
       title: ZigZag 网站结构与实现
       task_id: 01a055cc-8022-7050-b6a6-3aa10486cc6f
-      status: IDLE_WITH_BLOCKED_TASK
+      status: ACTIVE
       default_profile: balanced_build
       model: gpt-5.6-terra
       reasoning_effort: high
       workspace_mode: worktree
-      workspace_path: /Users/yangsizhe/.codex/worktrees/f79a/CDQC
+      workspace_path: /private/tmp/zc012-home-copy-nav
+      current_issue: ZC-012
     image-studio:
       title: ZigZag 图像生成
       task_id: 01a05600-6c1c-7412-b091-063e90c9175d
@@ -1824,6 +1825,108 @@ tasks:
         at: "2026-09-01T15:40:36+08:00"
         checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
         reason: 用户选定图片已接入首页，检查完成后风险已记录并接受，租约释放，交接同步。
+
+  - issue_id: ZC-012
+    title: 恢复首页原本文案并调整主导航
+    priority: P1
+    status: IN_PROGRESS
+    owner: site-architecture
+    problem: 用户确认保留当前首页图片和新增下半部分内容，同时恢复图2中的首页原本文案，并按图3替换主导航项目。
+    scope:
+      allowed_paths:
+        - src/content.js
+        - src/main.jsx
+      forbidden_paths:
+        - assets/
+        - src/styles.css
+        - public/
+        - supabase/
+        - dist-netlify/
+        - package.json
+        - TASKS.yaml
+        - HANDOFF.md
+    acceptance_criteria:
+      - id: AC-001
+        statement: 首页 hero 标题恢复为原本文案；英文为 Explore / Southwestern China，法文和中文同步恢复对应原译文，当前图片、kicker、介绍、按钮和现有布局保持不变。
+        evidence_required: 聚焦 diff 与三语首页浏览器检查确认仅替换标题文案，未改图片或样式。
+      - id: AC-002
+        statement: 主导航显示 About Us、Destinations、Practical FAQ、Contact Us；Experiences 与 Book Your Trip 不再显示，并保留现有页面可用的导航落点。
+        evidence_required: 桌面与移动菜单 DOM 检查、链接 href 检查及旧标签缺失检查。
+      - id: AC-003
+        statement: 首页桌面与 390×844 手机视口均能显示新标题和四项导航，无横向溢出、控制台错误或 hero 资源回归；现有首页图片保持不变。
+        evidence_required: 本地浏览器双视口截图/DOM、控制台与图片请求检查。
+      - id: AC-004
+        statement: 内容检查、生产构建和 diff 空白检查通过，未修改 dist-netlify 或用户已选图片。
+        evidence_required: npm run check、git diff --check、变更路径与干净工作区。
+    branch: codex/zc-012-home-copy-nav
+    workspace:
+      path: /private/tmp/zc012-home-copy-nav
+      mode: worktree
+      expected_branch: codex/zc-012-home-copy-nav
+    base_checkpoint: 867b6a473951386309502c2ab3b41cc6781bd56a
+    gate_ref: refs/tags/qa-pass/ZC-012-20260901-01
+    dependencies: []
+    required_tests:
+      - npm run check
+      - git diff --check
+      - 首页桌面与 390x844 手机视口、导航 href、控制台及图片请求检查
+      - git status --short --branch
+    execution_profile:
+      risk_level: L2
+      profile: balanced_build
+      rework_count: 0
+      selection_reason: 用户已明确确认文案和导航调整；范围限于现有内容模型与首页导航映射，需保留当前视觉和图片并完成双视口验收。
+      escalation_trigger: 若标题未恢复、导航落点失效、图片或响应式行为回归，保持同一 owner 做根因修复；不得恢复已删除的实用指南功能或改动图片。
+      assignment_history:
+        - assigned_at: "2026-09-01T16:31:57+08:00"
+          rework_count: 0
+          profile: balanced_build
+          model: gpt-5.6-terra
+          reasoning_effort: high
+          executor_target: 01a055cc-8022-7050-b6a6-3aa10486cc6f
+          reason: 网站结构与实现角色负责在独立 Worktree 中恢复已确认文案并更新主导航映射。
+    public_interface:
+      change_allowed: true
+      approval: 用户明确要求“来吧 开始修改”，并确认图2文案与图3导航标注。
+    file_lease:
+      status: HELD
+      write_paths:
+        - src/content.js
+        - src/main.jsx
+      acquired_at: "2026-09-01T16:31:57+08:00"
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification: []
+      review:
+        verdict: PENDING
+        checkpoint: null
+        task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations:
+        - 用户确认图2只作为首页原本文案，当前视觉效果与图1新增内容保持；图3红色标注要求删除 Experiences、Book Your Trip，新增 Practical FAQ、Contact Us。
+    risks:
+      - severity: P2
+        status: OPEN
+        owner: site-architecture
+        summary: 当前代码没有独立 FAQ 页面或实用指南区块；Practical FAQ 导航将指向现有 booking/inquiry 区域，不恢复已删除的实用指南功能。若需独立 FAQ 内容，应另建任务确认范围。
+    handoff_target: qa-gate
+    history:
+      - from: BACKLOG
+        to: READY
+        actor: control
+        at: "2026-09-01T16:31:57+08:00"
+        checkpoint: 867b6a473951386309502c2ab3b41cc6781bd56a
+        reason: 用户明确确认首页文案和导航调整，范围、基线、分支、Worktree、测试、owner 与 gate_ref 已完整。
+      - from: READY
+        to: IN_PROGRESS
+        actor: control
+        at: "2026-09-01T16:31:57+08:00"
+        checkpoint: 867b6a473951386309502c2ab3b41cc6781bd56a
+        reason: 独立 Worktree 已核验为目标分支、正确基线和干净状态，授予 src/content.js 与 src/main.jsx 文件租约。
 
 legacy_records:
   issue_prefix: ZZ
