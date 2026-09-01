@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T18:33:43+08:00"
+updated_at: "2026-09-01T18:37:56+08:00"
 
 status_flow:
   normal:
@@ -1996,7 +1996,7 @@ tasks:
   - issue_id: ZC-013
     title: 主导航右侧抽屉试行
     priority: P1
-    status: REVIEW
+    status: INTEGRATED
     owner: site-architecture
     problem: 用户认为当前展开菜单占用过大且与顶部导航重复，明确要求试行可回滚的右侧抽屉导航。
     scope:
@@ -2070,12 +2070,12 @@ tasks:
       baseline_checkpoint: cd749bbdbc957de13b39e6905a0373f7aa7e3aac
       method: 新实现以单独聚焦提交交付；若用户不接受，control 仅对该提交执行 revert，不改写历史、不影响 ZC-012 基线 tag。
     file_lease:
-      status: HELD
+      status: RELEASED
       write_paths:
         - src/main.jsx
         - src/styles.css
       acquired_at: "2026-09-01T18:14:52+08:00"
-      released_at: null
+      released_at: "2026-09-01T18:37:56+08:00"
     evidence:
       commits:
         - checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
@@ -2109,6 +2109,18 @@ tasks:
           result: PASS
           checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
           summary: 根因修复候选在同一目标分支、非 detached 且 Worktree 干净。
+        - command: npm run check
+          result: PASS
+          checkpoint: f1735949f2bd49163464f51b4eccad0b37c7fdc9
+          summary: control 将两笔已通过分支验收的抽屉提交集成到 main 后，内容检查与 Vite 生产构建通过。
+        - command: git diff --check cd749bbdbc957de13b39e6905a0373f7aa7e3aac f1735949f2bd49163464f51b4eccad0b37c7fdc9
+          result: PASS
+          checkpoint: f1735949f2bd49163464f51b4eccad0b37c7fdc9
+          summary: 集成后的完整任务 diff 无空白错误，变更仅含治理记录与 src/main.jsx、src/styles.css。
+        - command: git status --short --branch
+          result: PASS
+          checkpoint: f1735949f2bd49163464f51b4eccad0b37c7fdc9
+          summary: 集成后的 main 工作区干净，未改构建产物。
       manual_verification:
         - AC-001：owner 在桌面与手机菜单打开状态确认四项既有导航及 href 保持，展开层改为右侧抽屉。
         - AC-002：owner 在 1280×720 与 390×844 确认抽屉宽度、背景可识别性和页面宽度正常，桌面顶部重复导航隐藏。
@@ -2116,17 +2128,23 @@ tasks:
         - AC-004：候选为基于 cd749bb 的独立聚焦提交，ZC-012 annotated tag 保持指向 cd749bb。
         - AC-005：owner 确认未修改 dist-netlify、图片、内容模型或治理文件。
       review:
-        verdict: PENDING
+        verdict: PASS
         checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+        checked_at: "2026-09-01T18:37:56+08:00"
       review_history:
         - verdict: BLOCK
           checkpoint: ebf5e7beeb1fc9816757327477eec131893b920c
           task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
           checked_at: "2026-09-01T18:29:15+08:00"
           scope: 首轮独立候选验收；首页通过，内页 AC-003 因 header 层级和前景色回归而阻断。
+        - verdict: PASS
+          checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-09-01T18:37:56+08:00"
+          scope: 根因修复候选独立验收；AC-001 至 AC-005 均通过，内页层级和文字对比度回归已消失。
       integration:
-        checkpoint: null
+        checkpoint: f1735949f2bd49163464f51b4eccad0b37c7fdc9
       verification: []
       user_confirmations:
         - 用户明确选择右侧抽屉导航，并要求该试行版本可回滚。
@@ -2136,9 +2154,9 @@ tasks:
         owner: control
         summary: 当前首页已验收版本由本地 annotated tag refs/tags/qa-pass/ZC-012-20260901-01 固定；ZC-013 不会改写该基线，用户不满意时可单独 revert 新提交。
       - severity: P1
-        status: IN_REVIEW
+        status: RESOLVED
         owner: site-architecture
-        summary: 首轮候选在共享内页抽屉打开状态存在遮罩层级与深色文字对比度回归；根因修复候选 8217483 正在由同一 qa-gate 重新独立验收。
+        summary: 首轮候选在共享内页抽屉打开状态的遮罩层级与深色文字对比度问题已由 8217483 根因修复，并由同一 qa-gate 独立确认消失。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
@@ -2171,6 +2189,12 @@ tasks:
         at: "2026-09-01T18:33:43+08:00"
         checkpoint: 8217483d34dbbb96f3fe4faca3b052c04ff34daa
         reason: 原因限定修复已形成新聚焦提交，owner 机械检查与内页双视口交互复测通过，等待同一 qa-gate 对新 SHA 重新独立验收。
+      - from: REVIEW
+        to: INTEGRATED
+        actor: control
+        at: "2026-09-01T18:37:56+08:00"
+        checkpoint: f1735949f2bd49163464f51b4eccad0b37c7fdc9
+        reason: 同一 qa-gate 已对修复候选 PASS；control 将首轮抽屉与根因修复两笔提交机械集成到 main，集成构建、diff 与干净状态均通过，业务文件租约释放。
 
 legacy_records:
   issue_prefix: ZZ
