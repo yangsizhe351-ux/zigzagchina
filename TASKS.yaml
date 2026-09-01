@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T17:19:17+08:00"
+updated_at: "2026-09-01T17:23:13+08:00"
 
 status_flow:
   normal:
@@ -1828,7 +1828,7 @@ tasks:
   - issue_id: ZC-012
     title: 恢复首页原本文案并调整主导航
     priority: P1
-    status: VERIFIED
+    status: DONE
     owner: site-architecture
     problem: 用户确认保留当前首页图片和新增下半部分内容，同时恢复图2中的首页原本文案，并按图3替换主导航项目。
     scope:
@@ -1946,9 +1946,9 @@ tasks:
         - 用户确认图2只作为首页原本文案，当前视觉效果与图1新增内容保持；图3红色标注要求删除 Experiences、Book Your Trip，新增 Practical FAQ、Contact Us。
     risks:
       - severity: P2
-        status: OPEN
-        owner: site-architecture
-        summary: 当前代码没有独立 FAQ 页面或实用指南区块；Practical FAQ 导航将指向现有 booking/inquiry 区域，不恢复已删除的实用指南功能。若需独立 FAQ 内容，应另建任务确认范围。
+        status: ACCEPTED
+        owner: control
+        summary: 本轮范围仅调整导航入口，接受 Practical FAQ 复用现有 booking/inquiry 区域；不恢复已删除的实用指南功能。若需独立 FAQ 内容，应另建任务确认范围。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
@@ -1981,6 +1981,12 @@ tasks:
         at: "2026-09-01T17:19:17+08:00"
         checkpoint: 9d1c572c6870fa5aee20115e7261a5a8f1230251
         reason: 独立 qa-gate 对集成后的精确 main SHA 完成双视口、导航、资源、控制台、构建与 diff 验收，AC-001 至 AC-004 均 PASS。
+      - from: VERIFIED
+        to: DONE
+        actor: control
+        at: "2026-09-01T17:23:13+08:00"
+        checkpoint: 3bb65750263b8339c190bc72066a8e41dd96fb4f
+        reason: 封板候选回写独立最终验收 PASS，所有 AC 有证据，P2 导航落点风险已由 control 接受，租约已释放，等待最终精确 tag。
 
 legacy_records:
   issue_prefix: ZZ
