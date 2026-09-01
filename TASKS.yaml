@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T15:40:14+08:00"
+updated_at: "2026-09-01T15:49:46+08:00"
 
 status_flow:
   normal:
@@ -1722,7 +1722,7 @@ tasks:
         - assets/images/cdqc-hero-panda-city.png
         - src/main.jsx
       acquired_at: "2026-09-01T15:04:08+08:00"
-      released_at: "2026-09-01T15:40:14+08:00"
+      released_at: "2026-09-01T15:40:36+08:00"
     evidence:
       commits:
         - checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
@@ -1764,6 +1764,13 @@ tasks:
         checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
         task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
         checked_at: "2026-09-01T15:34:00+08:00"
+      review_history:
+        - verdict: BLOCK
+          checkpoint: 0502368c82a92d9d7ae386bf13427a1364aca3dd
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-09-01T15:49:46+08:00"
+          findings:
+            - 收口状态时间早于 owner 的 npm run check、git diff --check 与 git status 结果；本次修正将所有状态收口移到检查之后。
       integration:
         checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
       verification:
@@ -1778,7 +1785,7 @@ tasks:
       - severity: P2
         status: RESOLVED
         owner: site-architecture
-        summary: 独立 QA 确认手机裁切不影响文字可读、无横向溢出或加载错误；用户已选图保持原样，当前任务不改变既有 hero 定位逻辑。
+        summary: 独立 QA 确认手机裁切不影响文字可读、无横向溢出或加载错误；检查完成后再收口状态，用户已选图保持原样。
     handoff_target: qa-gate
     history:
       - from: BACKLOG
@@ -1802,21 +1809,21 @@ tasks:
       - from: REVIEW
         to: INTEGRATED
         actor: control
-        at: "2026-09-01T15:40:14+08:00"
+        at: "2026-09-01T15:40:34+08:00"
         checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
         reason: 独立 qa-gate 已对候选 PASS，control 将同一精确提交 fast-forward 集成到 main。
       - from: INTEGRATED
         to: VERIFIED
         actor: control
-        at: "2026-09-01T15:40:14+08:00"
+        at: "2026-09-01T15:40:35+08:00"
         checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
-        reason: main 上 npm run check、候选 diff 空白检查与干净状态均通过；无新 SHA，复用候选独立验收。
+        reason: main 上 npm run check、候选 diff 空白检查与干净状态均已完成；无新 SHA，复用候选独立验收。
       - from: VERIFIED
         to: DONE
         actor: control
-        at: "2026-09-01T15:40:14+08:00"
+        at: "2026-09-01T15:40:36+08:00"
         checkpoint: 9fa225b0f559ec6ec4030f25c47959d1d8ed5f6e
-        reason: 用户选定图片已接入首页，风险已记录并接受，租约释放，交接同步。
+        reason: 用户选定图片已接入首页，检查完成后风险已记录并接受，租约释放，交接同步。
 
 legacy_records:
   issue_prefix: ZZ
