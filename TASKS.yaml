@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T17:26:00+08:00"
+updated_at: "2026-09-01T18:11:11+08:00"
 
 status_flow:
   normal:
@@ -1992,6 +1992,109 @@ tasks:
         at: "2026-09-01T17:23:13+08:00"
         checkpoint: 3bb65750263b8339c190bc72066a8e41dd96fb4f
         reason: 封板候选回写独立最终验收 PASS，所有 AC 有证据，P2 导航落点风险已由 control 接受，租约已释放，等待最终精确 tag。
+
+  - issue_id: ZC-013
+    title: 主导航右侧抽屉试行
+    priority: P1
+    status: READY
+    owner: site-architecture
+    problem: 用户认为当前展开菜单占用过大且与顶部导航重复，明确要求试行可回滚的右侧抽屉导航。
+    scope:
+      allowed_paths:
+        - src/main.jsx
+        - src/styles.css
+      forbidden_paths:
+        - src/content.js
+        - assets/
+        - public/
+        - supabase/
+        - dist-netlify/
+        - package.json
+        - TASKS.yaml
+        - HANDOFF.md
+    acceptance_criteria:
+      - id: AC-001
+        statement: 点击菜单后，现有全宽展开菜单改为从右侧滑入的导航抽屉；抽屉只呈现现有四项主导航及其既有链接，不更改文案、图片或页面内容。
+        evidence_required: 聚焦 diff、桌面与手机打开菜单的 DOM/截图、四个 href 检查。
+      - id: AC-002
+        statement: 菜单打开时桌面顶部导航不再与抽屉重复显示；背景首页仍可识别，抽屉宽度和排版在桌面与手机均无横向溢出。
+        evidence_required: 1280×720 与 390×844 截图/DOM 检查及页面宽度检查。
+      - id: AC-003
+        statement: 菜单可通过关闭按钮、点击遮罩、Esc 和选择导航项关闭；保留已有语言切换与导航落点行为，无控制台错误。
+        evidence_required: 浏览器交互、键盘与控制台检查。
+      - id: AC-004
+        statement: 当前 ZC-012 已验收版本保持为独立回滚锚点；新实现为单独聚焦提交，可在用户不满意时安全 revert，不 push 或部署。
+        evidence_required: 基线 tag、聚焦提交及干净 Git 状态。
+      - id: AC-005
+        statement: 代码、样式与交互检查通过，未修改构建产物、图片、内容模型或治理文件。
+        evidence_required: npm run check、git diff --check、变更路径和干净工作区。
+    branch: codex/zc-013-nav-drawer
+    workspace:
+      path: /private/tmp/zc013-nav-drawer
+      mode: worktree
+      expected_branch: codex/zc-013-nav-drawer
+    base_checkpoint: cd749bbdbc957de13b39e6905a0373f7aa7e3aac
+    gate_ref: refs/tags/qa-pass/ZC-013-20260901-01
+    dependencies: []
+    required_tests:
+      - npm run check
+      - git diff --check
+      - 1280x720 与 390x844 菜单打开/关闭、背景可见性、横向溢出、链接 href、Esc、遮罩和控制台检查
+      - git status --short --branch
+    execution_profile:
+      risk_level: L2
+      profile: balanced_build
+      rework_count: 0
+      selection_reason: 用户已明确选择右侧抽屉方向，但需要保持当前已验收首页、导航信息架构和可逆性，涉及 JSX、CSS、交互与响应式验证。
+      escalation_trigger: 若关闭/焦点/链接行为、双视口布局或现有首页交互回归，保持同一 owner 做根因修复；不得借此恢复已删除功能或改动内容与图片。
+      assignment_history:
+        - assigned_at: "2026-09-01T18:11:11+08:00"
+          rework_count: 0
+          profile: balanced_build
+          model: gpt-5.6-terra
+          reasoning_effort: high
+          executor_target: 01a055cc-8022-7050-b6a6-3aa10486cc6f
+          reason: 网站结构与实现角色负责在独立 Worktree 中把现有主导航替换为可逆的右侧抽屉。
+    public_interface:
+      change_allowed: true
+      approval: 用户明确要求“右侧抽屉试试”，并要求不喜欢时可回滚。
+    rollback:
+      baseline_tag: refs/tags/qa-pass/ZC-012-20260901-01
+      baseline_checkpoint: cd749bbdbc957de13b39e6905a0373f7aa7e3aac
+      method: 新实现以单独聚焦提交交付；若用户不接受，control 仅对该提交执行 revert，不改写历史、不影响 ZC-012 基线 tag。
+    file_lease:
+      status: NONE
+      write_paths:
+        - src/main.jsx
+        - src/styles.css
+      acquired_at: null
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification: []
+      review:
+        verdict: PENDING
+        checkpoint: null
+        task_id: null
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations:
+        - 用户明确选择右侧抽屉导航，并要求该试行版本可回滚。
+    risks:
+      - severity: P2
+        status: MITIGATED
+        owner: control
+        summary: 当前首页已验收版本由本地 annotated tag refs/tags/qa-pass/ZC-012-20260901-01 固定；ZC-013 不会改写该基线，用户不满意时可单独 revert 新提交。
+    handoff_target: qa-gate
+    history:
+      - from: BACKLOG
+        to: READY
+        actor: control
+        at: "2026-09-01T18:11:11+08:00"
+        checkpoint: cd749bbdbc957de13b39e6905a0373f7aa7e3aac
+        reason: 用户明确授权试行右侧抽屉；范围、基线、回滚锚点、分支、Worktree、测试、owner、模型与 gate_ref 已完整。
 
 legacy_records:
   issue_prefix: ZZ
