@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-08-31T13:39:53+08:00"
+updated_at: "2026-09-01T15:04:08+08:00"
 
 status_flow:
   normal:
@@ -74,12 +74,13 @@ role_registry:
     site-architecture:
       title: ZigZag 网站结构与实现
       task_id: 01a055cc-8022-7050-b6a6-3aa10486cc6f
-      status: IDLE_WITH_BLOCKED_TASK
+      status: ACTIVE
       default_profile: balanced_build
       model: gpt-5.6-terra
       reasoning_effort: high
       workspace_mode: worktree
-      workspace_path: /Users/yangsizhe/.codex/worktrees/f79a/CDQC
+      workspace_path: /Users/yangsizhe/.codex/worktrees/zc011/CDQC
+      current_issue: ZC-011
     image-studio:
       title: ZigZag 图像生成
       task_id: 01a05600-6c1c-7412-b091-063e90c9175d
@@ -1651,6 +1652,110 @@ tasks:
         at: "2026-08-31T13:39:53+08:00"
         checkpoint: 259848523074bcd023ef850b243557dd0d25735a
         reason: 上下文、单一 QA、事件等待、增量交接和最小验证规则完成收口。
+
+  - issue_id: ZC-011
+    title: 替换首页主视觉为用户选定双城熊猫图
+    priority: P1
+    status: IN_PROGRESS
+    owner: site-architecture
+    problem: 首页仍使用旧双城主视觉，需替换为用户在 2026-09-01 明确选定的 1672×941 熊猫与成都重庆城市景观图。
+    scope:
+      allowed_paths:
+        - assets/images/cdqc-hero-panda-city.png
+        - src/main.jsx
+      forbidden_paths:
+        - assets/images/cdqc-hero-clean.jpg
+        - assets/brand/
+        - src/content.js
+        - src/styles.css
+        - public/
+        - supabase/
+        - dist-netlify/
+        - package.json
+    acceptance_criteria:
+      - id: AC-001
+        statement: 新生产资源与用户提供的 PNG 字节一致，保持 1672×941、RGB、无透明通道和原始构图。
+        evidence_required: 源文件与目标文件 SHA-256 一致，并记录尺寸、格式和 alpha 检查。
+      - id: AC-002
+        statement: 首页 hero 仅改为导入新资源，现有预加载、遮罩、动效、三语文案和交互逻辑不变。
+        evidence_required: 聚焦 diff 仅含新资源与 src/main.jsx 单行导入变更。
+      - id: AC-003
+        statement: 桌面与手机首屏均正确加载新图，loader 消失、文字可读、无横向溢出、控制台无错误且图片请求成功。
+        evidence_required: 本地首页桌面与 390×844 手机视口的浏览器检查。
+      - id: AC-004
+        statement: 内容检查和静态生产构建通过，未修改或提交 dist-netlify。
+        evidence_required: npm run check、git diff --check、变更路径与干净分支。
+    branch: codex/zc-011-home-hero
+    workspace:
+      path: /Users/yangsizhe/.codex/worktrees/zc011/CDQC
+      mode: worktree
+      expected_branch: codex/zc-011-home-hero
+    base_checkpoint: 438e920482213c5bc2a58a2caddbca7fae581d6c
+    gate_ref: refs/tags/qa-pass/ZC-011-20260901-01
+    dependencies: []
+    required_tests:
+      - shasum -a 256 源 PNG 与目标 PNG
+      - sips -g pixelWidth -g pixelHeight -g format -g hasAlpha 目标 PNG
+      - npm run check
+      - git diff --check
+      - 首页桌面与 390x844 手机视口、控制台及图片请求检查
+      - git status --short --branch
+    execution_profile:
+      risk_level: L1
+      profile: balanced_build
+      rework_count: 0
+      selection_reason: 用户已选定最终图片；任务只做原图复制与首页单行资源引用替换，但仍需网站构建和双视口视觉验收。
+      escalation_trigger: 若手机裁切、文字对比或资源加载失败，保持同一 owner 做根因调整；不得重新生成或擅自改变用户图片。
+      assignment_history:
+        - assigned_at: "2026-09-01T15:04:08+08:00"
+          rework_count: 0
+          profile: balanced_build
+          model: gpt-5.6-terra
+          reasoning_effort: high
+          executor_target: 01a055cc-8022-7050-b6a6-3aa10486cc6f
+          reason: 网站实现角色负责将用户已选定的原图接入现有 React/Vite 首页。
+    public_interface:
+      change_allowed: false
+      approval: 用户明确要求“我们首页图换成这张”。
+    file_lease:
+      status: HELD
+      write_paths:
+        - assets/images/cdqc-hero-panda-city.png
+        - src/main.jsx
+      acquired_at: "2026-09-01T15:04:08+08:00"
+      released_at: null
+    evidence:
+      commits: []
+      checks: []
+      manual_verification: []
+      review:
+        verdict: PENDING
+        checkpoint: null
+        task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+      integration:
+        checkpoint: null
+      verification: []
+      user_confirmations:
+        - 用户明确选择 /Users/yangsizhe/Desktop/微信图片_20260830173022_2752_6.png 作为首页图；源 SHA-256 为 473df6b49751bd3ebb0d5d972b9899cdd8f4c159ca78d791a8c3552e723506d7。
+    risks:
+      - severity: P2
+        status: OPEN
+        owner: site-architecture
+        summary: 16:9 横图在手机纵向 cover 裁切时无法同时完整展示左右两端，需以用户选图不变为前提验证视觉焦点。
+    handoff_target: qa-gate
+    history:
+      - from: BACKLOG
+        to: READY
+        actor: control
+        at: "2026-09-01T15:04:06+08:00"
+        checkpoint: 438e920482213c5bc2a58a2caddbca7fae581d6c
+        reason: 用户明确选定首页图，范围、基线、分支、测试、owner 与 gate_ref 已完整。
+      - from: READY
+        to: IN_PROGRESS
+        actor: control
+        at: "2026-09-01T15:04:08+08:00"
+        checkpoint: 438e920482213c5bc2a58a2caddbca7fae581d6c
+        reason: 独立开发 Worktree 已核验为目标分支、正确基线和干净状态，授予两文件租约。
 
 legacy_records:
   issue_prefix: ZZ

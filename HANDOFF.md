@@ -1,6 +1,6 @@
 # ZigZag China 当前交接
 
-更新时间：2026-08-31 13:39（Asia/Shanghai）
+更新时间：2026-09-01 15:04（Asia/Shanghai）
 
 ## 30 秒看懂当前状态
 
@@ -18,7 +18,7 @@
 | `ZigZag 总控台（项目内唯一入口）` | `01a05605-cf05-7722-b5e6-1efc32e20ab0` | `gpt-5.6-sol / high` | `ACTIVE` |
 | `ZigZag 文本与翻译` | `01a05600-619c-7820-877a-82ca45e5e9cd` | `gpt-5.6-terra / high` | `IDLE_READ_ONLY` |
 | `ZigZag 政策与合规` | `01a05600-76b4-7170-aea1-5c19ed47c909` | `gpt-5.6-sol / xhigh` | `IDLE_READ_ONLY` |
-| `ZigZag 网站结构与实现` | `01a055cc-8022-7050-b6a6-3aa10486cc6f` | `gpt-5.6-terra / high` | `IDLE_WITH_BLOCKED_TASK` |
+| `ZigZag 网站结构与实现` | `01a055cc-8022-7050-b6a6-3aa10486cc6f` | `gpt-5.6-terra / high` | `ACTIVE · ZC-011` |
 | `ZigZag 图像生成` | `01a05600-6c1c-7412-b091-063e90c9175d` | `gpt-5.6-terra / medium` | `IDLE_READ_ONLY` |
 | `ZigZag 集成验收` | `01a05590-acd0-73b1-808e-04fc11b95db2` | `gpt-5.6-sol / xhigh` | `IDLE` |
 
@@ -34,6 +34,7 @@ Fast 仅由总控按单次任务切到 `gpt-5.6-luna / medium`；政策结论、
 
 ## 当前任务状态
 
+- `ZC-011`：`IN_PROGRESS`；在独立分支把用户选定的 1672×941 熊猫双城原图接入首页，禁止改图、改文案或改现有布局。
 - `ZC-010`：`DONE`；精确候选 `259848523074bcd023ef850b243557dd0d25735a` 已由唯一 qa-gate `PASS`，效率规则完成收口。
 - `ZC-009`：`DONE`；六角色、模型路由、全局自动交接边界、两阶段核验及前任可恢复归档已收口。
 - `ZC-008`：`BLOCKED`；唯一缺口仍是合法状态转换边校验，交付 `90f62b5b03932631e48e54258ac1fa6ef192aafe` 未合并。
