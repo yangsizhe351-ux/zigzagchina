@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T18:11:11+08:00"
+updated_at: "2026-09-01T18:14:52+08:00"
 
 status_flow:
   normal:
@@ -1996,7 +1996,7 @@ tasks:
   - issue_id: ZC-013
     title: 主导航右侧抽屉试行
     priority: P1
-    status: READY
+    status: IN_PROGRESS
     owner: site-architecture
     problem: 用户认为当前展开菜单占用过大且与顶部导航重复，明确要求试行可回滚的右侧抽屉导航。
     scope:
@@ -2063,11 +2063,11 @@ tasks:
       baseline_checkpoint: cd749bbdbc957de13b39e6905a0373f7aa7e3aac
       method: 新实现以单独聚焦提交交付；若用户不接受，control 仅对该提交执行 revert，不改写历史、不影响 ZC-012 基线 tag。
     file_lease:
-      status: NONE
+      status: HELD
       write_paths:
         - src/main.jsx
         - src/styles.css
-      acquired_at: null
+      acquired_at: "2026-09-01T18:14:52+08:00"
       released_at: null
     evidence:
       commits: []
@@ -2095,6 +2095,12 @@ tasks:
         at: "2026-09-01T18:11:11+08:00"
         checkpoint: cd749bbdbc957de13b39e6905a0373f7aa7e3aac
         reason: 用户明确授权试行右侧抽屉；范围、基线、回滚锚点、分支、Worktree、测试、owner、模型与 gate_ref 已完整。
+      - from: READY
+        to: IN_PROGRESS
+        actor: control
+        at: "2026-09-01T18:14:52+08:00"
+        checkpoint: cd749bbdbc957de13b39e6905a0373f7aa7e3aac
+        reason: 独立 Worktree 已核验为目标分支、正确基线和干净状态，授予 src/main.jsx 与 src/styles.css 文件租约。
 
 legacy_records:
   issue_prefix: ZZ
