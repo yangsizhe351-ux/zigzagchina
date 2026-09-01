@@ -1,7 +1,7 @@
 schema_version: 1
 project: zigzag-china
 ledger_authority: "This file is the only task status ledger."
-updated_at: "2026-09-01T17:23:13+08:00"
+updated_at: "2026-09-01T17:26:00+08:00"
 
 status_flow:
   normal:
@@ -1942,6 +1942,11 @@ tasks:
           task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
           checked_at: "2026-09-01T17:19:17+08:00"
           scope: 集成后精确 main SHA 的独立只读验收；AC-001 至 AC-004 均通过，普通 DOM/截图/HTTP 检查未使用 full CDP。
+        - verdict: PASS
+          checkpoint: d7e07f5f00561935cd66b2a779f050edebf79c11
+          task_id: 01a05590-acd0-73b1-808e-04fc11b95db2
+          checked_at: "2026-09-01T17:26:00+08:00"
+          scope: DONE 封板候选的独立只读复核；AC-001 至 AC-004 均通过，页面内容仅继承前一通过候选，未使用 full CDP。
       user_confirmations:
         - 用户确认图2只作为首页原本文案，当前视觉效果与图1新增内容保持；图3红色标注要求删除 Experiences、Book Your Trip，新增 Practical FAQ、Contact Us。
     risks:
