@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { createRoot, hydrateRoot } from 'react-dom/client';
-import heroImage from '../assets/images/cdqc-hero-clean.jpg';
+import heroImage from '../assets/images/cdqc-hero-panda-city.png';
 import cityChengduImage from '../assets/images/webp/cdqc-city-chengdu.webp';
 import cityChongqingImage from '../assets/images/webp/cdqc-city-chongqing.webp';
 import teaImage from '../assets/images/webp/cdqc-experience-tea.webp';
