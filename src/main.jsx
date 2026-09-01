@@ -45,15 +45,15 @@ function BrandLockup() {
 function SiteHeader({ t, language, setLanguage, languageOpen, setLanguageOpen, menuOpen, setMenuOpen, innerPage = false }) {
   const navLinks = innerPage ? ['/about', '/#destinations', '/#booking', '/#contact'] : ['/about', '#destinations', '#booking', '#contact'];
   return <>
-    <header className={`site-header ${innerPage ? 'inner-page-header' : ''}`}>
+    <header className={`site-header ${innerPage ? 'inner-page-header' : ''} ${menuOpen ? 'is-menu-open' : ''}`}>
       <a className="brand-mark" href={innerPage ? '/' : '#top'} aria-label={t.a11y.home}><BrandLockup /></a>
-      <button className={`menu-button ${menuOpen ? 'is-open' : ''}`} aria-label={menuOpen ? t.a11y.closeMenu : t.a11y.openMenu} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
+      <button className={`menu-button ${menuOpen ? 'is-open' : ''}`} aria-label={menuOpen ? t.a11y.closeMenu : t.a11y.openMenu} aria-controls="site-navigation-drawer" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
       <nav className="nav-links" aria-label={t.a11y.mainNav}>
         {t.nav.map((item, index) => <a href={navLinks[index]} key={item}>{item}</a>)}
       </nav>
       <div className="header-actions"><div className="language-wrap"><button className="language-button" aria-expanded={languageOpen} onClick={() => setLanguageOpen(!languageOpen)} aria-label={t.a11y.chooseLanguage}>{languages.find(({ code }) => code === language)?.short} <span>⌄</span></button>{languageOpen && <div className="language-menu">{languages.map(({ code, short }) => <button key={code} onClick={() => { setLanguage(code); setLanguageOpen(false); }}>{short}<span>{languageNames[language][code]}</span></button>)}</div>}</div></div>
     </header>
-    {menuOpen && <div className={`mobile-menu ${innerPage ? 'inner-page-menu' : ''}`}>{t.nav.map((item, index) => <a href={navLinks[index]} key={item} onClick={() => setMenuOpen(false)}>{item} <span>0{index + 1}</span></a>)}</div>}
+    {menuOpen && <><button className="nav-drawer-backdrop" type="button" aria-label={t.a11y.closeMenu} onClick={() => setMenuOpen(false)} /><nav className={`nav-drawer ${innerPage ? 'inner-page-drawer' : ''}`} id="site-navigation-drawer" aria-label={t.a11y.mainNav}>{t.nav.map((item, index) => <a href={navLinks[index]} key={item} onClick={() => setMenuOpen(false)}>{item} <span>0{index + 1}</span></a>)}</nav></>}
   </>;
 }
 
