@@ -1,9 +1,9 @@
 {
-  "_main-BuG_cHYE.js": {
-    "file": "assets/main-BuG_cHYE.js",
+  "_main-DrVGqC9P.js": {
+    "file": "assets/main-DrVGqC9P.js",
     "name": "main",
     "css": [
-      "assets/main-liA_jntY.css"
+      "assets/main-ygMEqMqi.css"
     ],
     "assets": [
       "assets/cdqc-hero-panda-city-BxGNdO3m.png",
@@ -13,15 +13,13 @@
       "assets/cdqc-experience-panda-i02wtJl_.webp",
       "assets/cdqc-experience-hotpot-49PRVYe2.webp",
       "assets/cdqc-experience-nightscape-Dr4rZYgG.webp",
-      "assets/cdqc-tea-lane-BMwG8nfC.jpg",
       "assets/cdqc-chongqing-hillside-night-CSHenTgl.jpg",
-      "assets/cdqc-sichuan-table-BpFk5PaO.jpg",
       "assets/zigzag-mark-new-DvCS5-dw.png"
     ]
   },
-  "_main-liA_jntY.css": {
-    "file": "assets/main-liA_jntY.css",
-    "src": "_main-liA_jntY.css"
+  "_main-ygMEqMqi.css": {
+    "file": "assets/main-ygMEqMqi.css",
+    "src": "_main-ygMEqMqi.css"
   },
   "assets/brand/zigzag-mark-new.png": {
     "file": "assets/zigzag-mark-new-DvCS5-dw.png",
@@ -34,14 +32,6 @@
   "assets/images/generated/cdqc-chongqing-hillside-night.jpg": {
     "file": "assets/cdqc-chongqing-hillside-night-CSHenTgl.jpg",
     "src": "assets/images/generated/cdqc-chongqing-hillside-night.jpg"
-  },
-  "assets/images/generated/cdqc-sichuan-table.jpg": {
-    "file": "assets/cdqc-sichuan-table-BpFk5PaO.jpg",
-    "src": "assets/images/generated/cdqc-sichuan-table.jpg"
-  },
-  "assets/images/generated/cdqc-tea-lane.jpg": {
-    "file": "assets/cdqc-tea-lane-BMwG8nfC.jpg",
-    "src": "assets/images/generated/cdqc-tea-lane.jpg"
   },
   "assets/images/webp/cdqc-city-chengdu.webp": {
     "file": "assets/cdqc-city-chengdu-3-43R5qG.webp",
