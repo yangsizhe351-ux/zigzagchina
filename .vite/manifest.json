@@ -1,13 +1,13 @@
 {
-  "_main-Cc2PTUUA.css": {
-    "file": "assets/main-Cc2PTUUA.css",
-    "src": "_main-Cc2PTUUA.css"
+  "_main-CxDKtiad.css": {
+    "file": "assets/main-CxDKtiad.css",
+    "src": "_main-CxDKtiad.css"
   },
-  "_main-EBIuLsKe.js": {
-    "file": "assets/main-EBIuLsKe.js",
+  "_main-DInr-YGc.js": {
+    "file": "assets/main-DInr-YGc.js",
     "name": "main",
     "css": [
-      "assets/main-Cc2PTUUA.css"
+      "assets/main-CxDKtiad.css"
     ],
     "assets": [
       "assets/cdqc-hero-panda-city-BxGNdO3m.png",
