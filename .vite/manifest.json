@@ -1,9 +1,13 @@
 {
-  "_main-DuhHGbz2.js": {
-    "file": "assets/main-DuhHGbz2.js",
+  "_main-C29wLQC_.css": {
+    "file": "assets/main-C29wLQC_.css",
+    "src": "_main-C29wLQC_.css"
+  },
+  "_main-G9K1HHRW.js": {
+    "file": "assets/main-G9K1HHRW.js",
     "name": "main",
     "css": [
-      "assets/main-a7RX7by1.css"
+      "assets/main-C29wLQC_.css"
     ],
     "assets": [
       "assets/cdqc-hero-panda-city-BxGNdO3m.png",
@@ -16,10 +20,6 @@
       "assets/cdqc-experience-nightscape-Dr4rZYgG.webp",
       "assets/zigzag-mark-new-DvCS5-dw.png"
     ]
-  },
-  "_main-a7RX7by1.css": {
-    "file": "assets/main-a7RX7by1.css",
-    "src": "_main-a7RX7by1.css"
   },
   "assets/brand/zigzag-mark-new.png": {
     "file": "assets/zigzag-mark-new-DvCS5-dw.png",
